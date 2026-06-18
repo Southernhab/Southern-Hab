@@ -1,0 +1,229 @@
+Fix the mobile layout overflow across the entire website.
+
+The current iPhone layout is clipped on the right side. The header, hero heading, and some sections are wider than the viewport.
+
+Edit only the active shared stylesheet and any necessary mobile overrides.
+
+Do not change copy, links, forms, page URLs, colors, or desktop layout.
+
+ADD THESE GLOBAL RULES
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+svg,
+video,
+iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+main,
+section,
+article,
+header,
+footer,
+nav,
+.container,
+.container-fluid {
+  width: 100%;
+  max-width: 100%;
+}
+
+MOBILE RULES
+
+Use:
+
+@media (max-width: 768px) {
+
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  main,
+  section,
+  article,
+  header,
+  footer,
+  nav,
+  .container,
+  .container-fluid {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .container,
+  .container-fluid,
+  main,
+  section {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  nav {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    padding: 16px 18px !important;
+  }
+
+  nav ul {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  nav ul:first-child {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  nav ul:last-child {
+    flex: 0 0 auto !important;
+  }
+
+  nav .brand,
+  nav strong,
+  nav a {
+    max-width: 100% !important;
+  }
+
+  nav a[role="button"] {
+    width: auto !important;
+    min-width: 0 !important;
+    white-space: normal !important;
+    text-align: center !important;
+    padding: 12px 14px !important;
+    font-size: 15px !important;
+    line-height: 1.3 !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  p,
+  li,
+  a,
+  button {
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+  }
+
+  h1 {
+    font-size: clamp(34px, 10vw, 44px) !important;
+    line-height: 1.08 !important;
+  }
+
+  h2 {
+    font-size: clamp(28px, 8vw, 36px) !important;
+    line-height: 1.15 !important;
+  }
+
+  h3 {
+    font-size: 23px !important;
+    line-height: 1.2 !important;
+  }
+
+  .hero,
+  .page-hero {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    padding: 48px 18px !important;
+  }
+
+  .hero-copy,
+  .hero > div,
+  .page-hero > div {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .grid,
+  .grid-2,
+  .grid-3,
+  .grid-4,
+  .service-grid,
+  .cards,
+  .form-grid,
+  .split {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+  }
+
+  .card,
+  form,
+  article {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .actions,
+  .button-group,
+  .cta-group {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 12px !important;
+  }
+
+  .actions a,
+  .button-group a,
+  .cta-group a,
+  button,
+  .button {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+REMOVE CONFLICTING RULES
+
+Search the active stylesheet and page-specific styles for:
+
+- fixed widths larger than 100%
+- min-width values on mobile
+- left or right margins that push content off-screen
+- desktop padding that remains on mobile
+- white-space: nowrap on headings or buttons
+- transform or translateX rules
+- absolute positioning that extends past the viewport
+- fixed-width navigation containers
+- oversized hero widths
+
+Remove or override only those conflicting mobile rules.
+
+Do not:
+- rewrite copy
+- change desktop styling
+- change navigation labels
+- change forms
+- run screenshot verification
+- analyze screenshots
+- start browser automation
+- run appearance-check loops
+
+Stop immediately after fixing the mobile overflow.
+
+Report only:
+- files changed
+- overflow rules fixed
+- fixed-width elements removed
