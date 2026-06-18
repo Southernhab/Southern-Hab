@@ -1,0 +1,167 @@
+Reconfigure the entire website for mobile screens.
+
+Do not change the desktop layout or approved wording.
+
+MOBILE DESCRIPTION BEHAVIOR
+
+At screen widths of 768px and below:
+
+1. On every individual service page, show only the first two paragraphs of the service description by default.
+2. Place the remaining paragraphs inside a collapsible section.
+3. Add a button labeled:
+
+“Read Full Description”
+
+4. When opened, change the button text to:
+
+“Show Less”
+
+5. Do not delete or rewrite the full service description.
+6. Keep all content in the HTML so it remains available for accessibility and search engines.
+7. Do not collapse:
+   - service-page heading
+   - breadcrumb or back link
+   - “What the client can expect”
+   - inquiry button
+   - required legal or licensing limitations
+8. Any licensing, prescribed-fire, nuisance-wildlife, chemical-application, or registered-forester limitation must remain visible without requiring the user to expand the description.
+
+OVERVIEW CARDS
+
+On the Private Lands and Industrial, Municipal & Utility overview pages:
+
+- Limit each service-card description to about 2–3 lines on mobile
+- Keep the service title visible
+- Keep the Learn More button visible
+- Do not shorten the desktop card descriptions
+- Use CSS line-clamp only on mobile
+
+Use:
+
+.service-card p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+MOBILE HEADER
+
+At 768px and below:
+
+- Keep the logo readable
+- Do not allow words to wrap one letter at a time
+- Place the logo and “Discuss a Project” button in separate rows if necessary
+- Use a stacked mobile header rather than forcing both into one narrow row
+- Center or left-align the logo consistently
+- Make the CTA button full-width below the logo
+- Hide secondary desktop navigation links behind a simple menu if needed
+
+Use this preferred mobile header structure:
+
+- Row 1: logo
+- Row 2: Discuss a Project button
+- Row 3: mobile navigation menu
+
+MOBILE PAGE LAYOUT
+
+Across the entire website:
+
+- Set all grids to one column
+- Remove fixed widths
+- Remove min-width values
+- Prevent horizontal scrolling
+- Set images to max-width: 100%
+- Set containers to width: 100%
+- Use 18px to 20px horizontal padding
+- Use 32px to 48px vertical section padding
+- Stack buttons vertically
+- Make buttons full-width
+- Make all form fields full-width
+- Use at least 16px font size for form fields
+- Keep body text at 17px minimum
+- Keep line-height between 1.55 and 1.7
+
+MOBILE TYPOGRAPHY
+
+Use:
+
+h1 {
+  font-size: clamp(34px, 10vw, 42px);
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: clamp(28px, 8vw, 34px);
+  line-height: 1.15;
+}
+
+h3 {
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+p,
+li {
+  font-size: 17px;
+  line-height: 1.62;
+}
+
+Do not allow:
+- overflow-wrap: anywhere on logos or headings
+- word-break: break-all
+- fixed desktop heights
+- fixed desktop widths
+- horizontal scrolling
+- clipped headings
+- buttons extending beyond the viewport
+
+HERO SECTIONS
+
+On mobile:
+
+- Use min-height: auto
+- Use padding: 40px 20px
+- Keep text width at 100%
+- Remove oversized blank space
+- Keep background images centered
+- Use a solid overlay if text appears over an image
+- Do not use gradients
+
+FORMS
+
+On mobile:
+
+- Use one column
+- Keep labels above fields
+- Make inputs, selects, textareas, and buttons 100% width
+- Keep only one inquiry action per service page
+- Preserve:
+  - Private Land Inquiry Form
+  - Industrial / Municipal Inquiry Form
+
+IMPLEMENTATION
+
+Use the active shared stylesheet for the mobile rules.
+
+Add only the minimum JavaScript needed for the Read Full Description / Show Less controls.
+
+Do not:
+- rewrite approved copy
+- remove full descriptions
+- change page URLs
+- change form destinations
+- change desktop styling
+- run screenshot verification
+- analyze screenshots
+- start browser automation
+- run appearance-check loops
+
+Stop immediately after applying the mobile layout and collapsible-description behavior.
+
+Report only:
+- files changed
+- mobile rules added
+- service pages given collapsible descriptions
+- overview cards given mobile line limits
+- header changes made
