@@ -211,3 +211,133 @@ footer {
 footer a {
   color: var(--color-warm-white) !important;
 }
+
+/* ── Mobile layout ── */
+
+@media (max-width: 768px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  main,
+  section,
+  article,
+  header,
+  footer,
+  nav,
+  .container,
+  .container-fluid {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Grids → single column */
+  .grid,
+  .grid-2,
+  .grid-3,
+  .grid-4,
+  .service-grid,
+  .cards,
+  .form-grid,
+  .split {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+
+  /* Headings */
+  h1 {
+    font-size: 36px !important;
+    line-height: 1.12 !important;
+  }
+
+  h2 {
+    font-size: 29px !important;
+    line-height: 1.18 !important;
+  }
+
+  h3 {
+    font-size: 23px !important;
+    line-height: 1.22 !important;
+  }
+
+  /* Body text */
+  p,
+  li,
+  label {
+    font-size: 17px !important;
+  }
+
+  /* Sections and page padding */
+  section,
+  .section,
+  .page-header,
+  .hero {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  /* Hero / page-header height */
+  .page-header,
+  .hero {
+    min-height: 0 !important;
+  }
+
+  /* Cards */
+  .service-card,
+  .card {
+    width: 100% !important;
+    padding: 20px !important;
+  }
+
+  /* Button groups */
+  .actions,
+  .button-group,
+  .cta-group {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 12px !important;
+  }
+
+  /* Buttons */
+  button,
+  .button,
+  a[role="button"],
+  .button-link {
+    width: 100% !important;
+    min-height: 48px !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
+  }
+
+  /* Form inputs */
+  input,
+  select,
+  textarea {
+    width: 100% !important;
+    font-size: 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Navigation: hide secondary links, keep logo + CTA */
+  nav.container-fluid ul:nth-child(2) li:not(:last-child) {
+    display: none !important;
+  }
+
+  /* Wide content: scrollable rather than page-breaking */
+  table,
+  pre {
+    overflow-x: auto;
+    display: block;
+    width: 100%;
+  }
+}
