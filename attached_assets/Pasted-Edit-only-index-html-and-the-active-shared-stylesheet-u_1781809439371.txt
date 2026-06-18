@@ -1,0 +1,106 @@
+Edit only /index.html and the active shared stylesheet used by the homepage.
+
+Do not change any other page.
+
+HOMEPAGE PATHWAY SECTIONS
+
+Update these three homepage sections:
+
+- Private Lands
+- About
+- Industrial, Municipal & Utility Vegetation Management
+
+For each section:
+
+1. Remove all blue text.
+2. Use charcoal for body text:
+   #252A27
+3. Use forest green for the section heading:
+   #1F3A2E
+4. Use Source Sans 3 for body text.
+5. Use Libre Baskerville for the main section heading.
+6. Keep links and buttons readable with strong contrast.
+7. Do not use blue anywhere in these sections.
+
+SINGLE HEADING PER SECTION
+
+Each of the three sections should have only one visible heading.
+
+Remove any duplicate heading, eyebrow heading, category label, subtitle heading, or repeated title above the main heading.
+
+Keep only these headings:
+
+Industrial, Municipal & Utility
+
+Private Lands
+
+About
+
+Do not show a second heading directly above or below any of these.
+
+Keep the existing descriptions and buttons beneath each heading.
+
+Do not rewrite the approved descriptions.
+
+HOMEPAGE HERO
+
+Update the section containing the heading:
+
+“Practical Solutions for Private and Public Land Management”
+
+Remove the dark background and remove the gradient completely.
+
+Use:
+
+- Background: #F3EFE4
+- Heading color: #1F3A2E
+- Body text color: #252A27
+- Button background: #1F3A2E
+- Button text: #FAF9F5
+- Button hover background: #13271F
+
+Do not use:
+- gradients
+- black backgrounds
+- dark overlays
+- blue text
+- low-contrast text
+
+Keep this hero section light, open, and easy to read.
+
+If there is a background-image declaration on this section, remove it for now.
+
+Keep the current spacing, wording, links, and buttons.
+
+STYLE OVERRIDES
+
+Search /index.html and the active shared stylesheet for:
+
+- blue text colors
+- dark hero backgrounds
+- gradient backgrounds
+- duplicate heading styles
+- page-specific color overrides affecting these homepage sections
+
+Remove or replace only the conflicting rules.
+
+Do not:
+- change page structure beyond removing duplicate headings
+- change navigation
+- change footer
+- change forms
+- change links
+- change approved copy
+- modify service pages
+- run screenshot verification
+- analyze screenshots
+- run browser automation
+- perform appearance-check loops
+
+Save the files and stop immediately.
+
+Report only:
+- files changed
+- blue color rules removed
+- gradient rules removed
+- duplicate headings removed
