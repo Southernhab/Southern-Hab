@@ -1,0 +1,381 @@
+Rework the entire Southern Habitat Consulting website for the best possible mobile experience.
+
+This task applies to all pages.
+
+PRIMARY GOAL
+
+At screen widths of 768px and below, the site should feel intentionally designed for mobile rather than simply compressed from desktop.
+
+Keep the full desktop version intact.
+
+Do not rewrite approved copy.
+Do not change page URLs.
+Do not change form destinations.
+Do not remove required legal or licensing limitations.
+Do not change the desktop layout unless a desktop rule is causing mobile overflow.
+
+MOBILE BREAKPOINTS
+
+Use:
+
+@media (max-width: 768px)
+
+and add a smaller breakpoint for narrow phones:
+
+@media (max-width: 430px)
+
+GLOBAL MOBILE LAYOUT
+
+At 768px and below:
+
+- Set all content to one column
+- Remove fixed widths
+- Remove min-width values
+- Prevent horizontal scrolling
+- Use width: 100%
+- Use max-width: 100%
+- Use box-sizing: border-box
+- Use 18px horizontal page padding
+- Use 32px to 48px vertical section spacing
+- Reduce oversized blank sections
+- Remove desktop-only fixed heights
+- Keep images responsive
+- Stack buttons vertically
+- Keep all touch targets at least 48px high
+
+Add:
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+svg,
+video,
+iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+MOBILE HEADER
+
+Replace the current squeezed mobile header with a true mobile header.
+
+At 768px and below:
+
+- Put the logo on its own row
+- Keep the logo horizontal and readable
+- Do not allow one-letter-per-line wrapping
+- Put the main “Discuss a Project” button below the logo
+- Make the button full-width
+- Hide desktop navigation links behind a dropdown or expandable menu
+- Add a clear button labeled “Menu”
+- When opened, show:
+  - Home
+  - Industrial, Municipal & Utility
+  - Private Lands
+  - About
+  - Contact
+- Stack menu links vertically
+- Make each menu link at least 48px high
+- Close the menu after a link is selected
+- Keep the mobile header light and uncluttered
+
+Use simple accessible JavaScript for the dropdown menu.
+
+Do not use a large animated menu.
+Do not use horizontal scrolling navigation.
+
+HOMEPAGE MOBILE STRUCTURE
+
+On mobile, keep the homepage focused on three choices:
+
+- Industrial, Municipal & Utility
+- Private Lands
+- About
+
+For the homepage hero:
+
+- Reduce vertical height
+- Use padding: 40px 18px
+- Use h1 between 34px and 40px
+- Keep body text at 17px
+- Limit the visible introduction to two short paragraphs
+- Place any remaining paragraph inside a collapsible “Read More” section
+- Keep only one primary button visible at first
+- Move secondary buttons into a stacked button group below
+
+For the three homepage pathway cards:
+
+- One card per row
+- Full-width cards
+- Short descriptions of 2 to 3 lines
+- Full-width button
+- 18px gap between cards
+- No side-by-side cards
+
+SERVICE OVERVIEW PAGES
+
+For:
+
+/private-land-services/
+/industrial-municipal-utility/
+
+At 768px and below:
+
+- Stack all service cards into one column
+- Show only 2 to 3 lines of each card description
+- Keep the service name visible
+- Keep the Learn More button visible
+- Use CSS line-clamp for card descriptions
+- Reduce card padding to about 20px
+- Use full-width buttons
+- Remove unnecessary decorative spacing
+- Keep overview introduction to two short paragraphs
+- Move any additional introductory copy into a collapsible “Read More” area
+
+Use mobile-only line clamp:
+
+.service-card p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+INDIVIDUAL SERVICE PAGES
+
+At 768px and below:
+
+- Keep the breadcrumb or back link visible
+- Keep the service name visible
+- Keep the first two paragraphs of the service description visible
+- Put the remaining nonessential description paragraphs inside a collapsible section
+- Add a control labeled “Read Full Description”
+- Change it to “Show Less” when opened
+- Keep all required legal, licensing, authorization, forester, prescribed-fire, chemical-application, and nuisance-wildlife limitations visible at all times
+- Keep “What the client can expect” visible
+- Keep only one inquiry button at the bottom
+- Make the inquiry button full-width
+- Stack related-service cards in one column
+- Remove oversized empty hero areas
+- Keep section spacing compact but readable
+
+Do not delete full content from the HTML.
+
+ABOUT PAGE
+
+At 768px and below:
+
+- Keep one heading hierarchy
+- Use short paragraphs
+- Collapse any extra supporting copy after the first two paragraphs
+- Stack all columns
+- Remove dark background blocks
+- Use the same light background and text colors as the rest of the site
+- Keep the About section full-width
+- Keep body copy no wider than the screen
+- Make any CTA full-width
+
+CONTACT PAGE
+
+At 768px and below:
+
+- Show the Contact hero in a compact format
+- Stack all form fields into one column
+- Keep labels above fields
+- Use font-size: 16px or larger in inputs to prevent iPhone zoom
+- Make selects, inputs, textareas, and buttons full-width
+- Use only one form visible at a time
+- Add a dropdown or tab selector labeled:
+  - Private Land Inquiry
+  - Industrial / Municipal Inquiry
+- Show the selected form and hide the other
+- Keep both forms in the HTML
+- Use accessible JavaScript
+- Keep submission behavior unchanged
+- Keep only one submit button per form
+
+BUTTON CONFIGURATION
+
+At 768px and below:
+
+- Stack all button groups vertically
+- Use width: 100%
+- Use min-height: 48px
+- Use 12px gap
+- Keep text centered
+- Prevent awkward wrapping
+- Use 16px button text
+- Do not place two buttons side by side
+- Do not use oversized button text
+- Do not allow buttons to extend beyond the viewport
+
+TYPOGRAPHY
+
+At 768px and below:
+
+h1 {
+  font-size: clamp(34px, 9vw, 40px);
+  line-height: 1.08;
+}
+
+h2 {
+  font-size: clamp(28px, 7vw, 34px);
+  line-height: 1.15;
+}
+
+h3 {
+  font-size: 22px;
+  line-height: 1.22;
+}
+
+p,
+li {
+  font-size: 17px;
+  line-height: 1.62;
+}
+
+nav a,
+button,
+input,
+select,
+textarea,
+label {
+  font-size: 16px;
+}
+
+Do not use:
+- word-break: break-all
+- overflow-wrap: anywhere on logos
+- oversized letter spacing
+- fixed-width headings
+- text wider than the viewport
+
+IMAGES
+
+At 768px and below:
+
+- Use width: 100%
+- Use height: auto
+- Use object-fit: cover where needed
+- Avoid very tall image crops
+- Use hero background-position appropriate to the subject
+- If text overlays an image, use a solid semi-transparent overlay
+- Do not use gradients
+- If overlay text is still difficult to read, move text below the image
+
+DROPDOWN MENUS
+
+Use mobile dropdowns for:
+
+- Main navigation
+- Contact form type
+- Long service descriptions where appropriate
+
+Dropdowns must:
+
+- Be keyboard accessible
+- Use aria-expanded
+- Use aria-controls
+- Be easy to tap
+- Open and close without page reload
+- Not require hover
+
+FORMS
+
+At 768px and below:
+
+- One column only
+- Full-width inputs
+- Full-width buttons
+- Clear labels
+- 16px minimum input font size
+- Proper spacing between fields
+- No side-by-side fields
+- No clipped error messages
+- No horizontal overflow
+
+FOOTER
+
+At 768px and below:
+
+- Stack footer content vertically
+- Left-align or center consistently
+- Keep links on separate lines if necessary
+- Use comfortable spacing
+- Do not make the footer excessively tall
+- Keep phone, email, and location readable
+
+SMALL PHONE RULES
+
+At 430px and below:
+
+- Reduce horizontal padding to 16px
+- Use h1 between 32px and 36px
+- Use h2 between 27px and 31px
+- Make all buttons full-width
+- Keep logo readable
+- Keep menu button full-width or easy to tap
+- Remove nonessential decorative elements
+- Keep card padding around 18px
+- Keep no more than one card per row
+
+ACCESSIBILITY
+
+Ensure:
+
+- WCAG AA contrast
+- Visible focus states
+- 44px minimum touch targets
+- Dropdowns use buttons, not noninteractive text
+- Collapsible content uses aria-expanded
+- Forms retain labels
+- No important content is available only by hover
+- No content is hidden permanently from screen readers
+
+IMPLEMENTATION
+
+Use the active shared stylesheet for all general mobile rules.
+
+Add one small shared JavaScript file if needed for:
+
+- mobile navigation dropdown
+- service-description expand/collapse
+- contact form selector
+
+Do not duplicate JavaScript in every page.
+
+Do not:
+
+- rewrite approved copy
+- delete full service descriptions
+- change desktop copy
+- change page URLs
+- change form submission destinations
+- change SEO titles or meta descriptions
+- run screenshot verification
+- analyze screenshots
+- start browser automation
+- run appearance-check loops
+
+Stop immediately after completing the mobile rework.
+
+Report only:
+
+- files changed
+- shared mobile CSS added
+- shared JavaScript added
+- pages with collapsible descriptions
+- pages with dropdown menus
+- pages with form selector
+- mobile overflow issues corrected
