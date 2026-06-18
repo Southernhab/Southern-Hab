@@ -7,7 +7,12 @@
  * and the page <h1>.
  *
  * Exits 0 when everything matches, non-zero when mismatches are found.
+ *
  * Run manually:  node scripts/check-breadcrumbs.js
+ *
+ * Pre-publish hook: This script is configured as the deployment build command
+ * in .replit ([deployment] build = ["node", "scripts/check-breadcrumbs.js"]).
+ * A non-zero exit blocks publishing and prints the offending page(s).
  */
 
 const fs = require("fs");
