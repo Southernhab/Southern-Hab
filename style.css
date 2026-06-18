@@ -430,6 +430,18 @@ footer a {
     max-width: 100% !important;
   }
 
+  .page-header h1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    font-size: clamp(32px, 8vw, 40px) !important;
+    line-height: 1.08 !important;
+    white-space: normal !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+  }
+
   /* Grids → single column */
   .grid,
   .grid-2,
