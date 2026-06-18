@@ -1,0 +1,96 @@
+Update all service subsection pages so each page has only one inquiry action at the bottom.
+
+PRIVATE-LAND SERVICE PAGES
+
+Use only this title:
+
+“Private Land Inquiry Form”
+
+Apply it to:
+
+/property-assessment-planning/
+/forestry-timber-management/
+/forestry-site-preparation/
+/reforestation-longleaf-pine/
+/habitat-management/
+/prescribed-fire-planning/
+/wildlife-management/
+/nuisance-wildlife-management/
+/private-land-invasive-plant-control/
+/complete-property-management/
+/property-mapping-monitoring-records/
+
+INDUSTRIAL AND MUNICIPAL SERVICE PAGES
+
+Use only this title:
+
+“Industrial / Municipal Inquiry Form”
+
+Apply it to:
+
+/industrial-vegetation-management/
+/municipal-vegetation-management/
+/industrial-invasive-plant-control/
+/drainage-detention-vegetation-management/
+/rights-of-way-site-perimeters/
+/mechanical-vegetation-management/
+/herbicide-chemical-vegetation-control/
+/vegetation-mapping-reporting/
+/recurring-vegetation-maintenance/
+
+REMOVE DUPLICATE ACTIONS
+
+On every service page:
+
+1. Remove the service-specific CTA button such as:
+   - Request an Industrial Site Review
+   - Request a Property Assessment
+   - Discuss Treatment Options
+   - Request a Habitat Assessment
+   - Any similar service-specific button
+
+2. Keep only one inquiry button or form link.
+
+3. Private-Land pages should show only:
+   “Private Land Inquiry Form”
+
+4. Industrial and Municipal pages should show only:
+   “Industrial / Municipal Inquiry Form”
+
+5. The remaining inquiry button must lead to the correct form:
+   - Private-Land pages → /contact/#private-land-inquiry
+   - Industrial and Municipal pages → /contact/#industrial-municipal-inquiry
+
+6. Do not show two buttons side by side.
+
+7. Do not duplicate the full form on each page unless a form is already embedded there. Prefer one clear button linking to the correct form on the Contact page.
+
+Keep unchanged:
+
+- Service descriptions
+- Headings
+- Breadcrumbs
+- Related-service links
+- Navigation
+- Fonts
+- Colors
+- Page layout
+- Contact form fields
+- Form submission behavior
+
+Do not:
+
+- rewrite approved copy
+- create new forms
+- change form destinations
+- run screenshot verification
+- analyze screenshots
+- start browser automation
+- perform appearance checks
+
+Stop immediately after removing the duplicate actions and standardizing the inquiry title.
+
+Report only:
+- files changed
+- duplicate buttons removed
+- final inquiry link used for each service category
