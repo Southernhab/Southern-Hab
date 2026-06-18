@@ -200,12 +200,16 @@
   }
 
   // ── Init ──────────────────────────────────────────────────────────────────
+  var isMobile = window.matchMedia('(max-width: 768px)').matches;
+
   function init() {
     setupMobileNav();
-    setupServiceCollapsible();
-    setupHeroCollapsible();
-    setupOverviewCollapsible();
-    setupAboutCollapsibles();
+    if (isMobile) {
+      setupServiceCollapsible();
+      setupHeroCollapsible();
+      setupOverviewCollapsible();
+      setupAboutCollapsibles();
+    }
     setupContactFormSelector();
   }
 

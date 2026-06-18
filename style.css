@@ -243,7 +243,7 @@ footer a {
 /* ── Component defaults: hidden on desktop, shown only on mobile ── */
 
 .desc-toggle {
-  display: none;
+  display: none !important;
 }
 
 .mobile-menu-btn {
@@ -260,6 +260,24 @@ footer a {
 
 .form-selector {
   display: none;
+}
+
+/* ── Desktop: collapsible content always fully visible ── */
+
+@media (min-width: 769px) {
+  .desc-toggle,
+  .mobile-description-toggle,
+  [data-description-toggle] {
+    display: none !important;
+  }
+
+  .desc-collapsible,
+  .mobile-description-extra,
+  [data-description-extra] {
+    display: block !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
 }
 
 /* ── Mobile layout ── */
