@@ -3,6 +3,15 @@
 :root {
   --font-heading: "Libre Baskerville", Georgia, "Times New Roman", serif;
   --font-body: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+  --color-forest: #1F3A2E;
+  --color-pine: #13271F;
+  --color-cream: #F3EFE4;
+  --color-warm-white: #FAF9F5;
+  --color-charcoal: #252A27;
+  --color-moss: #66765A;
+  --color-gold: #B58A48;
+  --color-earth: #76543C;
+  --color-border: #D8D3C7;
 }
 
 html {
@@ -10,7 +19,14 @@ html {
   width: 100%;
 }
 
-body,
+body {
+  background: var(--color-warm-white);
+  color: var(--color-charcoal);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
 button,
 input,
 select,
@@ -25,6 +41,7 @@ h1,
 h2,
 h3 {
   font-family: var(--font-heading);
+  color: var(--color-forest);
 }
 
 h1 {
@@ -42,7 +59,6 @@ h3 {
   line-height: 1.25;
 }
 
-body,
 p,
 li,
 label,
@@ -61,4 +77,45 @@ button,
   font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
+}
+
+section,
+article,
+.card {
+  border-color: var(--color-border);
+}
+
+.card,
+form,
+.callout,
+.alt-section {
+  background: var(--color-cream);
+}
+
+button,
+.button,
+[role="button"] {
+  background: var(--color-forest);
+  border-color: var(--color-forest);
+  color: var(--color-warm-white);
+}
+
+button:hover,
+.button:hover,
+[role="button"]:hover {
+  background: var(--color-pine);
+  border-color: var(--color-pine);
+}
+
+footer {
+  background: var(--color-pine);
+  color: var(--color-warm-white);
+}
+
+footer a {
+  color: var(--color-warm-white);
+}
+
+footer a:hover {
+  color: var(--color-gold);
 }
