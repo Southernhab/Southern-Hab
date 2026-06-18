@@ -1,0 +1,119 @@
+Fix only the mobile header and navigation.
+
+The current iPhone header is broken because the Southern Habitat Consulting brand is wrapping one letter per line.
+
+Do not change desktop styling.
+
+MOBILE HEADER GOAL
+
+At screen widths of 768px and below:
+
+1. Keep the brand readable on the left.
+2. Keep the “Discuss a Project” button on the right.
+3. Do not let the brand wrap one letter at a time.
+4. Do not allow the header to exceed the screen width.
+5. Do not use vertical text.
+6. Do not stack individual letters.
+7. Do not let either item push the other off-screen.
+
+Use this mobile layout:
+
+- Header uses display: grid
+- Two columns:
+  - brand: minmax(0, 1fr)
+  - button: auto
+- Gap: 12px
+- Align items: center
+- Padding: 14px 16px
+
+Use these exact rules inside the mobile media query:
+
+@media (max-width: 768px) {
+  nav,
+  .site-header,
+  header nav {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 14px 16px !important;
+  }
+
+  nav ul {
+    display: contents !important;
+  }
+
+  nav ul:first-child,
+  nav ul:last-child {
+    width: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .brand,
+  nav strong,
+  nav strong a {
+    display: block !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    line-height: 1.15 !important;
+  }
+
+  .brand {
+    font-size: 22px !important;
+  }
+
+  .brand small {
+    display: block !important;
+    margin-top: 4px !important;
+    font-size: 11px !important;
+    letter-spacing: 0.16em !important;
+    white-space: nowrap !important;
+  }
+
+  nav a[role="button"],
+  .header-cta {
+    width: auto !important;
+    max-width: 150px !important;
+    min-height: 48px !important;
+    padding: 12px 14px !important;
+    font-size: 15px !important;
+    line-height: 1.25 !important;
+    text-align: center !important;
+    white-space: normal !important;
+  }
+}
+
+REMOVE CONFLICTING MOBILE RULES
+
+Remove or override any mobile rule that applies:
+
+- overflow-wrap: anywhere to the brand
+- word-break: break-all
+- width: 100% to the header button
+- flex-direction: column on the whole header
+- fixed widths on the brand
+- excessive letter spacing on the brand name
+- min-width values that force overflow
+
+Keep unchanged:
+
+- desktop header
+- page copy
+- navigation labels
+- colors
+- fonts
+- links
+- forms
+- footer
+
+Do not run screenshot verification, browser automation, or appearance-check loops.
+
+Save the active stylesheet and stop immediately.
