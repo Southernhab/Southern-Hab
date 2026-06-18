@@ -119,3 +119,95 @@ footer a {
 footer a:hover {
   color: var(--color-gold);
 }
+
+/* ── Override block: wins over Pico and earlier rules ── */
+
+:root {
+  --color-forest: #1F3A2E;
+  --color-pine: #13271F;
+  --color-cream: #F3EFE4;
+  --color-warm-white: #FAF9F5;
+  --color-charcoal: #252A27;
+  --color-moss: #66765A;
+  --color-gold: #B58A48;
+  --color-earth: #76543C;
+  --color-border: #D8D3C7;
+  --font-heading: "Libre Baskerville", Georgia, "Times New Roman", serif;
+  --font-body: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+}
+
+html,
+body {
+  background: var(--color-warm-white) !important;
+  color: var(--color-charcoal) !important;
+  font-family: var(--font-body) !important;
+}
+
+body,
+p,
+li,
+a,
+button,
+input,
+select,
+textarea,
+label,
+nav,
+footer {
+  font-family: var(--font-body) !important;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading) !important;
+  color: var(--color-forest) !important;
+}
+
+nav {
+  background: var(--color-warm-white) !important;
+}
+
+nav a {
+  color: var(--color-charcoal) !important;
+}
+
+section,
+article,
+.card {
+  border-color: var(--color-border) !important;
+}
+
+.card,
+form,
+.callout,
+.alt-section {
+  background: var(--color-cream) !important;
+}
+
+button,
+.button,
+[role="button"] {
+  background: var(--color-forest) !important;
+  border-color: var(--color-forest) !important;
+  color: var(--color-warm-white) !important;
+  font-family: var(--font-body) !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+button:hover,
+.button:hover,
+[role="button"]:hover {
+  background: var(--color-pine) !important;
+  border-color: var(--color-pine) !important;
+}
+
+footer {
+  background: var(--color-pine) !important;
+  color: var(--color-warm-white) !important;
+}
+
+footer a {
+  color: var(--color-warm-white) !important;
+}
