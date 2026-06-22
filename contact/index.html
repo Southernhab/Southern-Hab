@@ -179,7 +179,7 @@
       }
     }
   
-html,body{background:#1F3A2E!important;color:#FAF9F5!important;}.section,.section.alt{background:#1F3A2E!important;color:#FAF9F5!important;}.section h2{color:#FAF9F5!important;}.section .eyebrow{color:#66765A!important;}.section>p{color:#D8D3C7!important;}.form-shell{background:#FAF9F5!important;color:#252A27!important;border:1px solid #D8D3C7!important;box-shadow:0 12px 30px rgba(0,0,0,.14)!important;}.form-shell h3{color:#1F3A2E!important;}.form-shell label{color:#252A27!important;}.form-shell input,.form-shell select,.form-shell textarea{background:#fff!important;color:#252A27!important;border:1px solid #D8D3C7!important;}.form-shell button[type=submit]{background:#1F3A2E!important;border-color:#1F3A2E!important;color:#FAF9F5!important;width:100%;margin-top:.75rem;}.form-shell button[type=submit]:hover{background:#13271F!important;border-color:#13271F!important;}@media(max-width:768px){.section{padding:2rem 18px!important;}.form-shell{padding:1.5rem 18px!important;}.form-shell h3{overflow-wrap:normal!important;word-break:normal!important;hyphens:none!important;}}</style>
+.hidden{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;overflow:hidden!important;}html,body{background:#1F3A2E!important;color:#FAF9F5!important;}.section,.section.alt{background:#1F3A2E!important;color:#FAF9F5!important;}.section h2{color:#FAF9F5!important;}.section .eyebrow{color:#66765A!important;}.section>p{color:#D8D3C7!important;}.form-shell{background:#FAF9F5!important;color:#252A27!important;border:1px solid #D8D3C7!important;box-shadow:0 12px 30px rgba(0,0,0,.14)!important;}.form-shell h3{color:#1F3A2E!important;}.form-shell label{color:#252A27!important;}.form-shell input,.form-shell select,.form-shell textarea{background:#fff!important;color:#252A27!important;border:1px solid #D8D3C7!important;}.form-shell button[type=submit]{background:#1F3A2E!important;border-color:#1F3A2E!important;color:#FAF9F5!important;width:100%;margin-top:.75rem;}.form-shell button[type=submit]:hover{background:#13271F!important;border-color:#13271F!important;}@media(max-width:768px){.section{padding:2rem 18px!important;}.form-shell{padding:1.5rem 18px!important;}.form-shell h3{overflow-wrap:normal!important;word-break:normal!important;hyphens:none!important;}}</style>
 </head>
 
 <body>
@@ -199,8 +199,7 @@ html,body{background:#1F3A2E!important;color:#FAF9F5!important;}.section,.sectio
       <h2>Tell Us About Your Property or Project</h2>
       <p>Share the location, type of property and the work you need help with. We'll review the details and follow up about the next step.</p>
       <div class="grid-2">
-        <form class="form-shell" name="industrial-municipal-inquiry" method="POST" data-netlify="true"><input
-            type="hidden" name="form-name" value="industrial-municipal-inquiry">
+        <form class="form-shell" name="industrial-municipal-inquiry" method="POST" action="/thank-you/" data-netlify="true" netlify-honeypot="bot-field"><input type="hidden" name="form-name" value="industrial-municipal-inquiry"><p class="hidden" aria-hidden="true"><label>Do not fill this out: <input name="bot-field"></label></p>
           <h3>Industrial or Municipal</h3>
           <div class="form-grid"><label>Organization<input type="text" name="organization"
                 required></label><label>Contact name<input type="text" name="name" required></label><label>Email<input
@@ -210,8 +209,7 @@ html,body{background:#1F3A2E!important;color:#FAF9F5!important;}.section,.sectio
               class="full">Project details<textarea name="details"></textarea></label></div><button type="submit">Send
             Project Information</button>
         </form>
-        <form class="form-shell" name="private-land-inquiry" method="POST" data-netlify="true"><input type="hidden"
-            name="form-name" value="private-land-inquiry">
+        <form class="form-shell" name="private-land-inquiry" method="POST" action="/thank-you/" data-netlify="true" netlify-honeypot="bot-field"><input type="hidden" name="form-name" value="private-land-inquiry"><p class="hidden" aria-hidden="true"><label>Do not fill this out: <input name="bot-field"></label></p>
           <h3>Private Lands</h3>
           <div class="form-grid"><label>Name<input type="text" name="name" required></label><label>Email<input
                 type="email" name="email" required></label><label>Phone<input type="tel"
