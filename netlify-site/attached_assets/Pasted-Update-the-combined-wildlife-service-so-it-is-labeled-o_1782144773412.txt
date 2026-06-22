@@ -1,0 +1,152 @@
+Update the combined wildlife service so it is labeled only:
+
+Wildlife Management
+
+PAGE TO UPDATE
+
+/wildlife-management/index.html
+
+PRIVATE LANDS OVERVIEW PAGE
+
+On:
+
+/private-land-services/index.html
+
+- Rename the service card from:
+  Wildlife and Nuisance Wildlife Management
+- To:
+  Wildlife Management
+- Keep the card linked to:
+  /wildlife-management/
+- Use a concise description that reflects both wildlife management and nuisance-wildlife management
+- Do not create a separate nuisance-wildlife service card
+
+OLD PAGE
+
+Keep:
+
+/nuisance-wildlife-management/index.html
+
+redirecting to:
+
+/wildlife-management/
+
+Update the visible fallback message to:
+
+“This service is now included under Wildlife Management.”
+
+Update all internal references so the site shows only:
+
+Wildlife Management
+
+EXACT PAGE COPY
+
+Use the wording below exactly.
+
+Do not rewrite, shorten, paraphrase, or reorder it.
+
+Wildlife Management
+
+Wildlife management starts with understanding how animals are using the property and what the habitat provides throughout the year.
+
+We review food, cover, water, travel corridors and seasonal use. Harvest history, camera data and field observations may also help identify population trends and areas of heavy activity. The owner’s goals guide the plan, whether the property is managed for hunting, recreation, wildlife viewing or a combination of uses.
+
+Field work may include habitat improvements, vegetation management, opening maintenance, access work and monitoring. Mapping, camera surveys and observation records can be used to track changes over time. The plan can then be adjusted as habitat conditions and wildlife use change.
+
+Nuisance-Wildlife Management
+
+Nuisance wildlife can affect access, timber, agricultural land, food plots and wildlife populations.
+
+Beavers may flood roads, trails or timber stands. Feral hogs can damage food plots, fields and planted areas. Predators may place added pressure on turkey, deer and other wildlife when habitat conditions support high numbers.
+
+We review the damage, the species involved and the conditions contributing to the problem. This may include water levels, food sources, cover, travel routes and access points. Removal may be part of the work, but it is not treated as the only solution. The broader plan may also include habitat changes, vegetation work, exclusion, monitoring and water-management improvements.
+
+What the Client Can Expect
+
+A field-based management plan supported by habitat assessment, wildlife observations, mapped activity areas and practical work designed to improve wildlife use while reducing damage and unwanted pressure on the property.
+
+BUTTON
+
+Use one button only at the bottom:
+
+Private Land Inquiry Form
+
+Link it to:
+
+/contact/#private-land-inquiry
+
+PAGE DESIGN
+
+Keep the existing dark service-page design.
+
+Use:
+
+- dark forest-green background
+- cream or warm-white headings
+- light content panel
+- charcoal body text inside the panel
+- restrained gold accents
+- no image
+- no gradient
+- no oversized hero area
+
+Use separate sections for:
+
+- Wildlife Management
+- Nuisance-Wildlife Management
+- What the Client Can Expect
+
+MOBILE
+
+At 768px and below:
+
+- use one column
+- keep 18px horizontal padding
+- keep headings from breaking in the middle of words
+- keep body text at least 17px
+- make the inquiry button full-width
+- preserve the mobile Read Full Description behavior
+- keep the Nuisance-Wildlife Management section included on the same page
+- keep What the Client Can Expect visible
+
+SEO AND INTERNAL REFERENCES
+
+Update:
+
+- page title
+- meta description
+- heading
+- breadcrumb
+- service card
+- related-service links
+- sitemap-style service lists
+- homepage references
+- footer references
+
+The final site should display only one wildlife service in menus and cards:
+
+Wildlife Management
+
+Do not:
+
+- create a second wildlife card
+- change unrelated approved copy
+- change form destinations
+- change other page URLs
+- add images
+- use gradients
+- run screenshot verification
+- analyze screenshots
+- start browser automation
+- run appearance-check loops
+
+Save all changes and stop immediately.
+
+Report only:
+
+- files changed
+- service renamed
+- page copy updated
+- redirect preserved
+- internal links updated
+- final page URL

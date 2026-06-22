@@ -1,0 +1,230 @@
+Fix the website layout for iPhone and other small mobile screens.
+
+Edit only the active shared stylesheet and any page-specific mobile overrides that are necessary.
+
+Do not change copy, links, forms, page URLs, navigation labels, or desktop layout.
+
+MOBILE BREAKPOINT
+
+Use a mobile breakpoint of:
+
+@media (max-width: 768px)
+
+GENERAL MOBILE RULES
+
+For all pages:
+
+- Set body overflow-x: hidden
+- Prevent any section from extending wider than the viewport
+- Set images to max-width: 100% and height: auto
+- Set containers to width: 100%
+- Remove fixed desktop widths
+- Remove large left and right margins
+- Reduce page padding to 18px to 22px
+- Prevent text from being clipped
+- Prevent horizontal scrolling
+
+NAVIGATION
+
+On mobile:
+
+- Stack or collapse the navigation
+- Keep the logo visible
+- Do not let navigation links run off-screen
+- Do not use oversized buttons in the header
+- Make navigation links full-width if stacked
+- Keep touch targets at least 44px high
+
+HEADINGS
+
+On mobile:
+
+H1:
+- font-size: 36px
+- line-height: 1.12
+
+H2:
+- font-size: 29px
+- line-height: 1.18
+
+H3:
+- font-size: 23px
+- line-height: 1.22
+
+Do not allow headings to overflow the viewport.
+
+CARDS AND GRIDS
+
+On mobile:
+
+- Change all multi-column grids to one column
+- Set grid-template-columns: 1fr
+- Stack all service cards vertically
+- Remove fixed card widths
+- Use gap: 18px
+- Keep card padding around 20px
+- Prevent button rows from staying side by side
+
+BUTTONS
+
+On mobile:
+
+- Stack buttons vertically
+- Set width: 100%
+- Use min-height: 48px
+- Add 10px to 14px spacing between buttons
+- Prevent button text from wrapping awkwardly
+
+FORMS
+
+On mobile:
+
+- Use one column
+- Set all inputs, selects, textareas, and buttons to width: 100%
+- Remove side-by-side form fields
+- Keep labels above fields
+- Prevent forms from overflowing
+- Use at least 16px input text to avoid iPhone zoom
+
+HERO SECTIONS
+
+On mobile:
+
+- Reduce hero height
+- Use min-height between 420px and 520px
+- Use padding around 32px 20px
+- Keep text width at 100%
+- Do not use fixed desktop heights
+- Keep background images centered
+- If text overlays an image, use a solid semi-transparent overlay
+- Do not use gradients
+
+SERVICE PAGES
+
+On mobile:
+
+- Keep breadcrumb or back link visible
+- Keep the service heading readable
+- Remove excessive blank space
+- Do not allow content to begin off-screen
+- Stack related-service cards vertically
+- Keep inquiry buttons full-width
+
+ABOUT, CONTACT, PRIVATE LANDS, AND INDUSTRIAL OVERVIEW PAGES
+
+On mobile:
+
+- Stack columns into one column
+- Keep all text left-aligned
+- Use light backgrounds
+- Remove any large empty vertical blocks
+- Prevent cards from extending past the screen
+
+TABLES OR WIDE CONTENT
+
+If any wide content exists:
+
+- wrap it in an overflow-x:auto container
+- do not let it force the whole page wider than the viewport
+
+ADD THESE CORE MOBILE RULES
+
+@media (max-width: 768px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  main,
+  section,
+  article,
+  header,
+  footer,
+  nav,
+  .container,
+  .container-fluid {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .grid,
+  .grid-2,
+  .grid-3,
+  .grid-4,
+  .service-grid,
+  .cards,
+  .form-grid,
+  .split {
+    grid-template-columns: 1fr !important;
+  }
+
+  h1 {
+    font-size: 36px !important;
+    line-height: 1.12 !important;
+  }
+
+  h2 {
+    font-size: 29px !important;
+    line-height: 1.18 !important;
+  }
+
+  h3 {
+    font-size: 23px !important;
+    line-height: 1.22 !important;
+  }
+
+  p,
+  li,
+  label,
+  input,
+  select,
+  textarea,
+  button {
+    font-size: 17px !important;
+  }
+
+  .actions,
+  .button-group,
+  .cta-group {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  button,
+  .button,
+  a[role="button"] {
+    width: 100% !important;
+    min-height: 48px !important;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100% !important;
+    font-size: 16px !important;
+  }
+}
+
+Do not:
+- run screenshot verification
+- analyze screenshots
+- start browser automation
+- perform appearance-check loops
+- rewrite content
+- change desktop styling beyond what is necessary for mobile compatibility
+
+Stop immediately after updating the mobile CSS.
+
+Report only:
+- files changed
+- mobile rules added
+- fixed-width elements removed
+- pages with page-specific mobile overrides

@@ -1,0 +1,99 @@
+Update all individual service pages.
+
+GOAL
+
+Remove the entire large page-title hero section shown at the top of each service page.
+
+This is the oversized section that currently contains:
+
+- the category label, such as “PRIVATE LANDS”
+- the large service title, such as “Forestry and Timber Management”
+- the large cream or colored background block
+- excessive vertical space above the actual service content
+
+Remove that entire section from every individual service page.
+
+Do not recolor it.
+Do not restyle it.
+Delete the section completely.
+
+KEEP THE SMALLER CONTENT HEADING
+
+Keep the smaller heading that was previously changed from:
+
+“Service Description”
+
+to the actual service name.
+
+That smaller heading should remain as the main visible service heading inside the page content.
+
+The top of each service page should begin with:
+
+1. The back link or breadcrumb
+2. The smaller service heading
+3. The service description
+
+SPACING
+
+After removing the large hero section:
+
+- remove leftover blank space
+- remove empty margins and padding
+- remove any min-height tied to the deleted hero
+- keep normal spacing above the breadcrumb
+- use approximately 40px to 64px top padding on desktop
+- use approximately 28px to 40px top padding on mobile
+
+APPLY TO ALL SERVICE PAGES
+
+Private Lands:
+- /property-assessment-planning/
+- /forestry-timber-management/
+- /forestry-site-preparation/
+- /reforestation-longleaf-pine/
+- /habitat-management/
+- /prescribed-fire-planning/
+- /wildlife-management/
+- /nuisance-wildlife-management/
+- /private-land-invasive-plant-control/
+- /complete-property-management/
+- /property-mapping-monitoring-records/
+
+Industrial, Municipal & Utility:
+- /industrial-vegetation-management/
+- /municipal-vegetation-management/
+- /industrial-invasive-plant-control/
+- /drainage-detention-vegetation-management/
+- /rights-of-way-site-perimeters/
+- /mechanical-vegetation-management/
+- /herbicide-chemical-vegetation-control/
+- /vegetation-mapping-reporting/
+- /recurring-vegetation-maintenance/
+
+KEEP UNCHANGED
+
+Do not change:
+- the smaller service heading
+- approved service copy
+- back links or breadcrumbs
+- inquiry links
+- related-service links
+- forms
+- navigation
+- footer
+- fonts
+- colors
+- page URLs
+
+Do not:
+- run screenshot verification
+- analyze screenshots
+- start browser automation
+- run appearance-check loops
+
+Stop immediately after deleting the large hero sections and removing the leftover spacing.
+
+Report only:
+- files changed
+- hero sections removed
+- pages where extra spacing was removed

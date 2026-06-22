@@ -1,0 +1,153 @@
+Fix both inquiry forms so they work after deployment to Netlify.
+
+PAGE TO UPDATE
+
+/contact/index.html
+
+FORMS
+
+There are two separate forms:
+
+1. Private Land Inquiry
+2. Industrial / Municipal Inquiry
+
+Configure both forms for Netlify Forms.
+
+PRIVATE LAND FORM
+
+Use:
+
+<form
+  name="private-land-inquiry"
+  method="POST"
+  action="/thank-you/"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+>
+
+Immediately inside the form, add:
+
+<input type="hidden" name="form-name" value="private-land-inquiry">
+
+Add a hidden honeypot field:
+
+<p class="hidden" aria-hidden="true">
+  <label>
+    Do not fill this out:
+    <input name="bot-field">
+  </label>
+</p>
+
+INDUSTRIAL / MUNICIPAL FORM
+
+Use:
+
+<form
+  name="industrial-municipal-inquiry"
+  method="POST"
+  action="/thank-you/"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+>
+
+Immediately inside the form, add:
+
+<input
+  type="hidden"
+  name="form-name"
+  value="industrial-municipal-inquiry"
+>
+
+Add the same hidden honeypot field.
+
+IMPORTANT FORM REQUIREMENTS
+
+- Every input, select, and textarea must have a unique name attribute
+- Every visible field must have a label
+- Do not disable the submit buttons
+- Remove onclick="event.preventDefault()" from submit buttons
+- Remove any JavaScript that prevents normal form submission
+- Submit buttons must use type="submit"
+- Do not use action="#"
+- Do not use JavaScript-only form submission
+- Keep the two forms separate
+- Keep the mobile form selector working
+- Do not change approved labels or questions
+- Do not change the visual design
+
+THANK-YOU PAGE
+
+Create:
+
+/thank-you/index.html
+
+Use this copy:
+
+Thank You
+
+Your inquiry has been received.
+
+Southern Habitat Consulting will review the information and follow up about the next step.
+
+Add one button:
+
+Return to Home
+
+Link it to:
+
+/
+
+Style the page consistently with the rest of the site.
+
+HIDDEN FORM DETECTION
+
+Because the contact page may show only one form at a time, make sure both complete forms remain present in the HTML when the page loads.
+
+Do not dynamically generate the forms with JavaScript.
+
+JavaScript may hide or show the forms, but both forms must exist in the original HTML source.
+
+FORM VALIDATION
+
+- Keep required fields required
+- Keep email inputs as type="email"
+- Keep phone inputs usable on mobile
+- Do not block submission because an optional field is empty
+- Display browser validation normally
+
+CSS
+
+Add:
+
+.hidden {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+}
+
+Do not use display: none on the honeypot field.
+
+DO NOT
+
+- change form destinations to email links
+- change page URLs
+- add a server or database
+- add unsupported third-party scripts
+- rewrite page copy
+- run screenshot verification
+- analyze screenshots
+- start browser automation
+- run appearance-check loops
+
+Save and stop immediately.
+
+Report only:
+
+- files changed
+- form names
+- form actions
+- preventDefault handlers removed
+- thank-you page created
+- Netlify attributes added

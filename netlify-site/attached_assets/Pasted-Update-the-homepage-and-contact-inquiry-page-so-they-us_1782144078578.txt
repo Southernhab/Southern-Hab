@@ -1,0 +1,141 @@
+Update the homepage and contact/inquiry page so they use the same visual color scheme as the About, Private Lands, and Industrial pages.
+
+PAGES TO UPDATE
+
+- /index.html
+- /contact/index.html
+
+DESIGN GOAL
+
+Make both pages feel like part of the same website system.
+
+Use the existing Southern Habitat Consulting palette:
+
+- dark forest: #1F3A2E
+- deep pine: #13271F
+- cream: #F3EFE4
+- warm white: #FAF9F5
+- charcoal: #252A27
+- moss: #66765A
+- gold accent: #B58A48
+- light border: #D8D3C7
+
+Do not use gradients.
+
+HOMEPAGE
+
+Update the homepage so it matches the darker, more refined styling used on the About, Private Lands, and Industrial pages.
+
+Use:
+
+- dark forest-green background sections
+- cream or warm-white text
+- light content cards where appropriate
+- gold used only as a restrained accent
+- subtle borders and shadows
+- consistent button styling
+- consistent heading typography
+- no bright white sections that feel disconnected from the rest of the site
+
+Keep the existing homepage order:
+
+1. About
+2. Private Lands
+3. Industrial, Municipal & Utility
+
+For the three main pathway cards:
+
+- use warm-white card backgrounds
+- use dark charcoal text
+- use subtle borders
+- use restrained shadows
+- keep buttons consistent with the rest of the site
+- preserve all existing wording and links
+
+If the homepage hero uses the existing landscape image, keep it.
+
+Use a solid semi-transparent dark overlay only if needed for text readability.
+
+Do not use a gradient overlay.
+
+CONTACT / INQUIRY PAGE
+
+Update /contact/index.html to use the same visual system.
+
+Use:
+
+- dark forest-green page background
+- cream or warm-white headings
+- light form panels
+- charcoal form text
+- light border color
+- gold accents only where appropriate
+- consistent button styling
+- no disconnected bright-white page background
+
+The inquiry form panels should use:
+
+background: #FAF9F5;
+color: #252A27;
+border: 1px solid #D8D3C7;
+box-shadow: 0 12px 30px rgba(0,0,0,0.14);
+
+Keep:
+
+- Private Land Inquiry
+- Industrial / Municipal Inquiry
+- current field labels
+- current form destinations
+- current validation
+- current mobile selector behavior
+
+MOBILE
+
+At 768px and below:
+
+- keep one-column layouts
+- make buttons full-width
+- keep all forms full-width
+- keep the mobile navigation dropdown working
+- use 16px to 18px horizontal padding
+- keep headings from breaking in the middle of words
+- preserve readable contrast
+- prevent horizontal scrolling
+
+CONSISTENCY
+
+Match the About, Private Lands, and Industrial pages in:
+
+- background colors
+- card treatment
+- button treatment
+- borders
+- shadows
+- heading color
+- body-text color
+- section spacing
+
+Do not:
+
+- rewrite copy
+- change navigation links
+- change page URLs
+- change form actions
+- change service names
+- add images
+- use gradients
+- run screenshot verification
+- analyze screenshots
+- start browser automation
+- run appearance-check loops
+
+Save and stop immediately after updating both pages.
+
+Report only:
+
+- files changed
+- homepage colors updated
+- homepage cards updated
+- contact page colors updated
+- form panels updated
+- mobile styles preserved
