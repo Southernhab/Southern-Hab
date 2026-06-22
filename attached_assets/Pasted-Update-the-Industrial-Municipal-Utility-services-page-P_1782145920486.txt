@@ -1,0 +1,158 @@
+Update the Industrial, Municipal & Utility services page.
+
+PAGE TO UPDATE
+
+/industrial-municipal-utility/index.html
+
+PART 1 — MOVE RECURRING VEGETATION MAINTENANCE TO THE TOP
+
+Move:
+
+Recurring Vegetation Maintenance Programs
+
+to the first position in the Industrial, Municipal & Utility service list.
+
+PART 2 — USE COLUMNS
+
+Change the Industrial, Municipal & Utility service-card layout to columns on desktop.
+
+At screen widths above 768px:
+
+- Use a two-column grid
+- Keep consistent spacing between cards
+- Keep all cards the same width
+- Let card height grow naturally
+- Do not force square cards
+- Keep text and buttons aligned consistently
+- Place Recurring Vegetation Maintenance Programs as the first card in the top-left position
+
+Use:
+
+.industrial-services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+At 768px and below:
+
+- Use one column
+- Keep one card per row
+- Make buttons full-width
+- Keep descriptions readable
+- Prevent horizontal scrolling
+
+Use:
+
+@media (max-width: 768px) {
+  .industrial-services-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+PART 3 — UPDATE THE RECURRING VEGETATION MAINTENANCE PAGE
+
+Update:
+
+/recurring-vegetation-maintenance/index.html
+
+Use the exact wording below.
+
+Do not rewrite, shorten, paraphrase, reorder, or add wording.
+
+Recurring Vegetation Maintenance Programs
+
+The most effective vegetation management does not begin after a site becomes overgrown. It starts with a dependable plan that keeps key areas accessible, visible and easier to maintain throughout the year.
+
+We review the property and identify where recurring growth creates the most trouble. That may include fence lines, drainage systems, access routes, utility areas, rights-of-way and site perimeters. We also consider seasonal growth patterns, operating schedules and how often each area needs attention.
+
+From there, we build a maintenance program around the site. Scheduled service may include inspections, mowing, mechanical clearing, targeted herbicide treatment or a combination of methods. The program can be adjusted as vegetation changes or new priorities develop.
+
+Recurring maintenance gives the client a more predictable way to manage the property. It reduces the need for large corrective cleanups and helps prevent vegetation from interfering with access, drainage or daily operations. Each visit can be documented with photographs, field notes, updated maps and treatment records.
+
+What the Client Can Expect
+
+A dependable service schedule, consistent field crews, documented site conditions and a long-term maintenance plan that keeps vegetation problems from becoming larger and more expensive.
+
+BUTTON
+
+Use one button only at the bottom:
+
+Industrial / Municipal Inquiry Form
+
+Link it to:
+
+/contact/#industrial-municipal-inquiry
+
+OVERVIEW CARD
+
+On:
+
+/industrial-municipal-utility/index.html
+
+- Use the title:
+  Recurring Vegetation Maintenance Programs
+- Keep the card in the first position
+- Use a concise card description based on the approved copy
+- Keep the card linked to:
+  /recurring-vegetation-maintenance/
+
+PAGE DESIGN
+
+Keep the current dark service-page design.
+
+Use:
+
+- dark forest-green background
+- warm-white or cream headings
+- light service cards
+- charcoal text inside cards
+- restrained gold accents
+- no images
+- no gradients
+- no oversized empty hero areas
+
+FINAL DESKTOP CARD ORDER
+
+1. Recurring Vegetation Maintenance Programs
+2. Industrial and Municipal Vegetation Management
+3. Industrial Invasive Plant Control
+4. Drainage and Detention Vegetation Management
+5. Rights-of-Way and Site Perimeters
+6. Mechanical Vegetation Management
+7. Herbicide and Chemical Vegetation Control
+8. Vegetation Mapping and Reporting
+
+If another active service exists on this page, place it after these without duplicating any card.
+
+REMOVE DUPLICATES
+
+- Keep only one Industrial service grid
+- Keep only one card for each service
+- Remove duplicate mobile and desktop card lists
+- Use the same HTML cards for both desktop and mobile
+
+Do not:
+
+- change unrelated approved copy
+- change service links
+- change form destinations
+- rename other services
+- add images
+- use gradients
+- alter the Private Lands page
+- run screenshot verification
+- analyze screenshots
+- start browser automation
+- run appearance-check loops
+
+Save all changes and stop immediately.
+
+Report only:
+
+- files changed
+- recurring maintenance page updated
+- recurring maintenance moved to first position
+- industrial cards changed to two columns
+- mobile layout kept to one column
+- final card order
