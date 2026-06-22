@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "pP_KGzFOxNrp8RBtCX8d1"
+uri = "file://southern-hab-site.zip"
+type = "unspecified"
+title = "Southern Habitat Consulting — Full Site"
