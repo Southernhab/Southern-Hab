@@ -1,0 +1,111 @@
+Fix duplicate service cards on:
+
+/private-land-services/index.html
+
+CURRENT PROBLEM
+
+The Private Lands service section contains duplicate cards and/or duplicate columns.
+
+GOAL
+
+Each service should appear exactly once.
+
+The final Private Lands service list must contain only these services, in this order:
+
+1. Complete Property Management
+2. Property Assessment, Mapping and Monitoring
+3. Forestry Services
+4. Habitat Management
+5. Prescribed Fire Planning
+6. Wildlife Management
+7. Private Land Invasive Plant Control
+
+REMOVE DUPLICATES
+
+Delete any duplicate card markup, duplicate section markup, or repeated service-grid wrapper.
+
+Remove any old cards for:
+
+- Property Assessment and Planning
+- Property Mapping, Monitoring and Records
+- Forestry and Timber Management
+- Forestry Site Preparation
+- Reforestation and Longleaf-Pine Establishment
+- Wildlife and Nuisance Wildlife Management
+- Nuisance Wildlife Management
+
+Keep only the current combined services listed above.
+
+GRID STRUCTURE
+
+There should be only one Private Lands service grid on the page.
+
+Use one card per row.
+
+Use:
+
+.private-services-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+Make sure the HTML contains:
+
+- one grid wrapper
+- seven total service cards
+- no nested duplicate grids
+- no repeated mobile copy of the same cards
+- no hidden desktop copy and separate hidden mobile copy
+
+Use the same card markup for both desktop and mobile.
+
+Do not create separate duplicate card lists for different screen sizes.
+
+LINKS
+
+Keep these final links:
+
+- Complete Property Management:
+  /complete-property-management/
+
+- Property Assessment, Mapping and Monitoring:
+  /property-assessment-planning/
+
+- Forestry Services:
+  /forestry-timber-management/
+
+- Habitat Management:
+  /habitat-management/
+
+- Prescribed Fire Planning:
+  /prescribed-fire-planning/
+
+- Wildlife Management:
+  /wildlife-management/
+
+- Private Land Invasive Plant Control:
+  /private-land-invasive-plant-control/
+
+Do not:
+
+- change approved wording
+- change card styling
+- change the background image
+- change button labels
+- change page URLs
+- change navigation
+- change forms
+- run screenshot verification
+- analyze screenshots
+- start browser automation
+- run appearance-check loops
+
+Save and stop immediately.
+
+Report only:
+
+- file changed
+- duplicate markup removed
+- total number of remaining cards
+- final card order
