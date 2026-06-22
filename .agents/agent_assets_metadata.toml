@@ -6,3 +6,9 @@ id = "pP_KGzFOxNrp8RBtCX8d1"
 uri = "file://southern-hab-site.zip"
 type = "unspecified"
 title = "Southern Habitat Consulting — Full Site"
+
+[[outputs]]
+id = "Mlc_lkhGjIEdAqryMtRFR"
+uri = "file://southern-hab-netlify.zip"
+type = "unspecified"
+title = "Southern Habitat Consulting — Netlify Deploy Package"
