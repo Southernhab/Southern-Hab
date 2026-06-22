@@ -1,0 +1,154 @@
+Fix both inquiry forms and the confirmation page using a root-level static HTML file.
+
+FILES TO UPDATE
+
+/contact/index.html
+
+NEW ROOT FILE
+
+Create:
+
+/thank-you.html
+
+Do not create or rely on:
+
+/thank-you/index.html
+
+FORM ACTIONS
+
+Update both inquiry forms so they submit to:
+
+action="/thank-you.html"
+
+PRIVATE LAND FORM
+
+The opening form tag must be:
+
+<form
+  name="private-land-inquiry"
+  method="POST"
+  action="/thank-you.html"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+>
+
+Immediately inside the form, include:
+
+<input type="hidden" name="form-name" value="private-land-inquiry">
+
+INDUSTRIAL / MUNICIPAL FORM
+
+The opening form tag must be:
+
+<form
+  name="industrial-municipal-inquiry"
+  method="POST"
+  action="/thank-you.html"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+>
+
+Immediately inside the form, include:
+
+<input
+  type="hidden"
+  name="form-name"
+  value="industrial-municipal-inquiry"
+>
+
+HONEYPOT
+
+Each form must contain:
+
+<p class="hidden" aria-hidden="true">
+  <label>
+    Do not fill this out:
+    <input name="bot-field">
+  </label>
+</p>
+
+SUBMIT BUTTONS
+
+Confirm both submit buttons use:
+
+type="submit"
+
+Remove all:
+
+onclick="event.preventDefault()"
+
+Remove any JavaScript submit listener that calls:
+
+event.preventDefault()
+
+Do not use JavaScript to simulate form submission.
+
+THANK-YOU PAGE
+
+Create the root-level file:
+
+/thank-you.html
+
+Use this exact copy:
+
+Thank You
+
+Your inquiry has been received.
+
+Southern Habitat Consulting will review the information and follow up about the next step.
+
+Add one button:
+
+Return to Home
+
+Link it to:
+
+/
+
+Match the current website styling.
+
+NETLIFY FORM DETECTION
+
+Both complete forms must exist directly in the original HTML source of:
+
+/contact/index.html
+
+Do not create either form dynamically with JavaScript.
+
+JavaScript may show or hide the forms, but both forms must already exist in the HTML.
+
+Every input, select, and textarea must have a unique name attribute.
+
+Do not disable hidden forms with the disabled attribute.
+
+Do not remove required fields.
+
+Do not change approved form labels or questions.
+
+STATIC FILE CHECK
+
+Confirm these exact files exist:
+
+/index.html
+/contact/index.html
+/thank-you.html
+
+Update any button or link that points to:
+
+/thank-you/
+
+so it points to:
+
+/thank-you.html
+
+Do not run screenshot verification, browser automation, or appearance-check loops.
+
+Save and stop immediately.
+
+Report only:
+
+- files changed
+- root thank-you.html created
+- form actions updated
+- preventDefault removed
+- Netlify form names confirmed
