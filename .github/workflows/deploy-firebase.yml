@@ -9,6 +9,7 @@ on:
       - 'storage.rules'
       - 'firebase.json'
       - 'functions/**'
+      - '.github/workflows/deploy-firebase.yml'
   workflow_dispatch:
     inputs:
       target:
