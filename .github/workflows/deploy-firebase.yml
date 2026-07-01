@@ -21,6 +21,10 @@ on:
           - rules-only
           - functions-only
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   deploy-firebase:
     name: Deploy to Firebase
@@ -44,49 +48,32 @@ jobs:
         run: npm ci
         working-directory: functions
 
-      # Write the service account JSON to a temp file so firebase-tools can find it.
-      # FIREBASE_SERVICE_ACCOUNT must contain the full JSON downloaded from
-      # Firebase Console → Project Settings → Service Accounts → Generate new private key.
-      - name: Authenticate with Firebase (service account)
-        run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > /tmp/sa.json
-          echo "GOOGLE_APPLICATION_CREDENTIALS=/tmp/sa.json" >> $GITHUB_ENV
-
-      - name: Set Cloud Functions environment config
-        if: github.event_name == 'push' || inputs.target == 'all' || inputs.target == 'functions-only'
-        run: |
-          firebase functions:config:set \
-            shc.email_provider_api_key="${{ secrets.EMAIL_PROVIDER_API_KEY }}" \
-            shc.notification_email="${{ secrets.NOTIFICATION_EMAIL }}" \
-            shc.email_from="${{ secrets.EMAIL_FROM }}" \
-            shc.public_site_url="${{ secrets.PUBLIC_SITE_URL }}" \
-            --project "${{ secrets.FIREBASE_PROJECT_ID }}"
-        continue-on-error: true
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Deploy — all (rules + indexes + storage + functions)
         if: github.event_name == 'push' || inputs.target == 'all'
         run: |
           firebase deploy \
-            --only firestore:rules,firestore:indexes,storage,functions \
             --project "${{ secrets.FIREBASE_PROJECT_ID }}" \
+            --only firestore:rules,firestore:indexes,storage,functions \
             --non-interactive
 
       - name: Deploy — rules only
         if: inputs.target == 'rules-only'
         run: |
           firebase deploy \
-            --only firestore:rules,firestore:indexes,storage \
             --project "${{ secrets.FIREBASE_PROJECT_ID }}" \
+            --only firestore:rules,firestore:indexes,storage \
             --non-interactive
 
       - name: Deploy — functions only
         if: inputs.target == 'functions-only'
         run: |
           firebase deploy \
-            --only functions \
             --project "${{ secrets.FIREBASE_PROJECT_ID }}" \
+            --only functions \
             --non-interactive
-
-      - name: Clean up credentials
-        if: always()
-        run: rm -f /tmp/sa.json
