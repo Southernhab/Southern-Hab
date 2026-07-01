@@ -1,0 +1,19 @@
+// SHC Portal — Browser Configuration
+//
+// This file is a TEMPLATE. Do not use real values here.
+//
+// For local development:
+//   Copy this file to portal/config.js and fill in your Supabase project values.
+//   portal/config.js is listed in .gitignore — never commit it.
+//
+// For Netlify production deployment:
+//   netlify.toml includes a build command that auto-generates portal/config.js
+//   and admin/config.js from Netlify environment variables.
+//   Set SUPABASE_URL and SUPABASE_ANON_KEY in: Netlify → Site → Environment variables.
+//
+// Only the ANON key is placed here. The service-role key is never in browser JS.
+
+window.__SHC_CONFIG__ = {
+  SUPABASE_URL: 'https://your-project-ref.supabase.co',
+  SUPABASE_ANON_KEY: 'your-anon-key-here'
+};

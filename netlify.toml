@@ -1,0 +1,82 @@
+# Netlify deployment configuration for Southern Habitat Consulting
+#
+# REWRITES (200) for SPA routes — serves the shell HTML for any sub-path.
+# Public static pages are served directly because real files exist for them;
+# Netlify only hits these rules when no matching file is found.
+#
+# Do not add a catch-all that would return the portal for missing public pages.
+
+[build]
+  publish = "."
+  # Generates browser-safe config files from Netlify environment variables.
+  # Set SUPABASE_URL and SUPABASE_ANON_KEY in the Netlify dashboard under
+  # Site configuration → Environment variables before deploying.
+  command = """
+    echo "window.__SHC_CONFIG__={SUPABASE_URL:'$SUPABASE_URL',SUPABASE_ANON_KEY:'$SUPABASE_ANON_KEY'};" > portal/config.js &&
+    echo "window.__SHC_CONFIG__={SUPABASE_URL:'$SUPABASE_URL',SUPABASE_ANON_KEY:'$SUPABASE_ANON_KEY'};" > admin/config.js &&
+    node scripts/check-breadcrumbs.js
+  """
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# ── Portal authenticated app (SPA) ────────────────────────────────────────────
+[[redirects]]
+  from = "/portal/app"
+  to = "/portal/app/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/app/*"
+  to = "/portal/app/index.html"
+  status = 200
+
+# ── Portal supplementary pages ────────────────────────────────────────────────
+[[redirects]]
+  from = "/portal/reset-password"
+  to = "/portal/reset-password/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/request-access"
+  to = "/portal/request-access/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/unauthorized"
+  to = "/portal/unauthorized/index.html"
+  status = 200
+
+# ── Admin (SPA) ───────────────────────────────────────────────────────────────
+[[redirects]]
+  from = "/admin"
+  to = "/admin/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/index.html"
+  status = 200
+
+# ── Security headers ──────────────────────────────────────────────────────────
+[[headers]]
+  for = "/portal/app/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

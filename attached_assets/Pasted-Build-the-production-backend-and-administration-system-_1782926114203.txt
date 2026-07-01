@@ -1,0 +1,1184 @@
+Build the production backend and administration system for the existing Southern Habitat Consulting website and SHC Landowner Portal.
+
+IMPORTANT
+
+This is no longer a visual mockup task.
+
+Build a real production-capable backend with:
+
+- secure authentication
+- database persistence
+- role-based access
+- client and property administration
+- document and image uploads
+- ArcGIS map records
+- prices, estimates, budgets, invoices, and project costs
+- working public inquiry forms
+- audit history
+- secure deployment configuration
+
+Do not replace or redesign the existing public website.
+
+Do not perform an uncontrolled full-site rewrite.
+
+Create a checkpoint before making changes.
+
+==================================================
+ARCHITECTURE
+==================================================
+
+Use:
+
+- Existing public website and portal frontend
+- Supabase Authentication
+- Supabase PostgreSQL
+- Supabase Storage
+- Supabase Row Level Security
+- Supabase Edge Functions where server-side processing is required
+- Netlify for frontend deployment
+- Environment variables for all credentials
+
+Do not:
+
+- store passwords in the database
+- build custom password authentication
+- place service-role keys in frontend JavaScript
+- hardcode API keys
+- expose internal notes through client-facing APIs
+- use localStorage as the main database
+- use fictional data once production records are enabled
+
+If the existing portal uses a framework, preserve it.
+
+If the existing public website is static HTML, preserve it and keep the portal implementation isolated.
+
+Before coding, inspect and report:
+
+- current framework
+- route structure
+- portal files
+- admin files
+- authentication currently present
+- any mock-data files
+- current Netlify configuration
+- current form markup
+- current environment-variable support
+
+Then proceed with the implementation.
+
+==================================================
+ROUTES
+==================================================
+
+Preserve all public routes.
+
+Use:
+
+Public website:
+/
+
+Client login:
+/portal/
+
+Authenticated client area:
+/portal/app/
+
+Staff administration:
+/admin/
+
+Password reset:
+/portal/reset-password/
+
+Access request:
+/portal/request-access/
+
+Unauthorized:
+/portal/unauthorized/
+
+Do not allow unauthenticated access to client or admin data.
+
+==================================================
+USER ROLES
+==================================================
+
+Create these roles:
+
+1. super_admin
+2. staff_admin
+3. field_staff
+4. client_owner
+5. client_viewer
+
+Permissions:
+
+super_admin:
+- full system access
+- manage staff
+- manage roles
+- manage clients
+- manage properties
+- manage system settings
+- publish client-visible records
+- view audit logs
+
+staff_admin:
+- manage clients, properties, projects, budgets, reports, maps, and messages
+- invite client users
+- publish client-visible content
+- cannot promote users to super_admin
+
+field_staff:
+- add field notes
+- upload photographs
+- update assigned projects
+- add monitoring records
+- cannot view unrelated financial information unless explicitly granted
+- cannot manage users
+
+client_owner:
+- view assigned properties
+- view approved client-visible records
+- view estimates, budgets, invoices, and files assigned to them
+- send messages
+- upload requested files
+- respond to project decisions
+- manage additional client viewers only if staff approval is enabled
+
+client_viewer:
+- read-only access to assigned client-visible information
+- may send messages if enabled
+- cannot approve or defer projects
+
+Protect all permissions in the database with Row Level Security.
+
+Do not rely only on hidden navigation or frontend route checks.
+
+==================================================
+DATABASE SCHEMA
+==================================================
+
+Create versioned Supabase SQL migrations.
+
+Use UUID primary keys.
+
+Add created_at, updated_at, created_by, and updated_by where appropriate.
+
+Create the following tables.
+
+profiles
+- id linked to auth.users
+- first_name
+- last_name
+- email
+- phone
+- role
+- active
+- last_login_at
+- created_at
+- updated_at
+
+clients
+- id
+- legal_name
+- display_name
+- primary_contact_name
+- email
+- phone
+- mailing_address
+- city
+- state
+- postal_code
+- notes_internal
+- status
+- created_at
+- updated_at
+
+client_users
+- id
+- client_id
+- user_id
+- access_level
+- active
+- invited_at
+- accepted_at
+
+properties
+- id
+- client_id
+- name
+- description
+- acreage
+- county
+- state
+- physical_address
+- latitude
+- longitude
+- parcel_numbers
+- ownership_notes_internal
+- management_summary_client
+- primary_objectives
+- status
+- next_review_date
+- created_at
+- updated_at
+
+property_sections
+- id
+- property_id
+- name
+- acres
+- habitat_type
+- land_cover_type
+- current_condition
+- desired_condition
+- management_stage
+- progress_percent
+- primary_objectives
+- target_species
+- limiting_factors
+- recommended_next_action
+- planned_season
+- planned_year
+- estimated_cost
+- internal_notes
+- client_visible_notes
+- sort_order
+- created_at
+- updated_at
+
+projects
+- id
+- property_id
+- property_section_id nullable
+- name
+- work_type
+- description
+- reason_for_recommendation
+- expected_result
+- priority
+- classification
+- status
+- planned_start_date
+- planned_end_date
+- actual_start_date
+- actual_end_date
+- estimated_cost
+- approved_cost
+- committed_cost
+- invoiced_cost
+- paid_cost
+- quantity
+- quantity_unit
+- assigned_staff_id
+- contractor_name
+- client_review_status
+- client_visible
+- internal_notes
+- client_notes
+- created_at
+- updated_at
+
+project_actions
+- id
+- project_id
+- client_user_id
+- action_type
+- comments
+- created_at
+
+Allow action types:
+- question
+- request_information
+- request_proposal
+- request_schedule_change
+- preliminary_approval
+- defer
+
+Display a notice that portal actions do not replace a signed contract or formal authorization.
+
+work_history
+- id
+- property_id
+- property_section_id
+- project_id nullable
+- work_type
+- completion_date
+- acres_or_quantity
+- scope
+- crew_or_contractor
+- final_cost
+- treatment_specifications
+- completion_notes
+- inspection_result
+- recommended_follow_up
+- internal_notes
+- client_visible
+- created_at
+- updated_at
+
+monitoring_records
+- id
+- property_id
+- property_section_id nullable
+- project_id nullable
+- monitoring_type
+- observation_date
+- summary
+- measurements_json
+- interpretation
+- internal_notes
+- client_visible
+- created_at
+- updated_at
+
+wildlife_surveys
+- id
+- property_id
+- property_section_id nullable
+- survey_type
+- survey_date
+- direct_observations_json
+- calculated_metrics_json
+- modeled_estimates_json
+- professional_interpretation
+- internal_notes
+- client_visible
+- created_at
+- updated_at
+
+harvest_records
+- id
+- property_id
+- property_section_id nullable
+- species
+- harvest_date
+- sex
+- age_class
+- weight
+- antler_measurements_json
+- notes
+- client_visible
+- created_at
+
+budgets
+- id
+- property_id
+- name
+- budget_year
+- five_year_plan_start
+- estimated_total
+- approved_total
+- committed_total
+- invoiced_total
+- paid_total
+- potential_cost_share
+- internal_notes
+- client_visible_notes
+- status
+- created_at
+- updated_at
+
+budget_items
+- id
+- budget_id
+- project_id nullable
+- property_section_id nullable
+- practice
+- classification
+- planned_year
+- planned_season
+- estimated_cost
+- approved_cost
+- committed_cost
+- invoiced_cost
+- paid_cost
+- cost_share_estimate
+- notes
+- sort_order
+
+documents
+- id
+- client_id
+- property_id nullable
+- property_section_id nullable
+- project_id nullable
+- document_type
+- title
+- description
+- storage_path
+- original_filename
+- mime_type
+- file_size
+- document_status
+- client_visible
+- published_at
+- internal_notes
+- created_at
+- updated_at
+
+Use document_status values:
+- internal
+- draft
+- client_review
+- published
+- archived
+
+photographs
+- id
+- client_id
+- property_id
+- property_section_id nullable
+- project_id nullable
+- monitoring_record_id nullable
+- category
+- caption
+- taken_at
+- storage_path
+- client_visible
+- latitude nullable
+- longitude nullable
+- created_at
+
+arcgis_maps
+- id
+- property_id
+- property_section_id nullable
+- title
+- description
+- arcgis_item_id
+- arcgis_webmap_url
+- arcgis_feature_service_url nullable
+- arcgis_experience_url nullable
+- embed_url nullable
+- layer_configuration_json
+- thumbnail_storage_path nullable
+- client_visible
+- active
+- created_at
+- updated_at
+
+map_files
+- id
+- property_id
+- property_section_id nullable
+- title
+- file_type
+- storage_path
+- original_filename
+- mime_type
+- coordinate_system
+- description
+- client_visible
+- created_at
+
+Support uploads for:
+
+- GeoJSON
+- KML
+- KMZ
+- zipped shapefile packages
+- PDF maps
+- map images
+
+Do not attempt to fully process shapefiles in the browser.
+
+Store them securely and allow staff to attach an ArcGIS item ID or service URL after publishing through ArcGIS.
+
+messages
+- id
+- client_id
+- property_id nullable
+- property_section_id nullable
+- project_id nullable
+- wildlife_survey_id nullable
+- document_id nullable
+- subject
+- category
+- status
+- created_by
+- assigned_to nullable
+- client_visible
+- created_at
+- updated_at
+
+message_entries
+- id
+- message_id
+- sender_id
+- body
+- internal_only
+- created_at
+
+inquiries
+- id
+- inquiry_type
+- name
+- email
+- phone
+- organization
+- property_location
+- property_type
+- acreage
+- requested_services
+- message
+- referral_source
+- status
+- assigned_to nullable
+- source_page
+- created_at
+
+access_requests
+- id
+- name
+- email
+- phone
+- client_name
+- property_name
+- message
+- status
+- reviewed_by nullable
+- created_at
+- reviewed_at
+
+notifications
+- id
+- user_id
+- type
+- title
+- body
+- read_at
+- related_record_type
+- related_record_id
+- created_at
+
+audit_log
+- id
+- user_id
+- action
+- table_name
+- record_id
+- old_values_json
+- new_values_json
+- ip_address nullable
+- created_at
+
+system_settings
+- id
+- setting_key
+- setting_value_json
+- updated_by
+- updated_at
+
+==================================================
+ROW LEVEL SECURITY
+==================================================
+
+Enable RLS on every production table.
+
+Client users may only access records connected to a client_id assigned to their authenticated user through client_users.
+
+Client users may see only records where:
+
+- client_visible = true
+- document_status = published where applicable
+- the record belongs to an assigned client/property
+
+Internal notes must never be returned to client users.
+
+Do not solve this by hiding fields in the frontend.
+
+Create safe client-facing database views or RPC functions that omit:
+
+- notes_internal
+- internal_notes
+- internal_only messages
+- draft documents
+- unpublished reports
+- staff-only financial notes
+- audit logs
+- unrelated clients
+
+Staff access must also be enforced by RLS.
+
+Service-role operations must run only in secure server-side functions.
+
+Create automated RLS tests.
+
+==================================================
+AUTHENTICATION
+==================================================
+
+Use Supabase Auth.
+
+Support:
+
+- email and password
+- staff-created invitations
+- password reset
+- email verification
+- session expiration
+- sign out
+- disabled accounts
+- invitation acceptance
+
+Do not allow open public registration.
+
+Clients must be invited or approved by SHC staff.
+
+The Request Client Access form should create an access_requests record and notify staff. It must not automatically create an active account.
+
+Create a secure staff workflow:
+
+1. Create or select client
+2. Enter client information
+3. Add one or more properties
+4. Invite client user by email
+5. Assign the user to the correct client
+6. Select client_owner or client_viewer
+7. Send invitation
+8. Track invitation status
+9. Disable or revoke access when needed
+
+==================================================
+ADMINISTRATION
+==================================================
+
+Build a complete staff administration area at /admin/.
+
+Create these main sections:
+
+- Dashboard
+- Clients
+- Properties
+- Property Sections
+- Projects
+- Work History
+- Monitoring
+- Wildlife Surveys
+- Harvest Records
+- Budgets
+- Reports & Files
+- Maps
+- Messages
+- Inquiries
+- Users & Access
+- Audit Log
+- System Settings
+
+ADMIN CLIENT SETUP
+
+Staff must be able to:
+
+- create client
+- edit client
+- archive client
+- add contacts
+- invite users
+- revoke users
+- assign multiple users to one client
+- assign one user to multiple approved clients if needed
+- view client properties
+- view client files
+- view client messages
+- view client budgets
+- impersonation is not allowed unless a future audited support feature is built
+
+ADMIN PROPERTY SETUP
+
+Staff must be able to:
+
+- create property
+- edit property
+- enter acreage
+- enter county and state
+- enter parcel numbers
+- add management objectives
+- add property sections
+- reorder property sections
+- add internal notes
+- add client-visible summary
+- set next review date
+- upload photographs
+- attach documents
+- attach ArcGIS maps
+- upload GIS files
+- assign staff
+
+ADMIN PROJECT AND PRICE SETUP
+
+Staff must be able to:
+
+- create projects
+- select property and section
+- add scope
+- choose status
+- choose priority
+- choose Essential, Recommended, or Optional
+- enter estimated cost
+- enter approved cost
+- enter committed cost
+- enter invoiced cost
+- enter paid cost
+- add quantity and units
+- add contractor
+- set dates
+- add internal notes
+- add client-visible notes
+- attach proposals and reports
+- request client review
+- publish or unpublish the project
+
+Use decimal currency types.
+
+Format currency consistently.
+
+Never use floating-point values for money calculations.
+
+ADMIN BUDGETS
+
+Staff must be able to:
+
+- create annual budgets
+- create five-year plans
+- add budget items
+- connect budget items to projects
+- distinguish estimated, approved, committed, invoiced, and paid costs
+- enter potential cost-share amounts
+- show planned versus actual costs
+- export a client-visible budget summary
+- keep internal budget notes private
+
+==================================================
+ARCGIS AND MAPPING
+==================================================
+
+Build a practical ArcGIS integration without exposing private credentials.
+
+Staff must be able to enter:
+
+- ArcGIS item ID
+- ArcGIS web map URL
+- ArcGIS feature-service URL
+- ArcGIS Experience Builder URL
+- public or secured embed URL
+- description
+- layer visibility configuration
+- client visibility
+
+Client portal must display only approved maps assigned to the client’s property.
+
+Default client-visible layers:
+
+- property boundary
+- property sections
+- roads and trails
+- water features
+- wildlife openings
+- past work
+- active work
+- planned work
+- survey locations
+
+Clicking a property section should open the corresponding property-section record.
+
+If a private ArcGIS service requires a token:
+
+- do not store a permanent token in the browser
+- use a secure server-side token exchange
+- use short-lived tokens
+- document required ArcGIS credentials as environment variables
+
+Do not claim full ArcGIS synchronization unless it is actually implemented and tested.
+
+For the first production version, support:
+
+- stored ArcGIS item IDs and URLs
+- secure embeds
+- map metadata
+- uploaded GIS source files
+- property-to-map relationships
+
+==================================================
+FILE STORAGE
+==================================================
+
+Create private Supabase Storage buckets:
+
+- client-documents
+- property-photos
+- gis-files
+- message-attachments
+- reports
+- private-admin-files
+
+Do not make client files publicly enumerable.
+
+Use signed URLs with expiration for private downloads.
+
+Apply storage policies so clients can access only files assigned to their client records.
+
+Allow staff to define:
+
+- internal
+- draft
+- client review
+- published
+- archived
+
+Scan and validate uploads by:
+
+- file type
+- file size
+- extension
+- MIME type
+
+Do not allow executable uploads.
+
+Use safe generated storage names while preserving original filenames in metadata.
+
+==================================================
+PUBLIC INQUIRY FORMS
+==================================================
+
+Fix both public forms permanently:
+
+- Private Land Inquiry
+- Industrial / Municipal Inquiry
+
+Do not depend only on Netlify form detection.
+
+Submit both forms to a secure server-side endpoint.
+
+Use either:
+
+- Supabase Edge Function
+or
+- Netlify Function using Supabase server credentials
+
+The public browser must never receive the Supabase service-role key.
+
+Requirements:
+
+- validate all required fields server-side
+- sanitize text inputs
+- rate limit submissions
+- use a honeypot field
+- reject obvious spam
+- return clear success and error messages
+- store valid submissions in inquiries
+- send staff notification email
+- redirect to /thank-you.html or show an accessible success state
+- log errors without exposing secrets
+- work from the production custom domain
+- work on mobile
+- preserve the existing form design
+- preserve existing approved form questions
+
+Add an email fallback beneath each form.
+
+Use environment variables for the notification email provider.
+
+Do not claim email notifications work until a real provider and verified sender are configured.
+
+==================================================
+MESSAGES AND NOTIFICATIONS
+==================================================
+
+Create client and staff messaging.
+
+Messages may relate to:
+
+- property
+- property section
+- project
+- survey
+- document
+
+Clients may:
+
+- send a question
+- upload an attachment
+- request a site visit
+- request a proposal
+- ask about a project
+- ask about a report
+- report a property issue
+
+Staff may:
+
+- reply
+- assign
+- change status
+- add internal-only notes
+- close or reopen threads
+
+Internal-only entries must never be sent to clients.
+
+Create in-app notifications.
+
+Email notifications should use a configurable provider and verified sender.
+
+==================================================
+CLIENT PORTAL DATA
+==================================================
+
+Replace fictional demonstration data with authenticated database queries.
+
+The client Overview should show:
+
+- selected property
+- acreage
+- overall management progress
+- work completed this year
+- active projects
+- planned projects
+- projects requiring review
+- current-year projected cost
+- five-year projected investment
+- next scheduled activity
+- next property review
+- recent SHC activity
+- management attention required
+- recent photographs
+- new published reports
+- wildlife trend summary
+
+The portal must display only records belonging to the authenticated client.
+
+==================================================
+REPORTS
+==================================================
+
+Support:
+
+- management plans
+- annual property reports
+- proposals
+- estimates
+- contracts
+- invoices
+- maps
+- drone reports
+- harvest reports
+- camera reports
+- treatment reports
+- herbicide records
+- burn plans
+- inspection reports
+- photographs
+- videos
+- cost-share files
+
+Clients may:
+
+- view
+- download
+- ask SHC a question
+
+Only staff may:
+
+- generate
+- upload
+- revise
+- publish
+- archive
+
+Do not show draft or internal reports to clients.
+
+==================================================
+AUDIT AND DATA SAFETY
+==================================================
+
+Record audit events for:
+
+- user invitations
+- access changes
+- client creation
+- property creation
+- project creation
+- cost changes
+- document publication
+- map publication
+- deletions
+- client actions
+
+Use soft deletion or archival for important business records.
+
+Do not permanently delete financial or contract-related records from the normal interface.
+
+Create database backups and document the recovery procedure.
+
+==================================================
+ENVIRONMENT VARIABLES
+==================================================
+
+Create an .env.example file containing names only, never real values.
+
+Include:
+
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_JWT_SECRET=
+PUBLIC_SITE_URL=
+PORTAL_SITE_URL=
+NOTIFICATION_EMAIL_FROM=
+NOTIFICATION_EMAIL_TO=
+EMAIL_PROVIDER_API_KEY=
+ARCGIS_CLIENT_ID=
+ARCGIS_CLIENT_SECRET=
+ARCGIS_PORTAL_URL=
+
+Only expose variables prefixed for public use when they are safe for the browser.
+
+Never commit .env files.
+
+==================================================
+MIGRATIONS AND SEEDING
+==================================================
+
+Create:
+
+- schema migrations
+- RLS policies
+- storage policies
+- database indexes
+- database views
+- test fixtures
+- one optional development seed file
+
+Do not seed real client information.
+
+Use clearly fictional development data.
+
+Create a documented command to remove development data before production launch.
+
+==================================================
+TESTING
+==================================================
+
+Add automated tests for:
+
+- unauthenticated portal access blocked
+- client cannot access another client
+- client cannot access internal notes
+- client cannot access draft documents
+- staff can create a client
+- staff can create a property
+- staff can invite a client
+- staff can add a project
+- staff can add prices
+- staff can upload a document
+- staff can attach an ArcGIS map
+- client can view assigned published map
+- client can send a message
+- public inquiry form succeeds
+- spam inquiry is rejected
+- invalid upload is rejected
+- admin routes reject client users
+- password reset works
+- disabled user cannot sign in
+
+Also test:
+
+- public site routes
+- portal routes
+- admin routes
+- mobile layouts
+- file downloads
+- form success and error states
+- production build
+- Netlify deployment output
+
+Do not use screenshot loops.
+
+==================================================
+DEPLOYMENT
+==================================================
+
+Create deployment documentation for:
+
+1. Creating the Supabase project
+2. Running migrations
+3. Creating storage buckets
+4. Configuring authentication URLs
+5. Setting Netlify environment variables
+6. Configuring production redirect URLs
+7. Configuring email provider
+8. Configuring ArcGIS credentials if private maps are used
+9. Creating the first super_admin securely
+10. Deploying to Netlify
+11. Testing production
+12. Backing up the database
+
+Ensure Netlify rewrites support portal routes without breaking existing static public routes.
+
+Do not use a blanket redirect that causes all missing public pages to return the portal.
+
+==================================================
+IMPLEMENTATION ORDER
+==================================================
+
+Complete the work in these phases.
+
+Phase 1:
+- inspect project
+- create checkpoint
+- establish Supabase client
+- add environment-variable support
+- create migrations and RLS
+- create auth and role system
+
+Phase 2:
+- build Clients, Users, Properties, and Property Sections administration
+- connect portal property views to real data
+
+Phase 3:
+- build Projects, Work History, Budgets, Prices, Reports, and Files
+- add secure storage
+
+Phase 4:
+- build ArcGIS records, map file uploads, and portal map display
+
+Phase 5:
+- build Messages, Notifications, Access Requests, and Inquiry handling
+- fix both public inquiry forms
+
+Phase 6:
+- complete tests
+- remove mock data
+- document setup
+- prepare Netlify production deployment
+
+Create a checkpoint after each phase.
+
+Do not proceed past a phase if required environment variables or external account credentials are missing.
+
+When blocked, report exactly:
+
+- what is missing
+- where the user obtains it
+- where it must be entered
+- what has already been completed
+
+==================================================
+FINAL REPORT
+==================================================
+
+At completion, report only:
+
+- architecture used
+- routes created
+- database migrations created
+- tables created
+- RLS policies created
+- storage buckets created
+- authentication status
+- admin features completed
+- client features completed
+- ArcGIS support completed
+- inquiry form status
+- automated test results
+- environment variables still required
+- deployment steps remaining
+- known limitations

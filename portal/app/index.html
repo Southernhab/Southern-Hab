@@ -1,0 +1,77 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SHC Landowner Portal</title>
+<link rel="stylesheet" href="/portal/portal.css">
+<style>
+/* Auth guard — hide shell until verified */
+.portal-shell { visibility: hidden; }
+.portal-shell.ready { visibility: visible; }
+/* Loading state */
+.content-loading { display: flex; align-items: center; justify-content: center; height: 200px; color: var(--moss); font-size: 14px; }
+/* Error state */
+.content-error { background: #fdf0f0; border: 1px solid #e8a0a0; color: #7a2020; padding: 16px 20px; border-radius: 4px; font-size: 14px; margin: 0 0 16px; }
+/* Empty state */
+.content-empty { color: var(--moss); font-size: 14px; padding: 32px 0; text-align: center; }
+/* Property selector */
+#property-selector { font-family: var(--font-body); font-size: 13px; color: var(--charcoal); border: 1px solid var(--border); border-radius: 3px; padding: 5px 10px; background: var(--warm-white); cursor: pointer; }
+/* Action notice */
+.action-notice { background: #fffbf0; border: 1px solid #e8d090; color: #7a5c10; padding: 10px 14px; border-radius: 3px; font-size: 12px; line-height: 1.5; margin-bottom: 16px; }
+/* Notification badge */
+.notif-badge { background: var(--gold); color: #fff; border-radius: 10px; font-size: 11px; font-weight: 700; padding: 1px 6px; margin-left: 4px; }
+</style>
+</head><body>
+
+<div class="portal-shell" id="portal-shell-wrap">
+
+<aside class="portal-sidebar" id="portal-sidebar">
+  <div class="sidebar-brand">
+    <a href="/"><span class="sidebar-wordmark">Southern Habitat</span><span class="sidebar-sub">Consulting LLC</span></a>
+    <div class="sidebar-portal-label">Landowner Portal</div>
+  </div>
+  <div class="sidebar-client">
+    <span class="sidebar-client-name" id="sb-user-name">Loading…</span>
+    <span class="sidebar-client-prop" id="sb-user-client"></span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="#overview"  class="nav-link active"  data-section="overview"><span class="nav-icon">◉</span> Overview</a>
+    <a href="#property"  class="nav-link"          data-section="property"><span class="nav-icon">⬚</span> My Property</a>
+    <a href="#work"      class="nav-link"          data-section="work"><span class="nav-icon">⚒</span> Work &amp; Projects</a>
+    <a href="#wildlife"  class="nav-link"          data-section="wildlife"><span class="nav-icon">◎</span> Wildlife Analysis</a>
+    <a href="#plan"      class="nav-link"          data-section="plan"><span class="nav-icon">▦</span> Plan &amp; Budget</a>
+    <a href="#reports"   class="nav-link"          data-section="reports"><span class="nav-icon">≡</span> Reports &amp; Files</a>
+    <a href="#messages"  class="nav-link"          data-section="messages"><span class="nav-icon">✉</span> Messages <span class="notif-badge" id="msg-badge" style="display:none"></span></a>
+    <a href="#map"       class="nav-link"          data-section="map"><span class="nav-icon">◻</span> Property Map</a>
+    <a href="#account"   class="nav-link"          data-section="account"><span class="nav-icon">○</span> Account</a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="#" id="sign-out-link" class="sign-out-link">Sign Out</a> · <a href="/">Main Website</a>
+  </div>
+</aside>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="portal-main">
+  <header class="portal-topbar">
+    <div class="topbar-left">
+      <button class="topbar-menu-btn" aria-label="Open navigation" aria-expanded="false">☰</button>
+      <label for="property-selector" style="font-size:12px;font-weight:600;color:var(--moss);margin-right:6px">PROPERTY</label>
+      <select id="property-selector"></select>
+    </div>
+    <div class="topbar-right">
+      <span id="topbar-user" style="font-size:13px;color:var(--charcoal);font-weight:600"></span>
+    </div>
+  </header>
+
+  <div class="portal-content" id="portal-content">
+    <div class="content-loading">Loading your portal…</div>
+  </div>
+</div>
+
+</div><!-- /.portal-shell -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="/portal/config.js"></script>
+<script src="/portal/lib/supabase-client.js"></script>
+<script src="/portal/lib/auth.js"></script>
+<script src="/portal/lib/api.js"></script>
+<script src="/portal/app/app.js"></script>
+</body></html>

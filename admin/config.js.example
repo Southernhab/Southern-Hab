@@ -1,0 +1,10 @@
+// SHC Admin — Browser Configuration
+// Same pattern as portal/config.js.example.
+// Copy this file to admin/config.js and fill in your Supabase values for local development.
+// admin/config.js is listed in .gitignore — never commit it.
+// For Netlify: the netlify.toml build command auto-generates admin/config.js from env vars.
+
+window.__SHC_CONFIG__ = {
+  SUPABASE_URL:      'https://your-project-ref.supabase.co',
+  SUPABASE_ANON_KEY: 'your-anon-key-here'
+};

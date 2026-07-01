@@ -3,15 +3,22 @@
 <title>Administration — SHC Landowner Portal</title>
 <link rel="stylesheet" href="/portal/portal.css">
 <style>
+.portal-shell { visibility: hidden; }
+.portal-shell.ready { visibility: visible; }
 .admin-sidebar { background: #13271F; }
-.admin-sidebar .sidebar-wordmark, .admin-sidebar a { color: #fff; }
-.admin-badge { display: inline-flex; align-items: center; padding: 2px 8px; background: rgba(181,138,72,.25); color: #B58A48; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; border: 1px solid rgba(181,138,72,.4); border-radius: 3px; margin-left: 8px; }
-.admin-card { background: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 16px 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; }
-.admin-card-title { font-size: 14px; font-weight: 600; color: var(--charcoal); margin-bottom: 3px; font-family: var(--font-body); }
-.admin-card-sub { font-size: 12.5px; color: #999; }
-.admin-count { font-size: 22px; font-family: var(--font-heading); color: var(--forest); }
+.admin-sidebar .sidebar-wordmark, .admin-sidebar .sidebar-sub, .admin-sidebar .sidebar-portal-label { color: rgba(255,255,255,.8); }
+.admin-sidebar a { color: rgba(255,255,255,.75); }
+.admin-sidebar a:hover, .admin-sidebar a.active { color: #fff; background: rgba(255,255,255,.07); }
+.admin-badge { display: inline-flex; align-items: center; padding: 2px 8px; background: rgba(181,138,72,.25); color: #B58A48; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; border: 1px solid rgba(181,138,72,.4); border-radius: 3px; margin-left: 6px; }
+.admin-card { background: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 14px 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.admin-card-title { font-size: 13.5px; font-weight: 600; color: var(--charcoal); margin-bottom: 2px; font-family: var(--font-body); }
+.admin-card-sub { font-size: 12px; color: #999; line-height: 1.5; }
+.admin-count { font-size: 22px; font-family: var(--font-heading); color: var(--forest); font-weight: 700; }
+.content-loading { display: flex; align-items: center; justify-content: center; height: 200px; color: var(--moss); font-size: 14px; }
 </style>
 </head><body>
+
+<div class="portal-shell" id="admin-shell">
 
 <aside class="portal-sidebar admin-sidebar" id="portal-sidebar">
   <div class="sidebar-brand">
@@ -19,31 +26,25 @@
     <div class="sidebar-portal-label">Staff Administration</div>
   </div>
   <div class="sidebar-client">
-    <span class="sidebar-client-name">Richard <span class="admin-badge">Staff</span></span>
-    <span class="sidebar-client-prop">SHC — All Clients</span>
+    <span class="sidebar-client-name" id="sb-staff-name">Loading&hellip; <span class="admin-badge">Staff</span></span>
+    <span class="sidebar-client-prop">SHC &mdash; All Clients</span>
   </div>
   <nav class="sidebar-nav">
     <div class="sidebar-section-label">Portal Access</div>
-    <a href="/portal/overview/"><span class="nav-icon">◉</span> Client Portal</a>
+    <a href="/portal/app/" ><span class="nav-icon">&#9675;</span> Client Portal</a>
     <div class="sidebar-section-label">Administration</div>
-    <a href="/admin/" class="active"><span class="nav-icon">⊞</span> Dashboard</a>
-    <a href="/admin/#clients"><span class="nav-icon">○</span> Clients</a>
-    <a href="/admin/#properties"><span class="nav-icon">⬚</span> Properties</a>
-    <a href="/admin/#sections"><span class="nav-icon">▦</span> Property Sections</a>
-    <a href="/admin/#work"><span class="nav-icon">⚒</span> Work History</a>
-    <a href="/admin/#projects"><span class="nav-icon">◻</span> Planned Projects</a>
-    <a href="/admin/#surveys"><span class="nav-icon">◎</span> Wildlife Surveys</a>
-    <a href="/admin/#harvest"><span class="nav-icon">◻</span> Harvest Records</a>
-    <a href="/admin/#drone"><span class="nav-icon">◉</span> Drone Surveys</a>
-    <a href="/admin/#budgets"><span class="nav-icon">▦</span> Budgets</a>
-    <a href="/admin/#reports"><span class="nav-icon">📄</span> Reports</a>
-    <a href="/admin/#messages"><span class="nav-icon">✉</span> Messages</a>
-    <a href="/admin/#users"><span class="nav-icon">○</span> Users &amp; Access</a>
+    <a href="#dashboard" class="nav-link active" data-section="dashboard"><span class="nav-icon">&#8862;</span> Dashboard</a>
+    <a href="#clients"   class="nav-link" data-section="clients"><span class="nav-icon">&#9675;</span> Clients</a>
+    <a href="#properties" class="nav-link" data-section="properties"><span class="nav-icon">&#11034;</span> Properties</a>
+    <a href="#projects"  class="nav-link" data-section="projects"><span class="nav-icon">&#9723;</span> Projects</a>
+    <a href="#inquiries" class="nav-link" data-section="inquiries"><span class="nav-icon">&#9993;</span> Inquiries</a>
+    <a href="#access"    class="nav-link" data-section="access"><span class="nav-icon">&#9675;</span> Access Requests</a>
+    <a href="#users"     class="nav-link" data-section="users"><span class="nav-icon">&#9675;</span> Users &amp; Access</a>
     <div class="sidebar-section-label">System</div>
-    <a href="/admin/#settings"><span class="nav-icon">⊕</span> System Settings</a>
+    <a href="#audit"     class="nav-link" data-section="audit"><span class="nav-icon">&#8801;</span> Audit Log</a>
   </nav>
   <div class="sidebar-footer">
-    <a href="/portal/" class="sign-out-link">Sign Out</a> · <a href="/">Main Website</a>
+    <a href="#" id="admin-sign-out" class="sign-out-link">Sign Out</a> &middot; <a href="/">Main Website</a>
   </div>
 </aside>
 <div class="sidebar-overlay" id="sidebar-overlay"></div>
@@ -51,200 +52,26 @@
 <div class="portal-main">
   <header class="portal-topbar">
     <div class="topbar-left">
-      <button class="topbar-menu-btn" aria-label="Open navigation" aria-expanded="false">☰</button>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-size:13px;font-weight:600;color:var(--charcoal)">Administration</span>
-        <span class="admin-badge">Staff Only</span>
-      </div>
+      <button class="topbar-menu-btn" aria-label="Open navigation" aria-expanded="false">&#9776;</button>
+      <span style="font-size:13px;font-weight:600;color:var(--charcoal)" id="admin-section-title">Administration</span>
+      <span class="admin-badge">Staff Only</span>
     </div>
     <div class="topbar-right">
-      <a href="/portal/messages/">✉ Messages</a>
-      <a href="/portal/account/">Richard</a>
+      <span id="topbar-staff" style="font-size:13px;color:var(--charcoal);font-weight:600"></span>
     </div>
   </header>
 
-  <div class="portal-page">
-    <div class="page-heading">
-      <h1>Administration Dashboard</h1>
-      <p class="page-sub">SHC staff area — internal use only · Client-visible material is controlled through publish/approval steps</p>
-    </div>
-
-    <div class="alert alert-warning" style="margin-bottom:22px">
-      <strong>Separation of internal and client-visible content:</strong> Internal notes, draft material, and unpublished reports are never accessible through client portal routes. Only explicitly published content is visible to clients. Review the publishing workflow before adding or updating client records.
-    </div>
-
-    <!-- Summary metrics -->
-    <div class="metric-row" style="margin-bottom:24px">
-      <div class="metric-card">
-        <div class="metric-label">Active Clients</div>
-        <div class="metric-value">12</div>
-        <div class="metric-sub">with portal access</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Properties Under Management</div>
-        <div class="metric-value">18</div>
-        <div class="metric-sub">4 new in 2026</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Pending Client Actions</div>
-        <div class="metric-value">7</div>
-        <div class="metric-sub">across 5 properties</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Unread Client Messages</div>
-        <div class="metric-value">4</div>
-        <div class="metric-sub">require response</div>
-      </div>
-    </div>
-
-    <div class="two-col">
-      <div>
-        <!-- Admin navigation cards -->
-        <div class="panel">
-          <div class="panel-header"><h2>Client &amp; Property Management</h2></div>
-          <div class="panel-body-p">
-            <div class="admin-card">
-              <div>
-                <div class="admin-card-title">Clients</div>
-                <div class="admin-card-sub">Manage client accounts, portal access, and contact information</div>
-              </div>
-              <div style="text-align:right"><div class="admin-count">12</div><a href="/admin/#clients" class="btn btn-ghost btn-sm" style="margin-top:6px">Manage →</a></div>
-            </div>
-            <div class="admin-card">
-              <div>
-                <div class="admin-card-title">Properties</div>
-                <div class="admin-card-sub">Property records, boundaries, acreage, and overall status</div>
-              </div>
-              <div style="text-align:right"><div class="admin-count">18</div><a href="/admin/#properties" class="btn btn-ghost btn-sm" style="margin-top:6px">Manage →</a></div>
-            </div>
-            <div class="admin-card">
-              <div>
-                <div class="admin-card-title">Property Sections</div>
-                <div class="admin-card-sub">Section records, habitat types, management stage, progress scores, internal scoring</div>
-              </div>
-              <div style="text-align:right"><div class="admin-count">74</div><a href="/admin/#sections" class="btn btn-ghost btn-sm" style="margin-top:6px">Manage →</a></div>
-            </div>
-            <div class="admin-card">
-              <div>
-                <div class="admin-card-title">Work History</div>
-                <div class="admin-card-sub">Completed field work records, treatment logs, completion notes, inspections</div>
-              </div>
-              <div style="text-align:right"><div class="admin-count">231</div><a href="/admin/#work" class="btn btn-ghost btn-sm" style="margin-top:6px">Manage →</a></div>
-            </div>
-            <div class="admin-card">
-              <div>
-                <div class="admin-card-title">Planned Projects</div>
-                <div class="admin-card-sub">Upcoming work, proposals, cost estimates, client review status</div>
-              </div>
-              <div style="text-align:right"><div class="admin-count">48</div><a href="/admin/#projects" class="btn btn-ghost btn-sm" style="margin-top:6px">Manage →</a></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header"><h2>Wildlife &amp; Surveys</h2></div>
-          <div class="panel-body-p">
-            <div class="admin-card">
-              <div>
-                <div class="admin-card-title">Wildlife Surveys</div>
-                <div class="admin-card-sub">Camera surveys, direct observations, species data, SHC analysis</div>
-              </div>
-              <div style="text-align:right"><div class="admin-count">86</div><a href="/admin/#surveys" class="btn btn-ghost btn-sm" style="margin-top:6px">Manage →</a></div>
-            </div>
-            <div class="admin-card">
-              <div>
-                <div class="admin-card-title">Harvest Records</div>
-                <div class="admin-card-sub">Client-submitted harvest data, age class, weight, antler measurements</div>
-              </div>
-              <div style="text-align:right"><div class="admin-count">312</div><a href="/admin/#harvest" class="btn btn-ghost btn-sm" style="margin-top:6px">Manage →</a></div>
-            </div>
-            <div class="admin-card">
-              <div>
-                <div class="admin-card-title">Drone Surveys</div>
-                <div class="admin-card-sub">Thermal drone flight logs, population estimates, imagery archive</div>
-              </div>
-              <div style="text-align:right"><div class="admin-count">24</div><a href="/admin/#drone" class="btn btn-ghost btn-sm" style="margin-top:6px">Manage →</a></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <div class="panel">
-          <div class="panel-header"><h2>Reports &amp; Documents</h2></div>
-          <div class="panel-body-p">
-            <div class="admin-card">
-              <div>
-                <div class="admin-card-title">Reports Library</div>
-                <div class="admin-card-sub">All documents — published, draft, and internal. Control client visibility here.</div>
-              </div>
-              <div style="text-align:right"><div class="admin-count">184</div><a href="/admin/#reports" class="btn btn-ghost btn-sm" style="margin-top:6px">Manage →</a></div>
-            </div>
-            <div class="admin-card">
-              <div>
-                <div class="admin-card-title">Budgets &amp; Invoices</div>
-                <div class="admin-card-sub">Five-year budget records, invoices, estimates, cost-share tracking</div>
-              </div>
-              <div style="text-align:right"><div class="admin-count">—</div><a href="/admin/#budgets" class="btn btn-ghost btn-sm" style="margin-top:6px">Manage →</a></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header"><h2>Users &amp; System</h2></div>
-          <div class="panel-body-p">
-            <div class="admin-card">
-              <div>
-                <div class="admin-card-title">Users &amp; Access</div>
-                <div class="admin-card-sub">Client portal accounts, staff accounts, permissions, and access logs</div>
-              </div>
-              <div style="text-align:right"><div class="admin-count">14</div><a href="/admin/#users" class="btn btn-ghost btn-sm" style="margin-top:6px">Manage →</a></div>
-            </div>
-            <div class="admin-card">
-              <div>
-                <div class="admin-card-title">System Settings</div>
-                <div class="admin-card-sub">Species lists, habitat types, scoring formulas, treatment types, cost defaults, branding</div>
-              </div>
-              <div style="text-align:right"><div class="admin-count">—</div><a href="/admin/#settings" class="btn btn-ghost btn-sm" style="margin-top:6px">Settings →</a></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Pending items -->
-        <div class="panel">
-          <div class="panel-header"><h2>Pending Client Actions</h2></div>
-          <ul class="attention-list">
-            <li class="attention-item">
-              <div class="attn-dot dot-red"></div>
-              <div style="flex:1">
-                <p class="attn-title">Hawthorne — Longleaf Underplanting direction</p>
-                <p class="attn-desc">James Hawthorne has not yet responded to the June 18 proposal. Follow up recommended.</p>
-              </div>
-            </li>
-            <li class="attention-item">
-              <div class="attn-dot dot-gold"></div>
-              <div style="flex:1">
-                <p class="attn-title">Hawthorne — Invoice #2026-047 payment due Jul 15</p>
-                <p class="attn-desc">$3,850 for prescribed fire. No payment received yet.</p>
-              </div>
-            </li>
-            <li class="attention-item">
-              <div class="attn-dot dot-gold"></div>
-              <div style="flex:1">
-                <p class="attn-title">3 other clients awaiting direction on planned projects</p>
-                <p class="attn-desc">Review pending project queue for other properties.</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <div class="alert alert-notice" style="font-size:12.5px">
-          <strong>Internal data boundary:</strong> Fields marked as "internal only" in property section records, survey records, and report drafts are never returned through client portal API routes. Verify the published/draft status of any document before assuming client visibility.
-        </div>
-      </div>
-    </div>
+  <div class="portal-content" id="admin-content">
+    <div class="content-loading">Loading administration&hellip;</div>
   </div>
 </div>
 
-<script src="/portal/portal.js"></script>
+</div><!-- /.admin-shell -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="/admin/config.js"></script>
+<script src="/portal/lib/supabase-client.js"></script>
+<script src="/portal/lib/auth.js"></script>
+<script src="/portal/lib/api.js"></script>
+<script src="/admin/admin.js"></script>
 </body></html>

@@ -413,6 +413,11 @@ p { margin: 0 0 .75em; }
 .chip-essential  { background: #FEF3E2; color: #B85C00; }
 .chip-optional   { background: #F0EDE6; color: var(--moss); }
 .chip-recommended{ background: #E7F4EC; color: #2A7A40; }
+/* Semantic colour aliases used by portal/app/app.js and admin/admin.js */
+.chip-green { background: #E7F4EC; color: #2A7A40; }
+.chip-blue  { background: #E3F0FB; color: #1A5FA3; }
+.chip-gold  { background: #FEF3E2; color: #B85C00; }
+.chip-red   { background: #FDE8EE; color: #B0254A; }
 
 /* ── Tables ── */
 .data-table {

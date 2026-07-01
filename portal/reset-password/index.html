@@ -1,0 +1,158 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reset Password — SHC Landowner Portal</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+<link rel="stylesheet" href="/style.css">
+<style>
+html,body{margin:0;padding:0;min-height:100vh;background:#1F3A2E!important;display:flex;flex-direction:column}
+nav.container-fluid{max-width:none;margin:0;padding:.75rem 3vw;background:#13271F!important;border-bottom:1px solid rgba(255,255,255,.1)}
+nav ul{align-items:center;margin:0}
+nav a{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.75)!important}
+nav a:hover{color:#fff!important}
+.brand{font-size:1.15rem;color:#fff!important}
+.brand small{display:block;color:rgba(255,255,255,.45)!important;font-size:.6rem;letter-spacing:.16em}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:3rem 1.2rem}
+.card{background:#FAF9F5;border-radius:2px;box-shadow:0 20px 60px rgba(0,0,0,.3);padding:2.5rem;max-width:440px;width:100%}
+.card h2{font-family:"Libre Baskerville",Georgia,serif;font-size:1.2rem;color:#1F3A2E;margin:0 0 .25rem}
+.card p{font-size:.85rem;color:#66765A;margin:0 0 1.5rem}
+label{display:block;font-size:.82rem;font-weight:600;color:#252A27;margin-bottom:.3rem}
+input[type=email],input[type=password]{width:100%;border:1px solid #D8D3C7;padding:.65rem .9rem;font-size:.9rem;font-family:inherit;border-radius:2px;background:#fff;color:#252A27;margin-bottom:1rem}
+input:focus{outline:2px solid #B58A48;outline-offset:1px}
+.btn{width:100%;padding:.75rem;background:#1F3A2E;color:#fff;border:none;font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;border-radius:2px;transition:background .15s;margin-bottom:.75rem}
+.btn:hover:not(:disabled){background:#13271F}
+.btn:disabled{opacity:.6;cursor:default}
+.msg{padding:.65rem .9rem;border-radius:2px;font-size:.84rem;margin-bottom:1rem;display:none}
+.msg.visible{display:block}
+.msg-error{background:#fdf0f0;border:1px solid #e8a0a0;color:#7a2020}
+.msg-success{background:#f0fdf4;border:1px solid #86efac;color:#14532d}
+.back{font-size:.8rem;color:#66765A;text-align:center;margin:0}
+.back a{color:#B58A48;text-decoration:none}
+footer{background:#13271F!important;color:rgba(255,255,255,.4)!important;padding:1.25rem 3vw;font-size:.78rem}
+footer a{color:rgba(255,255,255,.5)!important}
+</style>
+</head><body>
+<nav class="container-fluid"><ul><li><strong><a class="brand" href="/">Southern Habitat<small>CONSULTING LLC</small></a></strong></li></ul><ul><li><a href="/portal/">Sign In</a></li></ul></nav>
+<main>
+  <div class="card">
+
+    <!-- Step 1: Request reset link -->
+    <div id="step-request">
+      <h2>Reset Your Password</h2>
+      <p>Enter your email address and we will send you a link to set a new password.</p>
+      <div class="msg msg-error" id="req-error" role="alert"></div>
+      <div class="msg msg-success" id="req-success" role="status"></div>
+      <form id="request-form" novalidate>
+        <label for="req-email">Email address</label>
+        <input type="email" id="req-email" name="email" autocomplete="email" placeholder="you@example.com" required>
+        <button type="submit" class="btn" id="req-btn">Send Reset Link</button>
+      </form>
+      <p class="back"><a href="/portal/">&#8592; Back to Sign In</a></p>
+    </div>
+
+    <!-- Step 2: Set new password (shown after clicking email link) -->
+    <div id="step-update" style="display:none">
+      <h2>Set a New Password</h2>
+      <p>Choose a new password for your SHC Landowner Portal account.</p>
+      <div class="msg msg-error" id="upd-error" role="alert"></div>
+      <div class="msg msg-success" id="upd-success" role="status"></div>
+      <form id="update-form" novalidate>
+        <label for="new-password">New password</label>
+        <input type="password" id="new-password" name="password" autocomplete="new-password" placeholder="At least 8 characters" required minlength="8">
+        <label for="confirm-password">Confirm new password</label>
+        <input type="password" id="confirm-password" name="confirm" autocomplete="new-password" placeholder="Repeat your new password" required minlength="8">
+        <button type="submit" class="btn" id="upd-btn">Update Password</button>
+      </form>
+    </div>
+
+  </div>
+</main>
+<footer><small>© 2026 Southern Habitat Consulting LLC · <a href="/contact/">Contact</a></small></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="/portal/config.js"></script>
+<script src="/portal/lib/supabase-client.js"></script>
+<script>
+(function () {
+  'use strict';
+  var sb = window.shcSupabase;
+
+  function showMsg(el, text, isError) {
+    el.textContent = text;
+    el.className = 'msg visible ' + (isError ? 'msg-error' : 'msg-success');
+  }
+
+  // Detect Supabase RECOVERY event (user arrived via email link)
+  sb.auth.onAuthStateChange(function (event) {
+    if (event === 'PASSWORD_RECOVERY') {
+      document.getElementById('step-request').style.display = 'none';
+      document.getElementById('step-update').style.display = '';
+    }
+  });
+
+  // Step 1 — request reset link
+  document.getElementById('request-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var btn = document.getElementById('req-btn');
+    var errEl = document.getElementById('req-error');
+    var okEl  = document.getElementById('req-success');
+    errEl.classList.remove('visible');
+    okEl.classList.remove('visible');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    var email = document.getElementById('req-email').value.trim();
+    if (!email) {
+      showMsg(errEl, 'Please enter your email address.', true);
+      btn.disabled = false; btn.textContent = 'Send Reset Link';
+      return;
+    }
+
+    var result = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/portal/reset-password/'
+    });
+
+    // Always show success to avoid email enumeration
+    showMsg(okEl, 'If that email is registered, a reset link has been sent. Check your inbox.', false);
+    btn.textContent = 'Link Sent';
+    if (result.error) console.error('reset error:', result.error.message);
+  });
+
+  // Step 2 — set new password
+  document.getElementById('update-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var btn = document.getElementById('upd-btn');
+    var errEl = document.getElementById('upd-error');
+    var okEl  = document.getElementById('upd-success');
+    errEl.classList.remove('visible');
+    okEl.classList.remove('visible');
+    btn.disabled = true;
+    btn.textContent = 'Updating…';
+
+    var pw1 = document.getElementById('new-password').value;
+    var pw2 = document.getElementById('confirm-password').value;
+
+    if (pw1.length < 8) {
+      showMsg(errEl, 'Password must be at least 8 characters.', true);
+      btn.disabled = false; btn.textContent = 'Update Password';
+      return;
+    }
+    if (pw1 !== pw2) {
+      showMsg(errEl, 'Passwords do not match.', true);
+      btn.disabled = false; btn.textContent = 'Update Password';
+      return;
+    }
+
+    var result = await sb.auth.updateUser({ password: pw1 });
+    if (result.error) {
+      showMsg(errEl, 'Failed to update password: ' + result.error.message, true);
+      btn.disabled = false; btn.textContent = 'Update Password';
+      return;
+    }
+
+    showMsg(okEl, 'Your password has been updated. Redirecting to sign in…', false);
+    setTimeout(function () { window.location.replace('/portal/'); }, 2500);
+  });
+
+})();
+</script>
+</body></html>
