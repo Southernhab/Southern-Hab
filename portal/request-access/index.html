@@ -47,7 +47,7 @@ footer a{color:rgba(255,255,255,.5)!important}
     <form id="access-form" novalidate>
       <!-- Honeypot field — must remain empty -->
       <div class="hp-field" aria-hidden="true">
-        <label>Do not fill this out <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        <label>Do not fill this out <input type="text" name="bot-field" tabindex="-1" autocomplete="off"></label>
       </div>
 
       <label for="req-name">Full name <span style="color:#B58A48">*</span></label>
@@ -77,69 +77,71 @@ footer a{color:rgba(255,255,255,.5)!important}
 </main>
 <footer><small>© 2026 Southern Habitat Consulting LLC · <a href="/contact/">Contact</a></small></footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script src="/portal/config.js"></script>
-<script src="/portal/lib/supabase-client.js"></script>
+<!-- Load Firebase config to get the Cloud Functions URL -->
+<script src="/portal/firebase-config.js" onerror="void 0"></script>
 <script>
 (function () {
   'use strict';
 
-  var form   = document.getElementById('access-form');
-  var errEl  = document.getElementById('form-error');
-  var okEl   = document.getElementById('form-success');
-  var btn    = document.getElementById('req-btn');
+  var form  = document.getElementById('access-form');
+  var errEl = document.getElementById('form-error');
+  var okEl  = document.getElementById('form-success');
+  var btn   = document.getElementById('req-btn');
 
   function showErr(msg) {
     errEl.textContent = msg;
     errEl.classList.add('visible');
-    btn.disabled = false;
+    btn.disabled    = false;
     btn.textContent = 'Submit Request';
   }
 
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
     errEl.classList.remove('visible');
-    btn.disabled = true;
-    btn.textContent = 'Submitting…';
+    btn.disabled    = true;
+    btn.textContent = 'Submitting\u2026';
 
     // Honeypot check
-    var hp = form.querySelector('input[name="website"]');
-    if (hp && hp.value) {
-      btn.disabled = false; btn.textContent = 'Submit Request';
-      return;
-    }
+    var hp = form.querySelector('input[name="bot-field"]');
+    if (hp && hp.value) { btn.disabled = false; btn.textContent = 'Submit Request'; return; }
 
     var name  = document.getElementById('req-name').value.trim();
     var email = document.getElementById('req-email').value.trim();
 
-    if (!name || !email) {
-      showErr('Please enter your name and email address.');
-      return;
-    }
+    if (!name || !email) { showErr('Please enter your name and email address.'); return; }
 
     var payload = {
       name:          name,
       email:         email,
-      phone:         document.getElementById('req-phone').value.trim() || null,
-      client_name:   document.getElementById('req-client').value.trim() || null,
+      phone:         document.getElementById('req-phone').value.trim()    || null,
+      client_name:   document.getElementById('req-client').value.trim()   || null,
       property_name: document.getElementById('req-property').value.trim() || null,
-      message:       document.getElementById('req-message').value.trim() || null
+      message:       document.getElementById('req-message').value.trim()  || null
     };
 
-    // Submit via Edge Function (server-side, uses service-role key, rate-limited)
-    var result = await window.shcSupabase.functions.invoke('request-access', { body: payload });
-
-    if (result.error) {
-      showErr('Submission failed. Please try again or contact SHC directly at info@southernhabitatconsulting.com.');
-      console.error(result.error);
+    var cfg = window.__SHC_FIREBASE_CONFIG__;
+    if (!cfg || !cfg.functionsUrl) {
+      showErr('Configuration not available. Contact SHC directly at info@southernhabitatconsulting.com.');
       return;
     }
 
-    // Show success
-    form.style.display = 'none';
-    okEl.innerHTML = '<strong>Your request has been received.</strong><br>An SHC team member will review it and follow up at ' + email + ' within 1&ndash;2 business days.';
-    okEl.className = 'msg msg-success visible';
-    okEl.style.display = 'block';
+    try {
+      var res  = await fetch(cfg.functionsUrl + '/requestAccess', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload)
+      });
+      var data = await res.json();
+      if (!data.ok) throw new Error(data.error || 'Submission failed');
+
+      form.style.display = 'none';
+      okEl.innerHTML = '<strong>Your request has been received.</strong><br>An SHC team member will review it and follow up at ' + email + ' within 1&ndash;2 business days.';
+      okEl.className = 'msg msg-success visible';
+      okEl.style.display = 'block';
+    } catch (err) {
+      console.error('access request error:', err);
+      showErr('Submission failed. Please try again or contact SHC directly at info@southernhabitatconsulting.com.');
+    }
   });
 
 })();

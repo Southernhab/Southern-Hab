@@ -1,0 +1,19 @@
+{
+  "name": "shc-portal-functions",
+  "description": "SHC Landowner Portal — Firebase Cloud Functions",
+  "scripts": {
+    "build": "echo 'No build step needed for Node.js functions'",
+    "serve": "firebase emulators:start --only functions,firestore,auth,storage",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^4.9.0"
+  },
+  "private": true
+}

@@ -49,7 +49,7 @@ footer a{color:rgba(255,255,255,.5)!important}
       <p class="back"><a href="/portal/">&#8592; Back to Sign In</a></p>
     </div>
 
-    <!-- Step 2: Set new password (shown after clicking email link) -->
+    <!-- Step 2: Set new password (shown when oobCode is present in URL) -->
     <div id="step-update" style="display:none">
       <h2>Set a New Password</h2>
       <p>Choose a new password for your SHC Landowner Portal account.</p>
@@ -68,37 +68,57 @@ footer a{color:rgba(255,255,255,.5)!important}
 </main>
 <footer><small>© 2026 Southern Habitat Consulting LLC · <a href="/contact/">Contact</a></small></footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script src="/portal/config.js"></script>
-<script src="/portal/lib/supabase-client.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="/portal/firebase-config.js"></script>
 <script>
 (function () {
   'use strict';
-  var sb = window.shcSupabase;
+
+  var cfg = window.__SHC_FIREBASE_CONFIG__ || {};
+  if (!cfg.apiKey) {
+    console.error('SHC: Firebase configuration missing.');
+    return;
+  }
+
+  firebase.initializeApp(cfg);
+  var fbAuth = firebase.auth();
+
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    fbAuth.useEmulator('http://localhost:9099');
+  }
 
   function showMsg(el, text, isError) {
     el.textContent = text;
     el.className = 'msg visible ' + (isError ? 'msg-error' : 'msg-success');
   }
 
-  // Detect Supabase RECOVERY event (user arrived via email link)
-  sb.auth.onAuthStateChange(function (event) {
-    if (event === 'PASSWORD_RECOVERY') {
+  // Detect oobCode in URL (Firebase includes mode=resetPassword&oobCode=... in the link)
+  var params  = new URLSearchParams(window.location.search);
+  var mode    = params.get('mode');
+  var oobCode = params.get('oobCode');
+
+  if (mode === 'resetPassword' && oobCode) {
+    // Verify the code is valid before showing the new-password form
+    fbAuth.verifyPasswordResetCode(oobCode).then(function () {
       document.getElementById('step-request').style.display = 'none';
-      document.getElementById('step-update').style.display = '';
-    }
-  });
+      document.getElementById('step-update').style.display  = '';
+    }).catch(function () {
+      document.getElementById('req-error').textContent = 'This password-reset link has expired or already been used. Please request a new one.';
+      document.getElementById('req-error').className   = 'msg visible msg-error';
+    });
+  }
 
   // Step 1 — request reset link
   document.getElementById('request-form').addEventListener('submit', async function (e) {
     e.preventDefault();
-    var btn = document.getElementById('req-btn');
+    var btn   = document.getElementById('req-btn');
     var errEl = document.getElementById('req-error');
     var okEl  = document.getElementById('req-success');
     errEl.classList.remove('visible');
     okEl.classList.remove('visible');
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
+    btn.disabled    = true;
+    btn.textContent = 'Sending\u2026';
 
     var email = document.getElementById('req-email').value.trim();
     if (!email) {
@@ -107,26 +127,30 @@ footer a{color:rgba(255,255,255,.5)!important}
       return;
     }
 
-    var result = await sb.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + '/portal/reset-password/'
-    });
+    try {
+      await fbAuth.sendPasswordResetEmail(email, {
+        url: window.location.origin + '/portal/'
+      });
+    } catch (err) {
+      // Intentionally do not expose whether the address is registered.
+      console.error('Password reset error:', err.code);
+    }
 
     // Always show success to avoid email enumeration
     showMsg(okEl, 'If that email is registered, a reset link has been sent. Check your inbox.', false);
     btn.textContent = 'Link Sent';
-    if (result.error) console.error('reset error:', result.error.message);
   });
 
-  // Step 2 — set new password
+  // Step 2 — confirm new password
   document.getElementById('update-form').addEventListener('submit', async function (e) {
     e.preventDefault();
-    var btn = document.getElementById('upd-btn');
+    var btn   = document.getElementById('upd-btn');
     var errEl = document.getElementById('upd-error');
     var okEl  = document.getElementById('upd-success');
     errEl.classList.remove('visible');
     okEl.classList.remove('visible');
-    btn.disabled = true;
-    btn.textContent = 'Updating…';
+    btn.disabled    = true;
+    btn.textContent = 'Updating\u2026';
 
     var pw1 = document.getElementById('new-password').value;
     var pw2 = document.getElementById('confirm-password').value;
@@ -142,15 +166,16 @@ footer a{color:rgba(255,255,255,.5)!important}
       return;
     }
 
-    var result = await sb.auth.updateUser({ password: pw1 });
-    if (result.error) {
-      showMsg(errEl, 'Failed to update password: ' + result.error.message, true);
+    try {
+      await fbAuth.confirmPasswordReset(oobCode, pw1);
+      showMsg(okEl, 'Your password has been updated. Redirecting to sign in\u2026', false);
+      setTimeout(function () { window.location.replace('/portal/'); }, 2500);
+    } catch (err) {
+      var msg = 'Failed to update password. The link may have expired. Please request a new reset link.';
+      if (err.code === 'auth/weak-password') msg = 'Password is too weak. Please choose a stronger password.';
+      showMsg(errEl, msg, true);
       btn.disabled = false; btn.textContent = 'Update Password';
-      return;
     }
-
-    showMsg(okEl, 'Your password has been updated. Redirecting to sign in…', false);
-    setTimeout(function () { window.location.replace('/portal/'); }, 2500);
   });
 
 })();

@@ -1,10 +1,9 @@
 // SHC Landowner Portal — Authenticated SPA
-// Depends on: supabase-client.js, auth.js, api.js (loaded in portal/app/index.html)
+// Depends on: firebase-client.js, auth.js, api.js (loaded in portal/app/index.html)
 
 (function () {
   'use strict';
 
-  var sb  = window.shcSupabase;
   var api = window.shcApi;
 
   var state = {
@@ -37,12 +36,15 @@
     setupSidebar();
     setupSignOut();
 
-    // Load client context
-    var cuResult = await sb.from('client_users').select('client_id, clients(display_name)').eq('user_id', auth.session.user.id).eq('active', true);
-    if (cuResult.data && cuResult.data.length > 0) {
-      state.clientId = cuResult.data[0].client_id;
-      var clientName = cuResult.data[0].clients && cuResult.data[0].clients.display_name;
-      document.getElementById('sb-user-client').textContent = clientName || '';
+    // Load client context from Firebase custom claims (set by Cloud Function at invite time)
+    var clientIds = await window.shcAuth.getClientIds();
+    state.clientId = clientIds[0] || null;
+    if (state.clientId) {
+      window.shcDb.collection('clients').doc(state.clientId).get().then(function (snap) {
+        if (snap.exists) {
+          document.getElementById('sb-user-client').textContent = snap.data().displayName || '';
+        }
+      }).catch(function () {});
     }
 
     // Load properties

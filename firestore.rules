@@ -1,0 +1,298 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helper functions ────────────────────────────────────────────────────
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function uid() {
+      return request.auth.uid;
+    }
+    function role() {
+      return request.auth.token.get('role', '');
+    }
+    function clientIds() {
+      return request.auth.token.get('clientIds', []);
+    }
+    function isSuperAdmin() {
+      return role() == 'super_admin';
+    }
+    function isAdmin() {
+      return role() in ['super_admin', 'staff_admin'];
+    }
+    function isStaff() {
+      return role() in ['super_admin', 'staff_admin', 'field_staff'];
+    }
+    function isClient() {
+      return role() in ['client_owner', 'client_viewer'];
+    }
+    function isClientOwner() {
+      return role() == 'client_owner';
+    }
+    // True when an authenticated client has been assigned this clientId
+    function clientCanAccess(clientId) {
+      return isAuthenticated() && isClient() && clientId in clientIds();
+    }
+
+    // ── Users ────────────────────────────────────────────────────────────────
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (uid() == userId || isStaff());
+      // Writes handled by Cloud Functions (Admin SDK bypasses rules)
+      allow write: if isAdmin();
+    }
+
+    // ── Clients (client-safe fields only) ─────────────────────────────────
+    match /clients/{clientId} {
+      allow read: if isAuthenticated() && (isStaff() || clientCanAccess(clientId));
+      allow write: if isAdmin();
+    }
+
+    // ── Clients Internal (staff only) ─────────────────────────────────────
+    match /clientsInternal/{clientId} {
+      allow read, write: if isStaff();
+    }
+
+    // ── Client Users ──────────────────────────────────────────────────────
+    match /clientUsers/{docId} {
+      allow read: if isAuthenticated() && (
+        isStaff() ||
+        (isClient() && resource.data.clientId in clientIds())
+      );
+      allow write: if isAdmin();
+    }
+
+    // ── Properties (client-safe fields only) ─────────────────────────────
+    match /properties/{propertyId} {
+      allow read: if isAuthenticated() && (
+        isStaff() || clientCanAccess(resource.data.clientId)
+      );
+      allow write: if isAdmin();
+    }
+
+    // ── Properties Internal (staff only) ─────────────────────────────────
+    match /propertiesInternal/{propertyId} {
+      allow read, write: if isStaff();
+    }
+
+    // ── Property Sections ─────────────────────────────────────────────────
+    match /propertySections/{sectionId} {
+      allow read: if isAuthenticated() && (
+        isStaff() || clientCanAccess(resource.data.clientId)
+      );
+      allow write: if isStaff();
+    }
+
+    // ── Property Sections Internal ────────────────────────────────────────
+    match /propertySectionsInternal/{sectionId} {
+      allow read, write: if isStaff();
+    }
+
+    // ── Projects (client-safe fields only) ───────────────────────────────
+    match /projects/{projectId} {
+      allow read: if isAuthenticated() && (
+        isStaff() ||
+        (clientCanAccess(resource.data.clientId) && resource.data.clientVisible == true)
+      );
+      allow write: if isStaff();
+    }
+
+    // ── Projects Internal (staff only) ────────────────────────────────────
+    match /projectsInternal/{projectId} {
+      allow read, write: if isStaff();
+    }
+
+    // ── Project Actions ───────────────────────────────────────────────────
+    match /projectActions/{actionId} {
+      allow read: if isAuthenticated() && (
+        isStaff() || clientCanAccess(resource.data.clientId)
+      );
+      allow create: if isAuthenticated() && isClient() &&
+        clientCanAccess(request.resource.data.clientId) &&
+        request.resource.data.clientUserId == uid();
+      allow update, delete: if isAdmin();
+    }
+
+    // ── Work History ──────────────────────────────────────────────────────
+    match /workHistory/{workId} {
+      allow read: if isAuthenticated() && (
+        isStaff() ||
+        (clientCanAccess(resource.data.clientId) && resource.data.clientVisible == true)
+      );
+      allow write: if isStaff();
+    }
+
+    // ── Monitoring Records ────────────────────────────────────────────────
+    match /monitoringRecords/{recordId} {
+      allow read: if isAuthenticated() && (
+        isStaff() ||
+        (clientCanAccess(resource.data.clientId) && resource.data.clientVisible == true)
+      );
+      allow write: if isStaff();
+    }
+
+    // ── Wildlife Surveys ──────────────────────────────────────────────────
+    match /wildlifeSurveys/{surveyId} {
+      allow read: if isAuthenticated() && (
+        isStaff() ||
+        (clientCanAccess(resource.data.clientId) && resource.data.clientVisible == true)
+      );
+      allow write: if isStaff();
+    }
+
+    // ── Harvest Records ───────────────────────────────────────────────────
+    match /harvestRecords/{recordId} {
+      allow read: if isAuthenticated() && (
+        isStaff() ||
+        (clientCanAccess(resource.data.clientId) && resource.data.clientVisible == true)
+      );
+      allow write: if isStaff();
+    }
+
+    // ── Budgets ───────────────────────────────────────────────────────────
+    match /budgets/{budgetId} {
+      allow read: if isAuthenticated() && (
+        isStaff() ||
+        (clientCanAccess(resource.data.clientId) && resource.data.clientVisible == true)
+      );
+      allow write: if isAdmin();
+    }
+
+    // ── Budget Items ──────────────────────────────────────────────────────
+    match /budgetItems/{itemId} {
+      allow read: if isAuthenticated() && (
+        isStaff() || clientCanAccess(resource.data.clientId)
+      );
+      allow write: if isAdmin();
+    }
+
+    // ── Documents (client-safe fields only) ──────────────────────────────
+    match /documents/{docId} {
+      allow read: if isAuthenticated() && (
+        isStaff() ||
+        (
+          clientCanAccess(resource.data.clientId) &&
+          resource.data.clientVisible == true &&
+          resource.data.documentStatus == 'published'
+        )
+      );
+      allow write: if isAdmin();
+    }
+
+    // ── Documents Internal (staff only) ──────────────────────────────────
+    match /documentsInternal/{docId} {
+      allow read, write: if isStaff();
+    }
+
+    // ── Photographs ───────────────────────────────────────────────────────
+    match /photographs/{photoId} {
+      allow read: if isAuthenticated() && (
+        isStaff() ||
+        (clientCanAccess(resource.data.clientId) && resource.data.clientVisible == true)
+      );
+      allow write: if isStaff();
+    }
+
+    // ── ArcGIS Maps ───────────────────────────────────────────────────────
+    match /arcgisMaps/{mapId} {
+      allow read: if isAuthenticated() && (
+        isStaff() ||
+        (
+          clientCanAccess(resource.data.clientId) &&
+          resource.data.clientVisible == true &&
+          resource.data.active == true
+        )
+      );
+      allow write: if isAdmin();
+    }
+
+    // ── Map Files ─────────────────────────────────────────────────────────
+    match /mapFiles/{fileId} {
+      allow read: if isAuthenticated() && (
+        isStaff() || clientCanAccess(resource.data.clientId)
+      );
+      allow write: if isStaff();
+    }
+
+    // ── Messages ──────────────────────────────────────────────────────────
+    match /messages/{messageId} {
+      allow read: if isAuthenticated() && (
+        isStaff() ||
+        (clientCanAccess(resource.data.clientId) && resource.data.clientVisible == true)
+      );
+      allow create: if isAuthenticated() && isClient() &&
+        clientCanAccess(request.resource.data.clientId) &&
+        request.resource.data.clientVisible == true;
+      allow update: if isAuthenticated() && (
+        isStaff() ||
+        (isClient() && clientCanAccess(resource.data.clientId))
+      );
+      allow delete: if isAdmin();
+    }
+
+    // ── Message Entries ───────────────────────────────────────────────────
+    match /messageEntries/{entryId} {
+      allow read: if isAuthenticated() && (
+        isStaff() ||
+        (
+          clientCanAccess(resource.data.clientId) &&
+          resource.data.internalOnly == false
+        )
+      );
+      allow create: if isAuthenticated() && (
+        isStaff() ||
+        (
+          isClient() &&
+          clientCanAccess(request.resource.data.clientId) &&
+          request.resource.data.internalOnly == false &&
+          request.resource.data.senderId == uid()
+        )
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    // ── Inquiries (written by Cloud Functions via Admin SDK) ──────────────
+    match /inquiries/{inquiryId} {
+      allow read, write: if isStaff();
+      // Public submissions are written by Cloud Functions (Admin SDK bypasses rules).
+      // Direct client writes are not allowed.
+    }
+
+    // ── Access Requests (written by Cloud Functions) ──────────────────────
+    match /accessRequests/{requestId} {
+      allow read: if isStaff();
+      allow write: if isAdmin();
+      // Public submissions written by Cloud Functions (Admin SDK).
+    }
+
+    // ── Notifications ─────────────────────────────────────────────────────
+    match /notifications/{notifId} {
+      allow read: if isAuthenticated() && (
+        isStaff() || uid() == resource.data.userId
+      );
+      allow update: if isAuthenticated() && uid() == resource.data.userId;
+      allow create, delete: if isAdmin();
+    }
+
+    // ── Audit Logs (Cloud Functions write; staff read) ─────────────────────
+    match /auditLogs/{logId} {
+      allow read: if isStaff();
+      allow write: if false;
+    }
+
+    // ── System Settings ───────────────────────────────────────────────────
+    match /systemSettings/{settingId} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    // ── Internal rate-limit counters (Cloud Functions only) ───────────────
+    match /_rateLimit/{docId} {
+      allow read, write: if false;
+    }
+
+    // ── Catch-all: deny everything not explicitly matched ──────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

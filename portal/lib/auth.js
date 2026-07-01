@@ -1,123 +1,220 @@
-// SHC Portal — Authentication helpers
-// Depends on: portal/lib/supabase-client.js (window.shcSupabase)
+// SHC Portal — Authentication helpers (Firebase Auth)
+// Depends on: portal/lib/firebase-client.js (window.shcFirebaseAuth, window.shcDb)
+//
+// Preserves the same window.shcAuth interface so portal/app/app.js and
+// admin/admin.js require minimal changes.
 
 (function () {
   'use strict';
 
-  var sb = window.shcSupabase;
+  var fbAuth = window.shcFirebaseAuth;
+  var db     = window.shcDb;
+
+  var STAFF_ROLES  = ['super_admin', 'staff_admin', 'field_staff'];
+  var ADMIN_ROLES  = ['super_admin', 'staff_admin'];
+  var CLIENT_ROLES = ['client_owner', 'client_viewer'];
+
+  // ── Internal helpers ──────────────────────────────────────────────────────
+
+  // Returns the Firebase user's ID token claims (includes role, clientIds).
+  async function getClaims(user) {
+    try {
+      var result = await user.getIdTokenResult(false);
+      return result.claims || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  // Fetches the Firestore profile for the user (firstName, lastName, etc.).
+  // Falls back gracefully if the document hasn't been created yet.
+  async function fetchProfile(uid) {
+    try {
+      var snap = await db.collection('users').doc(uid).get();
+      if (snap.exists) return { id: uid, ...snap.data() };
+    } catch (e) {
+      console.warn('SHC: Could not fetch user profile:', e.code);
+    }
+    return null;
+  }
+
+  // Returns a unified auth object: { user, claims, profile } or null.
+  async function getAuth() {
+    var user = fbAuth.currentUser;
+    if (!user) return null;
+
+    // Force-refresh token if it's more than 50 minutes old
+    await user.getIdToken(false);
+    var claims  = await getClaims(user);
+    var profile = await fetchProfile(user.uid);
+
+    return {
+      user:    user,
+      claims:  claims,
+      profile: profile || {
+        id:        user.uid,
+        email:     user.email,
+        firstName: user.displayName ? user.displayName.split(' ')[0] : '',
+        lastName:  user.displayName ? user.displayName.split(' ').slice(1).join(' ') : '',
+        role:      claims.role || '',
+        active:    true
+      }
+    };
+  }
+
+  // ── window.shcAuth ────────────────────────────────────────────────────────
 
   window.shcAuth = {
 
-    // ── getSession ────────────────────────────────────────────────────────────
-    // Returns the current session or null.
+    // ── getCurrentUser ────────────────────────────────────────────────────
+    getCurrentUser: function () {
+      return fbAuth.currentUser;
+    },
+
+    // ── getSession (compatibility alias — returns { user, claims, profile }) ──
     getSession: async function () {
-      var result = await sb.auth.getSession();
-      return result.data.session || null;
+      return getAuth();
     },
 
-    // ── getProfile ────────────────────────────────────────────────────────────
-    // Fetches the current user's profile row (role, name, etc.).
+    // ── getProfile ────────────────────────────────────────────────────────
     getProfile: async function () {
-      var session = await this.getSession();
-      if (!session) return null;
-      var result = await sb.from('profiles').select('*').eq('id', session.user.id).single();
-      return result.data || null;
+      var user = fbAuth.currentUser;
+      if (!user) return null;
+      return fetchProfile(user.uid);
     },
 
-    // ── requireAuth ───────────────────────────────────────────────────────────
-    // Call at the top of any authenticated page.
-    // Redirects to /portal/ if not signed in, then returns { session, profile }.
+    // ── requireAuth ───────────────────────────────────────────────────────
+    // Waits for Firebase to resolve the initial auth state (handles page refresh).
+    // Redirects to /portal/ if not signed in. Returns { user, claims, profile }.
     requireAuth: async function (options) {
       var opts = options || {};
-      var session = await this.getSession();
-      if (!session) {
-        var returnTo = opts.returnTo || window.location.href;
-        window.location.replace('/portal/?returnTo=' + encodeURIComponent(returnTo));
-        return null;
-      }
-      var profile = await this.getProfile();
-      if (!profile || !profile.active) {
-        await sb.auth.signOut();
-        window.location.replace('/portal/unauthorized/?reason=disabled');
-        return null;
-      }
-      return { session: session, profile: profile };
+      return new Promise(function (resolve) {
+        var unsubscribe = fbAuth.onAuthStateChanged(async function (user) {
+          unsubscribe();
+
+          if (!user) {
+            var returnTo = opts.returnTo || window.location.href;
+            window.location.replace('/portal/?returnTo=' + encodeURIComponent(returnTo));
+            resolve(null);
+            return;
+          }
+
+          // Check account is not disabled (Firebase handles this in auth, but
+          // also check our Firestore active flag for soft-deactivation)
+          var claims  = await getClaims(user);
+          var profile = await fetchProfile(user.uid);
+
+          if (profile && profile.active === false) {
+            await fbAuth.signOut();
+            window.location.replace('/portal/unauthorized/?reason=disabled');
+            resolve(null);
+            return;
+          }
+
+          // Synthesize profile if Firestore document is not yet created
+          if (!profile) {
+            profile = {
+              id:        user.uid,
+              email:     user.email,
+              firstName: user.displayName ? user.displayName.split(' ')[0] : '',
+              lastName:  user.displayName ? user.displayName.split(' ').slice(1).join(' ') : '',
+              role:      claims.role || '',
+              active:    true
+            };
+          }
+
+          // Update lastLoginAt (non-blocking)
+          db.collection('users').doc(user.uid).set(
+            { lastLoginAt: new Date().toISOString() }, { merge: true }
+          ).catch(function () {});
+
+          resolve({ user: user, claims: claims, profile: profile });
+        });
+      });
     },
 
-    // ── requireRole ───────────────────────────────────────────────────────────
-    // Requires auth AND one of the given roles.
-    // allowedRoles: string[] e.g. ['super_admin','staff_admin']
+    // ── requireRole ───────────────────────────────────────────────────────
     requireRole: async function (allowedRoles, options) {
-      var opts = options || {};
-      var auth = await this.requireAuth(opts);
+      var auth = await this.requireAuth(options);
       if (!auth) return null;
-      if (allowedRoles.indexOf(auth.profile.role) === -1) {
+      if (allowedRoles.indexOf(auth.claims.role || auth.profile.role) === -1) {
         window.location.replace('/portal/unauthorized/?reason=role');
         return null;
       }
       return auth;
     },
 
-    // ── requireStaff ──────────────────────────────────────────────────────────
+    // ── requireStaff ──────────────────────────────────────────────────────
     requireStaff: async function () {
-      return this.requireRole(['super_admin','staff_admin','field_staff']);
+      return this.requireRole(STAFF_ROLES);
     },
 
-    // ── requireAdmin ──────────────────────────────────────────────────────────
+    // ── requireAdmin ──────────────────────────────────────────────────────
     requireAdmin: async function () {
-      return this.requireRole(['super_admin','staff_admin']);
+      return this.requireRole(ADMIN_ROLES);
     },
 
-    // ── requireClient ─────────────────────────────────────────────────────────
+    // ── requireClient ─────────────────────────────────────────────────────
     requireClient: async function () {
-      return this.requireRole(['client_owner','client_viewer']);
+      return this.requireRole(CLIENT_ROLES);
     },
 
-    // ── signIn ────────────────────────────────────────────────────────────────
+    // ── signIn ────────────────────────────────────────────────────────────
     signIn: async function (email, password) {
-      return sb.auth.signInWithPassword({ email: email, password: password });
+      return fbAuth.signInWithEmailAndPassword(email, password);
     },
 
-    // ── signOut ───────────────────────────────────────────────────────────────
+    // ── signOut ───────────────────────────────────────────────────────────
     signOut: async function () {
-      await sb.auth.signOut();
+      await fbAuth.signOut();
       window.location.replace('/portal/');
     },
 
-    // ── requestPasswordReset ──────────────────────────────────────────────────
-    requestPasswordReset: async function (email, redirectTo) {
-      return sb.auth.resetPasswordForEmail(email, {
-        redirectTo: redirectTo || (window.location.origin + '/portal/reset-password/')
+    // ── requestPasswordReset ──────────────────────────────────────────────
+    requestPasswordReset: async function (email, redirectUrl) {
+      return fbAuth.sendPasswordResetEmail(email, {
+        url: redirectUrl || window.location.origin + '/portal/'
       });
     },
 
-    // ── updatePassword ────────────────────────────────────────────────────────
-    updatePassword: async function (newPassword) {
-      return sb.auth.updateUser({ password: newPassword });
+    // ── confirmPasswordReset ──────────────────────────────────────────────
+    confirmPasswordReset: async function (oobCode, newPassword) {
+      return fbAuth.confirmPasswordReset(oobCode, newPassword);
     },
 
-    // ── onAuthChange ──────────────────────────────────────────────────────────
-    // Subscribe to auth state changes. Returns the unsubscribe function.
+    // ── verifyPasswordResetCode ───────────────────────────────────────────
+    verifyPasswordResetCode: async function (oobCode) {
+      return fbAuth.verifyPasswordResetCode(oobCode);
+    },
+
+    // ── onAuthChange ──────────────────────────────────────────────────────
     onAuthChange: function (callback) {
-      var sub = sb.auth.onAuthStateChange(function (event, session) {
-        callback(event, session);
+      return fbAuth.onAuthStateChanged(function (user) {
+        callback(user ? 'SIGNED_IN' : 'SIGNED_OUT', user);
       });
-      return sub.data.subscription.unsubscribe;
     },
 
-    // ── isStaff ───────────────────────────────────────────────────────────────
-    isStaff: function (profile) {
-      return profile && ['super_admin','staff_admin','field_staff'].indexOf(profile.role) !== -1;
+    // ── Role helpers ──────────────────────────────────────────────────────
+    isStaff: function (profileOrClaims) {
+      var r = profileOrClaims && (profileOrClaims.role || '');
+      return STAFF_ROLES.indexOf(r) !== -1;
+    },
+    isAdmin: function (profileOrClaims) {
+      var r = profileOrClaims && (profileOrClaims.role || '');
+      return ADMIN_ROLES.indexOf(r) !== -1;
+    },
+    isClient: function (profileOrClaims) {
+      var r = profileOrClaims && (profileOrClaims.role || '');
+      return CLIENT_ROLES.indexOf(r) !== -1;
     },
 
-    // ── isAdmin ───────────────────────────────────────────────────────────────
-    isAdmin: function (profile) {
-      return profile && ['super_admin','staff_admin'].indexOf(profile.role) !== -1;
-    },
-
-    // ── isClient ──────────────────────────────────────────────────────────────
-    isClient: function (profile) {
-      return profile && ['client_owner','client_viewer'].indexOf(profile.role) !== -1;
+    // ── getClientIds ─────────────────────────────────────────────────────
+    // Returns the array of clientIds from the current user's ID token claims.
+    getClientIds: async function () {
+      var user = fbAuth.currentUser;
+      if (!user) return [];
+      var claims = await getClaims(user);
+      return Array.isArray(claims.clientIds) ? claims.clientIds : [];
     }
 
   };

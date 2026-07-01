@@ -1,0 +1,281 @@
+Replace the ArcGIS dependency in the SHC Landowner Portal with an open-source mapping system.
+
+Use:
+
+- Leaflet
+- OpenStreetMap-compatible base tiles
+- GeoJSON property and project layers
+- uploaded PDF maps
+- KML and KMZ file storage
+- optional external tile-provider configuration
+
+Do not require ArcGIS.
+
+Do not redesign the portal.
+
+CREATE THE FOLLOWING FEATURES
+
+ADMIN MAP MANAGEMENT
+
+Staff must be able to:
+
+- create a map record for a property
+- enter property latitude and longitude
+- set the default zoom level
+- upload property-boundary GeoJSON
+- upload additional GeoJSON layers
+- upload KML
+- upload KMZ
+- upload PDF maps
+- upload PNG and JPG maps
+- enter layer title
+- choose layer color
+- choose fill color
+- choose opacity
+- choose icon type
+- choose sort order
+- choose whether the layer is client-visible
+- activate or deactivate layers
+- replace uploaded files
+- delete draft layers
+- archive old maps
+
+MAP LAYER TYPES
+
+Support:
+
+- property boundary
+- timber stands
+- habitat areas
+- wildlife openings
+- roads
+- trails
+- water features
+- drainage areas
+- prescribed-fire units
+- completed work
+- active work
+- planned work
+- invasive-species areas
+- camera locations
+- hunting-stand locations
+- custom layers
+
+CLIENT MAP
+
+Inside each client property page:
+
+- display the Leaflet map
+- center on the property
+- load the approved property boundary
+- load approved client-visible layers
+- provide a layer-control menu
+- allow layers to be turned on and off
+- show a legend
+- support desktop and mobile
+- allow fullscreen view
+- support map zoom
+- support map pan
+- show a popup when a feature is selected
+- link mapped property sections to the corresponding portal record
+- link mapped projects to the corresponding project record
+
+Do not expose internal or draft layers.
+
+GEOJSON
+
+Support GeoJSON uploads.
+
+Validate:
+
+- file extension
+- MIME type
+- file size
+- valid JSON
+- valid FeatureCollection or Feature structure
+- geometry types
+
+Support:
+
+- Polygon
+- MultiPolygon
+- LineString
+- MultiLineString
+- Point
+- MultiPoint
+
+Do not execute uploaded content.
+
+KML AND KMZ
+
+Store KML and KMZ files securely.
+
+For the first version:
+
+- allow staff to upload and download KML/KMZ
+- optionally convert KML to GeoJSON server-side if a safe supported library is available
+- do not claim browser conversion works unless tested
+- keep the original uploaded file
+
+PDF AND IMAGE MAPS
+
+Allow staff to upload:
+
+- PDF maps
+- PNG maps
+- JPG maps
+- WebP maps
+
+Clients may:
+
+- view approved image maps
+- download approved PDF maps
+- ask SHC a question about a map
+
+BASE MAP CONFIGURATION
+
+Create environment-variable support for:
+
+MAP_TILE_URL=
+MAP_TILE_ATTRIBUTION=
+MAP_TILE_API_KEY=
+
+Default development base map:
+
+OpenStreetMap-compatible tiles
+
+Do not hardcode a paid provider key.
+
+Do not expose restricted provider credentials.
+
+Add a note in the setup guide that commercial production use should use an approved tile provider rather than relying indefinitely on public OpenStreetMap tile servers.
+
+DATA MODEL
+
+Replace ArcGIS-specific records with:
+
+maps
+- id
+- property_id
+- title
+- description
+- center_latitude
+- center_longitude
+- default_zoom
+- active
+- client_visible
+- created_at
+- updated_at
+
+map_layers
+- id
+- map_id
+- property_id
+- property_section_id nullable
+- project_id nullable
+- title
+- layer_type
+- source_type
+- storage_path nullable
+- external_url nullable
+- color
+- fill_color
+- opacity
+- icon_type nullable
+- popup_template nullable
+- client_visible
+- active
+- sort_order
+- created_at
+- updated_at
+
+map_files
+- id
+- property_id
+- map_id nullable
+- title
+- file_type
+- storage_path
+- original_filename
+- mime_type
+- file_size
+- coordinate_system nullable
+- description
+- client_visible
+- created_at
+- updated_at
+
+SECURITY
+
+- clients may see only map records assigned to their client and property
+- clients may see only client-visible layers
+- internal layers must not be returned through client-facing queries
+- files must use secure access rules
+- do not make client map files publicly enumerable
+- use signed URLs for private downloads when supported
+- validate all uploads server-side
+
+DEMO PROPERTY
+
+Update the Pinecrest Farm demonstration property to include realistic map records for:
+
+- property boundary
+- north pine stand
+- south longleaf unit
+- hardwood drainage corridor
+- wildlife openings
+- roads and trails
+- pond and beaver-management area
+- planned prescribed-fire unit
+- active treatment area
+- completed project area
+- camera locations
+- hunting-stand locations
+
+Do not invent functional GeoJSON geometry if no map files exist.
+
+Create clearly labeled placeholder map records until real GeoJSON files are uploaded.
+
+REMOVE ARCGIS DEPENDENCIES
+
+Remove or archive:
+
+- ArcGIS item ID fields
+- ArcGIS web map URL requirements
+- ArcGIS Experience Builder requirements
+- ArcGIS token handling
+- ArcGIS client ID and client secret requirements
+
+Do not break existing property, project, document, budget, or client records.
+
+TESTING
+
+Test:
+
+- staff can create a map
+- staff can upload valid GeoJSON
+- invalid GeoJSON is rejected
+- staff can configure layer colors
+- staff can publish a layer
+- client can view published layers
+- client cannot view internal layers
+- client cannot access another property’s layers
+- mobile map works
+- layer controls work
+- PDF map download works
+- KML and KMZ upload works
+
+Do not run screenshot-verification loops.
+
+Report only:
+
+- files changed
+- ArcGIS dependencies removed
+- Leaflet integration added
+- map tables or collections created
+- upload formats supported
+- security rules added
+- client map features completed
+- admin map features completed
+- environment variables required
+- remaining manual setup

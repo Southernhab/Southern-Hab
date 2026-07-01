@@ -1,0 +1,14 @@
+// SHC Admin — Firebase browser configuration
+// This file is GITIGNORED. Copy it to admin/firebase-config.js and fill in your values.
+// For Netlify: the build command copies portal/firebase-config.js here automatically.
+// Find all values in: Firebase Console → Project Settings → General → Your apps → SDK setup.
+
+window.__SHC_FIREBASE_CONFIG__ = {
+  apiKey:             'AIzaSy...',
+  authDomain:         'your-project-id.firebaseapp.com',
+  projectId:          'your-project-id',
+  storageBucket:      'your-project-id.appspot.com',
+  messagingSenderId:  '123456789012',
+  appId:              '1:123456789012:web:abcdef1234567890',
+  functionsUrl: 'https://us-central1-your-project-id.cloudfunctions.net'
+};

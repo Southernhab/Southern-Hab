@@ -1,0 +1,20 @@
+// SHC Portal — Firebase browser configuration
+// This file is GITIGNORED. Copy it to portal/firebase-config.js and fill in your values.
+// For Netlify: the build command generates this file automatically from FIREBASE_* env vars.
+// Find all values in: Firebase Console → Project Settings → General → Your apps → SDK setup.
+
+window.__SHC_FIREBASE_CONFIG__ = {
+  apiKey:             'AIzaSy...',
+  authDomain:         'your-project-id.firebaseapp.com',
+  projectId:          'your-project-id',
+  storageBucket:      'your-project-id.appspot.com',
+  messagingSenderId:  '123456789012',
+  appId:              '1:123456789012:web:abcdef1234567890',
+
+  // Cloud Functions base URL — used by public pages (contact, request-access)
+  // that do not load the full Firebase SDK.
+  functionsUrl: 'https://us-central1-your-project-id.cloudfunctions.net',
+
+  // Set this to false to disable emulators even on localhost
+  // useEmulators: false
+};

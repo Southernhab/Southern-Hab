@@ -1,0 +1,126 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ── Helper functions ──────────────────────────────────────────────────
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function uid() {
+      return request.auth.uid;
+    }
+    function role() {
+      return request.auth.token.get('role', '');
+    }
+    function clientIds() {
+      return request.auth.token.get('clientIds', []);
+    }
+    function isSuperAdmin() {
+      return role() == 'super_admin';
+    }
+    function isAdmin() {
+      return role() in ['super_admin', 'staff_admin'];
+    }
+    function isStaff() {
+      return role() in ['super_admin', 'staff_admin', 'field_staff'];
+    }
+    function isClient() {
+      return role() in ['client_owner', 'client_viewer'];
+    }
+    function clientOwns(clientId) {
+      return isClient() && clientId in clientIds();
+    }
+
+    // ── MIME type allow list ───────────────────────────────────────────────
+    function isAllowedMime() {
+      return request.resource.contentType in [
+        'application/pdf',
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'image/webp',
+        'text/csv',
+        'application/json',          // GeoJSON
+        'application/vnd.google-earth.kml+xml',
+        'application/vnd.google-earth.kmz',
+        'application/zip',           // Shapefile packages
+        'application/octet-stream'   // Some KMZ/zip variants
+      ];
+    }
+
+    // Reject any MIME type used for executable or web injection
+    function isBlockedMime() {
+      return request.resource.contentType in [
+        'text/html',
+        'application/javascript',
+        'application/x-javascript',
+        'text/javascript',
+        'application/x-msdownload',
+        'application/x-executable',
+        'application/x-sh',
+        'application/x-csh'
+      ];
+    }
+
+    // 50 MiB upload limit
+    function isWithinSizeLimit() {
+      return request.resource.size <= 50 * 1024 * 1024;
+    }
+
+    function isSafeUpload() {
+      return isAllowedMime() && !isBlockedMime() && isWithinSizeLimit();
+    }
+
+    // ── Client documents ──────────────────────────────────────────────────
+    // Path: clients/{clientId}/documents/{filename}
+    match /clients/{clientId}/documents/{filename} {
+      allow read: if isAuthenticated() && (isStaff() || clientOwns(clientId));
+      allow write: if isAuthenticated() && isAdmin() && isSafeUpload();
+      allow delete: if isAdmin();
+    }
+
+    // ── Property photographs ──────────────────────────────────────────────
+    // Path: clients/{clientId}/properties/{propertyId}/photos/{filename}
+    match /clients/{clientId}/properties/{propertyId}/photos/{filename} {
+      allow read: if isAuthenticated() && (isStaff() || clientOwns(clientId));
+      allow write: if isAuthenticated() && isStaff() && isSafeUpload();
+      allow delete: if isAdmin();
+    }
+
+    // ── GIS / shapefile uploads ────────────────────────────────────────────
+    // Path: clients/{clientId}/properties/{propertyId}/gis/{filename}
+    match /clients/{clientId}/properties/{propertyId}/gis/{filename} {
+      allow read: if isAuthenticated() && (isStaff() || clientOwns(clientId));
+      allow write: if isAuthenticated() && isStaff() && isSafeUpload();
+      allow delete: if isAdmin();
+    }
+
+    // ── Reports ───────────────────────────────────────────────────────────
+    // Path: clients/{clientId}/reports/{filename}
+    match /clients/{clientId}/reports/{filename} {
+      allow read: if isAuthenticated() && (isStaff() || clientOwns(clientId));
+      allow write: if isAuthenticated() && isAdmin() && isSafeUpload();
+      allow delete: if isAdmin();
+    }
+
+    // ── Message attachments ───────────────────────────────────────────────
+    // Path: clients/{clientId}/messages/{filename}
+    match /clients/{clientId}/messages/{filename} {
+      allow read: if isAuthenticated() && (isStaff() || clientOwns(clientId));
+      allow write: if isAuthenticated() && (isStaff() || clientOwns(clientId)) && isSafeUpload();
+      allow delete: if isStaff();
+    }
+
+    // ── Private administrative files (staff only) ─────────────────────────
+    // Path: admin/private/{filename}
+    match /admin/private/{filename} {
+      allow read, write: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ── Catch-all: deny all other paths ──────────────────────────────────
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

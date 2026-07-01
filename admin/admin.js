@@ -1,10 +1,10 @@
 // SHC Administration — Staff SPA
-// Depends on: supabase-client.js, auth.js, api.js (loaded in admin/index.html)
+// Depends on: firebase-client.js, auth.js, api.js (loaded in admin/index.html)
 
 (function () {
   'use strict';
 
-  var sb  = window.shcSupabase;
+  var db  = window.shcDb;
   var api = window.shcApi;
 
   var state = { profile: null };
@@ -102,19 +102,12 @@
   async function renderDashboard() {
     loading();
     try {
-      var [clients, properties, projects, inquiries, accessReqs] = await Promise.all([
-        sb.from('clients').select('id,status', { count: 'exact' }).eq('status','active'),
-        sb.from('properties').select('id', { count: 'exact' }).eq('status','active'),
-        sb.from('projects').select('id,client_review_status', { count: 'exact' }),
-        sb.from('inquiries').select('id', { count: 'exact' }).eq('status','new'),
-        sb.from('access_requests').select('id', { count: 'exact' }).eq('status','pending')
-      ]);
-
-      var clientCount    = clients.count    || 0;
-      var propCount      = properties.count || 0;
-      var awaitingCount  = (projects.data  || []).filter(function (p) { return p.client_review_status === 'awaiting_review'; }).length;
-      var inquiryCount   = inquiries.count  || 0;
-      var accessCount    = accessReqs.count || 0;
+      var counts = await api.staff.getDashboardCounts();
+      var clientCount   = counts.clients;
+      var propCount     = counts.properties;
+      var awaitingCount = counts.awaitingReview;
+      var inquiryCount  = counts.inquiries;
+      var accessCount   = counts.accessRequests;
 
       setContent(
         '<div class="portal-page">' +
@@ -384,8 +377,9 @@
 
       document.querySelectorAll('[data-inq-id]').forEach(function (sel) {
         sel.addEventListener('change', async function () {
-          var res = await sb.from('inquiries').update({ status: sel.value }).eq('id', sel.dataset.inqId);
-          if (res.error) alert('Update failed: ' + res.error.message);
+          try {
+            await api.staff.updateInquiryStatus(sel.dataset.inqId, sel.value);
+          } catch (e) { alert('Update failed: ' + e.message); }
         });
       });
     } catch (e) {
@@ -421,9 +415,10 @@
 
       document.querySelectorAll('[data-ar-id]').forEach(function (btn) {
         btn.addEventListener('click', async function () {
-          var res = await sb.from('access_requests').update({ status: btn.dataset.arAction, reviewed_by: state.profile.id, reviewed_at: new Date().toISOString() }).eq('id', btn.dataset.arId);
-          if (res.error) { alert('Update failed: ' + res.error.message); return; }
-          renderAccess();
+          try {
+            await api.staff.updateAccessRequestStatus(btn.dataset.arId, btn.dataset.arAction);
+            renderAccess();
+          } catch (e) { alert('Update failed: ' + e.message); }
         });
       });
     } catch (e) {
@@ -435,25 +430,38 @@
   async function renderUsers() {
     loading();
     try {
-      var profilesResult = await sb.from('profiles').select('id,first_name,last_name,email,role,active,last_login_at').order('last_name');
-      var cuResult = await sb.from('client_users').select('user_id,client_id,access_level,active,invited_at,accepted_at,clients(display_name)');
+      // Fetch users from Firestore
+      var [usersSnap, cuSnap, clients] = await Promise.all([
+        db.collection('users').orderBy('lastName').get(),
+        db.collection('clientUsers').where('active', '==', true).get(),
+        api.staff.getAllClients().catch(function () { return []; })
+      ]);
+
+      var clientMap = {};
+      clients.forEach(function (c) { clientMap[c.id] = c; });
 
       var cuByUser = {};
-      (cuResult.data || []).forEach(function (cu) { if (!cuByUser[cu.user_id]) cuByUser[cu.user_id] = []; cuByUser[cu.user_id].push(cu); });
+      cuSnap.docs.forEach(function (d) {
+        var cu = { id: d.id, ...d.data() };
+        if (!cuByUser[cu.userId]) cuByUser[cu.userId] = [];
+        cuByUser[cu.userId].push(cu);
+      });
 
-      var rows = (profilesResult.data || []).map(function (p) {
-        var links = (cuByUser[p.id] || []).map(function (cu) { return esc(cu.clients && cu.clients.display_name || cu.client_id); }).join(', ');
+      var rows = usersSnap.docs.map(function (d) {
+        var p     = { id: d.id, ...d.data() };
+        var links = (cuByUser[p.id] || []).map(function (cu) {
+          return esc(clientMap[cu.clientId] ? clientMap[cu.clientId].display_name : cu.clientId);
+        }).join(', ');
         return '<tr>' +
-          '<td>' + esc(p.first_name + ' ' + p.last_name) + '</td>' +
-          '<td>' + esc(p.email) + '</td>' +
-          '<td>' + chip(p.role, p.role.startsWith('client') ? 'blue' : 'gold') + '</td>' +
+          '<td>' + esc((p.firstName || '') + ' ' + (p.lastName || '')) + '</td>' +
+          '<td>' + esc(p.email || '') + '</td>' +
+          '<td>' + chip(p.role || '', (p.role || '').startsWith('client') ? 'blue' : 'gold') + '</td>' +
           '<td>' + (links || '<span style="color:var(--moss)">—</span>') + '</td>' +
           '<td>' + chip(p.active ? 'active' : 'inactive', p.active ? 'green' : 'gray') + '</td>' +
-          '<td>' + formatDate(p.last_login_at) + '</td>' +
+          '<td>' + formatDate(p.lastLoginAt) + '</td>' +
         '</tr>';
       }).join('');
 
-      var clients = await api.staff.getAllClients().catch(function () { return []; });
       var clientOpts = clients.map(function (c) { return '<option value="' + c.id + '">' + esc(c.display_name) + '</option>'; }).join('');
 
       setContent(

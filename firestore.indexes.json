@@ -1,0 +1,146 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "projects",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "clientId",    "order": "ASCENDING" },
+        { "fieldPath": "propertyId",  "order": "ASCENDING" },
+        { "fieldPath": "clientVisible","order": "ASCENDING" },
+        { "fieldPath": "status",      "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "projects",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "propertyId",         "order": "ASCENDING" },
+        { "fieldPath": "clientVisible",       "order": "ASCENDING" },
+        { "fieldPath": "clientReviewStatus",  "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "workHistory",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "propertyId",    "order": "ASCENDING" },
+        { "fieldPath": "clientVisible", "order": "ASCENDING" },
+        { "fieldPath": "completionDate","order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "wildlifeSurveys",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "propertyId",    "order": "ASCENDING" },
+        { "fieldPath": "clientVisible", "order": "ASCENDING" },
+        { "fieldPath": "surveyDate",    "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "harvestRecords",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "propertyId",    "order": "ASCENDING" },
+        { "fieldPath": "clientVisible", "order": "ASCENDING" },
+        { "fieldPath": "harvestDate",   "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "budgets",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "propertyId",    "order": "ASCENDING" },
+        { "fieldPath": "clientVisible", "order": "ASCENDING" },
+        { "fieldPath": "budgetYear",    "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "budgetItems",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "budgetId",   "order": "ASCENDING" },
+        { "fieldPath": "sortOrder",  "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "documents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "clientId",        "order": "ASCENDING" },
+        { "fieldPath": "propertyId",      "order": "ASCENDING" },
+        { "fieldPath": "clientVisible",   "order": "ASCENDING" },
+        { "fieldPath": "documentStatus",  "order": "ASCENDING" },
+        { "fieldPath": "publishedAt",     "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "messages",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "clientId",       "order": "ASCENDING" },
+        { "fieldPath": "clientVisible",  "order": "ASCENDING" },
+        { "fieldPath": "updatedAt",      "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "messageEntries",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "messageId",    "order": "ASCENDING" },
+        { "fieldPath": "internalOnly", "order": "ASCENDING" },
+        { "fieldPath": "createdAt",    "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "propertySections",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "propertyId", "order": "ASCENDING" },
+        { "fieldPath": "sortOrder",  "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "arcgisMaps",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "propertyId",    "order": "ASCENDING" },
+        { "fieldPath": "clientVisible", "order": "ASCENDING" },
+        { "fieldPath": "active",        "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "inquiries",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status",    "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "accessRequests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status",    "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "auditLogs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "collection", "order": "ASCENDING" },
+        { "fieldPath": "createdAt",  "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "clientUsers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "clientId", "order": "ASCENDING" },
+        { "fieldPath": "active",   "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

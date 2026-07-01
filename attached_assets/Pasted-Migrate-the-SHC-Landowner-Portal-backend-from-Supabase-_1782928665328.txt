@@ -1,0 +1,779 @@
+Migrate the SHC Landowner Portal backend from Supabase to Firebase.
+
+The Supabase setup is not being used successfully.
+
+Do not redesign the public website or portal interface.
+
+Create a checkpoint before making changes.
+
+GOAL
+
+Replace all Supabase dependencies with a production-capable Firebase backend using:
+
+- Firebase Authentication
+- Cloud Firestore
+- Firebase Storage
+- Cloud Functions for Firebase
+- Firebase Security Rules
+- Netlify for frontend hosting
+
+Do not use:
+
+- Supabase
+- localStorage as the database
+- hardcoded users
+- shared passwords
+- mock authentication
+- public file buckets
+- frontend admin secrets
+
+==================================================
+PHASE 1 — AUDIT CURRENT PROJECT
+==================================================
+
+Before editing, inspect and report:
+
+- current framework
+- all Supabase packages
+- Supabase configuration files
+- Supabase database calls
+- Supabase authentication calls
+- Supabase storage calls
+- Supabase Edge Function calls
+- mock-data files
+- current portal routes
+- current admin routes
+- current form handlers
+- current Netlify build command
+- current publish directory
+
+Then replace Supabase cleanly rather than layering Firebase on top of it.
+
+==================================================
+FIREBASE SERVICES
+==================================================
+
+Use:
+
+Firebase Authentication:
+- email and password
+- password reset
+- email verification
+- staff-created client invitations
+- disabled accounts
+- sign out
+- session persistence
+
+Cloud Firestore:
+- clients
+- client users
+- properties
+- property sections
+- projects
+- work history
+- monitoring
+- wildlife surveys
+- harvest records
+- budgets
+- budget items
+- documents
+- photographs
+- ArcGIS maps
+- GIS file records
+- messages
+- inquiries
+- access requests
+- notifications
+- audit logs
+- system settings
+
+Firebase Storage:
+- client documents
+- property photographs
+- GIS files
+- reports
+- message attachments
+- private administrative files
+
+Cloud Functions:
+- public inquiry submission
+- access request submission
+- client invitation
+- role assignment
+- email notification
+- secure user disabling
+- secure record publication
+- secure signed file access where required
+
+==================================================
+ROUTES
+==================================================
+
+Preserve:
+
+Public website:
+/
+
+Client login:
+/portal/
+
+Client application:
+/portal/app/
+
+Staff administration:
+/admin/
+
+Password reset:
+/portal/reset-password/
+
+Request access:
+/portal/request-access/
+
+Thank-you page:
+/thank-you.html
+
+Do not break existing public website routes.
+
+==================================================
+USER ROLES
+==================================================
+
+Use Firebase custom claims for:
+
+- super_admin
+- staff_admin
+- field_staff
+- client_owner
+- client_viewer
+
+Custom claims must be assigned only through a trusted Cloud Function using the Firebase Admin SDK.
+
+Do not allow the browser to assign or change roles.
+
+Permissions:
+
+super_admin:
+- complete access
+- manage staff roles
+- manage clients
+- manage users
+- manage properties
+- manage all system data
+- view audit logs
+
+staff_admin:
+- manage clients, properties, projects, budgets, documents, maps, inquiries, and client access
+- cannot create another super_admin
+
+field_staff:
+- update assigned field records
+- upload photographs
+- add monitoring notes
+- cannot manage users
+- cannot access unrelated financial information
+
+client_owner:
+- access assigned clients and properties
+- see approved client-visible information
+- send messages
+- upload requested files
+- respond to project actions
+
+client_viewer:
+- read-only access to approved assigned information
+- may send messages if enabled
+
+==================================================
+FIRESTORE DATA MODEL
+==================================================
+
+Create these top-level collections:
+
+users
+clients
+clientUsers
+properties
+propertySections
+projects
+projectActions
+workHistory
+monitoringRecords
+wildlifeSurveys
+harvestRecords
+budgets
+budgetItems
+documents
+photographs
+arcgisMaps
+mapFiles
+messages
+messageEntries
+inquiries
+accessRequests
+notifications
+auditLogs
+systemSettings
+
+Use Firebase document IDs.
+
+Include:
+
+- createdAt
+- updatedAt
+- createdBy
+- updatedBy
+- clientId
+- propertyId where applicable
+- clientVisible where applicable
+- status where applicable
+
+USERS
+
+users/{uid}
+
+Fields:
+
+- firstName
+- lastName
+- email
+- phone
+- role
+- active
+- clientIds
+- propertyIds
+- lastLoginAt
+- createdAt
+- updatedAt
+
+CLIENTS
+
+Include:
+
+- legalName
+- displayName
+- primaryContactName
+- email
+- phone
+- mailingAddress
+- city
+- state
+- postalCode
+- internalNotes
+- status
+
+PROPERTIES
+
+Include:
+
+- clientId
+- name
+- description
+- acreage
+- county
+- state
+- physicalAddress
+- latitude
+- longitude
+- parcelNumbers
+- internalOwnershipNotes
+- clientManagementSummary
+- primaryObjectives
+- status
+- nextReviewDate
+
+PROPERTY SECTIONS
+
+Include:
+
+- clientId
+- propertyId
+- name
+- acres
+- habitatType
+- landCoverType
+- currentCondition
+- desiredCondition
+- managementStage
+- progressPercent
+- primaryObjectives
+- targetSpecies
+- limitingFactors
+- recommendedNextAction
+- plannedSeason
+- plannedYear
+- estimatedCost
+- internalNotes
+- clientVisibleNotes
+- sortOrder
+
+PROJECTS
+
+Include:
+
+- clientId
+- propertyId
+- propertySectionId
+- name
+- workType
+- description
+- reasonForRecommendation
+- expectedResult
+- priority
+- classification
+- status
+- plannedStartDate
+- plannedEndDate
+- actualStartDate
+- actualEndDate
+- estimatedCostCents
+- approvedCostCents
+- committedCostCents
+- invoicedCostCents
+- paidCostCents
+- quantity
+- quantityUnit
+- assignedStaffId
+- contractorName
+- clientReviewStatus
+- clientVisible
+- internalNotes
+- clientNotes
+
+Use integer cents for all currency values.
+
+Do not use floating-point currency.
+
+DOCUMENTS
+
+Include:
+
+- clientId
+- propertyId
+- projectId
+- documentType
+- title
+- description
+- storagePath
+- originalFilename
+- mimeType
+- fileSize
+- documentStatus
+- clientVisible
+- publishedAt
+- internalNotes
+
+Document statuses:
+
+- internal
+- draft
+- client_review
+- published
+- archived
+
+ARCGIS MAPS
+
+Include:
+
+- clientId
+- propertyId
+- propertySectionId
+- title
+- description
+- arcgisItemId
+- arcgisWebMapUrl
+- arcgisFeatureServiceUrl
+- arcgisExperienceUrl
+- embedUrl
+- layerConfiguration
+- thumbnailStoragePath
+- clientVisible
+- active
+
+MAP FILES
+
+Support:
+
+- GeoJSON
+- KML
+- KMZ
+- zipped shapefile packages
+- PDF maps
+- map images
+
+Store uploaded files in Firebase Storage.
+
+Do not process shapefiles entirely in the browser.
+
+==================================================
+FIREBASE SECURITY RULES
+==================================================
+
+Create strict Firestore Security Rules.
+
+Rules must enforce:
+
+- unauthenticated users cannot access portal data
+- clients can access only records associated with their assigned clientIds
+- clients can access only clientVisible records
+- clients cannot access internalNotes
+- clients cannot access draft documents
+- clients cannot access another client
+- staff permissions are based on custom claims
+- only administrators can create client users
+- only administrators can change roles
+- audit logs are staff-only
+- system settings are super-admin-only
+
+Do not depend only on frontend filtering.
+
+Because Firestore returns whole documents, do not store internal and client-visible sensitive fields in the same readable document when clients must access that document.
+
+Where necessary, split records into:
+
+- client-safe document
+- internal staff-only document
+
+Example:
+
+projects/{projectId}
+projectsInternal/{projectId}
+
+properties/{propertyId}
+propertiesInternal/{propertyId}
+
+documents/{documentId}
+documentsInternal/{documentId}
+
+Create secure rules for each.
+
+==================================================
+STORAGE SECURITY
+==================================================
+
+Create Firebase Storage paths such as:
+
+clients/{clientId}/documents/
+clients/{clientId}/properties/{propertyId}/photos/
+clients/{clientId}/properties/{propertyId}/gis/
+clients/{clientId}/messages/
+admin/private/
+
+Storage rules must enforce:
+
+- authenticated access
+- client ownership
+- staff role access
+- client-visible publication status where needed
+- file size restrictions
+- MIME type restrictions
+- no executable uploads
+
+Allow:
+
+- PDF
+- JPG
+- JPEG
+- PNG
+- WebP
+- CSV
+- GeoJSON
+- KML
+- KMZ
+- ZIP for shapefile packages
+
+Reject:
+
+- executable files
+- HTML uploads
+- JavaScript uploads
+- unknown binary types unless explicitly allowed
+
+==================================================
+ADMIN AREA
+==================================================
+
+Preserve and connect the existing /admin/ interface.
+
+Staff must be able to:
+
+- create clients
+- edit clients
+- archive clients
+- create properties
+- create property sections
+- add projects
+- enter estimated prices
+- enter approved prices
+- enter committed costs
+- enter invoiced costs
+- enter paid costs
+- create annual budgets
+- create five-year plans
+- upload reports
+- upload photographs
+- upload GIS files
+- attach ArcGIS links
+- add internal notes
+- add client-visible notes
+- publish records
+- unpublish records
+- invite clients
+- disable users
+- view inquiries
+- reply to messages
+- view audit history
+
+Do not allow normal frontend code to directly create Firebase Authentication users with administrative roles.
+
+Use secure Cloud Functions.
+
+==================================================
+CLIENT ONBOARDING
+==================================================
+
+Build this workflow:
+
+1. Staff creates client
+2. Staff creates property
+3. Staff adds sections
+4. Staff adds projects
+5. Staff enters approved pricing
+6. Staff uploads approved files
+7. Staff attaches approved ArcGIS maps
+8. Staff selects Invite Client
+9. Cloud Function creates or invites Firebase Authentication user
+10. Cloud Function assigns client role through custom claims
+11. clientUsers record connects user to client
+12. Invitation email is sent
+13. Client creates or resets password
+14. Client signs in
+15. Client sees only assigned records
+
+Do not allow open public registration.
+
+==================================================
+PUBLIC INQUIRY FORMS
+==================================================
+
+Fix both public forms:
+
+- Private Land Inquiry
+- Industrial / Municipal Inquiry
+
+Submit them to an HTTPS Cloud Function.
+
+Requirements:
+
+- server-side validation
+- input sanitization
+- honeypot
+- rate limiting
+- spam rejection
+- Firestore inquiry record
+- accessible success message
+- redirect to /thank-you.html
+- email notification when configured
+- clear failure message
+- work on the production domain
+- work on mobile
+
+Do not expose Firebase Admin credentials.
+
+Add CORS restrictions for:
+
+- https://southernhabitatconsulting.com
+- https://www.southernhabitatconsulting.com
+- the active Netlify preview URL during testing
+
+==================================================
+EMAIL
+==================================================
+
+Use a configurable transactional email provider through Cloud Functions.
+
+Create environment-variable support for:
+
+EMAIL_PROVIDER_API_KEY
+NOTIFICATION_EMAIL
+EMAIL_FROM
+PUBLIC_SITE_URL
+
+Do not hardcode secrets.
+
+Do not claim email works until a verified sender and real API key are configured.
+
+Firebase Authentication password-reset and verification emails may use Firebase templates.
+
+==================================================
+CONFIGURATION
+==================================================
+
+Create:
+
+firebase.json
+.firebaserc.example
+firestore.rules
+firestore.indexes.json
+storage.rules
+functions/
+.env.example
+
+Create a safe frontend Firebase configuration file generated from Netlify environment variables.
+
+Required public variables:
+
+FIREBASE_API_KEY
+FIREBASE_AUTH_DOMAIN
+FIREBASE_PROJECT_ID
+FIREBASE_STORAGE_BUCKET
+FIREBASE_MESSAGING_SENDER_ID
+FIREBASE_APP_ID
+
+These Firebase browser configuration values are not administrative secrets, but they must still be managed consistently.
+
+Required server-only variables:
+
+FIREBASE_SERVICE_ACCOUNT
+EMAIL_PROVIDER_API_KEY
+NOTIFICATION_EMAIL
+EMAIL_FROM
+
+Never expose server-only variables to frontend code.
+
+==================================================
+REMOVE SUPABASE
+==================================================
+
+Remove or disable:
+
+- Supabase packages
+- Supabase client initialization
+- Supabase configuration files
+- Supabase authentication calls
+- Supabase database calls
+- Supabase storage calls
+- Supabase Edge Function calls
+- unused Supabase environment variables
+
+Preserve SQL migration files only in an archived migration folder if useful for reference.
+
+Do not leave two active backends.
+
+==================================================
+TESTING
+==================================================
+
+Create automated tests for:
+
+- unauthenticated portal access blocked
+- unauthenticated admin access blocked
+- client cannot access another client
+- client cannot access internal records
+- client cannot access draft documents
+- client cannot change roles
+- staff can create a client
+- staff can create a property
+- staff can create a project
+- staff can enter pricing
+- staff can upload a document
+- staff can attach an ArcGIS map
+- client can view assigned published map
+- client can download assigned published file
+- public inquiry succeeds
+- spam inquiry fails
+- invalid file upload fails
+- disabled user cannot sign in
+
+Use the Firebase Emulator Suite for automated security-rule testing.
+
+Do not use real client data in tests.
+
+==================================================
+DEPLOYMENT DOCUMENTATION
+==================================================
+
+Create a step-by-step setup guide covering:
+
+1. Create Firebase project
+2. Enable Authentication
+3. Enable Email/Password login
+4. Create Firestore database
+5. Create Firebase Storage
+6. Deploy Firestore rules
+7. Deploy indexes
+8. Deploy Storage rules
+9. Deploy Cloud Functions
+10. Create first administrator
+11. Set Firebase custom claims
+12. Add Netlify environment variables
+13. Add production authentication domains
+14. Configure email templates
+15. Configure notification email provider
+16. Test inquiry forms
+17. Test fictional client onboarding
+18. Deploy frontend to Netlify
+19. Add Client Login link
+20. Verify production security
+
+==================================================
+IMPLEMENTATION ORDER
+==================================================
+
+Phase 1:
+- audit current Supabase usage
+- create checkpoint
+- install Firebase SDK
+- create Firebase configuration
+- create Firestore collections and rules
+- create Authentication integration
+
+Phase 2:
+- migrate admin client and property functions
+- migrate portal data queries
+- remove mock data
+
+Phase 3:
+- migrate projects, pricing, budgets, documents, and ArcGIS records
+- configure Firebase Storage
+
+Phase 4:
+- build Cloud Functions
+- repair inquiry forms
+- build invitation workflow
+
+Phase 5:
+- run Firebase Emulator tests
+- remove Supabase dependencies
+- write deployment guide
+- prepare Netlify production build
+
+Create a checkpoint after each phase.
+
+Do not proceed when required Firebase configuration is missing.
+
+When blocked, report:
+
+- exact missing item
+- where to obtain it
+- where it must be entered
+- what is already complete
+
+FINAL REPORT
+
+Report only:
+
+- files changed
+- Supabase dependencies removed
+- Firebase services implemented
+- routes preserved
+- Firestore collections created
+- Firestore rules created
+- Storage rules created
+- Cloud Functions created
+- public forms connected
+- authentication status
+- admin features connected
+- client features connected
+- automated test results
+- environment variables required
+- remaining manual setup

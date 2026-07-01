@@ -1,0 +1,194 @@
+Do not make any changes.
+
+Perform a complete production-readiness audit of the SHC Landowner Portal backend that was just built.
+
+Report the current status of each item below.
+
+1. PROJECT ARCHITECTURE
+- framework used
+- public website structure
+- portal structure
+- admin structure
+- backend services used
+- whether Supabase is connected
+- whether the project currently uses mock data
+
+2. ROUTES
+Confirm whether these routes exist and provide the exact Preview URLs:
+
+- /portal/
+- /portal/app/
+- /portal/reset-password/
+- /portal/request-access/
+- /admin/
+- /thank-you.html
+
+3. AUTHENTICATION
+Report whether these are fully working, partially working, or not configured:
+
+- staff login
+- client login
+- password reset
+- invitation email
+- email verification
+- logout
+- disabled user access
+- protected portal routes
+- protected admin routes
+
+4. SUPABASE
+Report:
+
+- whether a Supabase project is connected
+- Supabase project URL currently configured
+- whether environment variables are present
+- whether database migrations were created
+- whether migrations have actually been run
+- whether tables exist in the live database
+- whether Row Level Security is enabled
+- whether storage buckets exist
+- whether Edge Functions exist
+- whether any service-role key is exposed in frontend code
+
+Do not display secret values.
+
+5. DATABASE
+List every database table that currently exists.
+
+For each table, report:
+
+- migration created
+- migration applied
+- RLS enabled
+- policies created
+- admin access tested
+- client isolation tested
+
+6. ADMIN FEATURES
+Report whether staff can currently:
+
+- create a client
+- edit a client
+- create a property
+- add property sections
+- invite a client user
+- assign users to clients
+- create projects
+- enter prices
+- create budgets
+- upload documents
+- upload photos
+- upload GIS files
+- add ArcGIS item IDs and URLs
+- publish records to clients
+- keep internal notes private
+- view inquiries
+- respond to messages
+
+7. CLIENT FEATURES
+Report whether clients can currently:
+
+- sign in
+- see assigned properties
+- see approved projects
+- see approved pricing
+- open approved maps
+- download approved files
+- send messages
+- upload requested files
+- view budgets
+- see only their own records
+
+8. PUBLIC INQUIRY FORMS
+Report the status of:
+
+- Private Land Inquiry
+- Industrial / Municipal Inquiry
+- server-side endpoint
+- database storage
+- spam protection
+- success response
+- thank-you page
+- staff email notification
+- production-domain compatibility
+
+9. ARCGIS
+Report whether the portal currently supports:
+
+- ArcGIS item IDs
+- web map URLs
+- Experience Builder URLs
+- secure embeds
+- uploaded KML
+- uploaded KMZ
+- uploaded GeoJSON
+- zipped shapefile storage
+- private ArcGIS token handling
+
+10. STORAGE
+Report:
+
+- storage buckets created
+- whether files are private
+- whether signed URLs are used
+- file-size limits
+- file-type validation
+- client isolation policies
+
+11. TESTS
+List every automated test created.
+
+Report which tests pass and which fail.
+
+Specifically report:
+
+- unauthenticated access blocked
+- client cannot access another client
+- client cannot see internal notes
+- client cannot see draft files
+- admin can create client
+- admin can create property
+- admin can enter pricing
+- admin can upload files
+- public inquiry form succeeds
+
+12. REQUIRED ENVIRONMENT VARIABLES
+List every environment variable still needed.
+
+For each one, explain:
+
+- where I obtain it
+- whether it belongs in Replit, Supabase, or Netlify
+- whether it is public or secret
+
+Do not display any secret values already configured.
+
+13. DEPLOYMENT
+Report:
+
+- whether the portal is included in the current production build
+- whether the current Netlify export includes portal files
+- whether Netlify redirects are configured
+- whether the existing public website routes will continue working
+- exact build command
+- exact publish directory
+- any remaining deployment steps
+
+14. SECURITY WARNINGS
+Identify:
+
+- exposed credentials
+- missing RLS
+- public storage buckets
+- hardcoded secrets
+- mock authentication
+- localStorage-based records
+- missing server-side validation
+- client data leakage risks
+
+Do not edit files.
+Do not run screenshot verification.
+Do not run browser automation.
+Do not create new features.
+
+Report only the current status, missing setup, failed tests, exact Preview links, and the next five required actions.

@@ -87,20 +87,40 @@ footer a{color:rgba(255,255,255,.5)!important}
 </main>
 <footer><small>© 2026 Southern Habitat Consulting LLC · <a href="/contact/">Contact</a></small></footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script src="/portal/config.js"></script>
-<script src="/portal/lib/supabase-client.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="/portal/firebase-config.js"></script>
 <script>
 (function () {
   'use strict';
 
-  // If already signed in, go to the portal app
-  window.shcSupabase.auth.getSession().then(function (result) {
-    if (result.data && result.data.session) {
-      var params = new URLSearchParams(window.location.search);
+  var cfg = window.__SHC_FIREBASE_CONFIG__ || {};
+  if (!cfg.apiKey) {
+    console.error('SHC: Firebase configuration missing. Copy portal/firebase-config.js.example to portal/firebase-config.js.');
+  }
+
+  firebase.initializeApp(cfg);
+  var fbAuth = firebase.auth();
+
+  // Emulators on localhost
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    fbAuth.useEmulator('http://localhost:9099');
+  }
+
+  // If already signed in, redirect based on role
+  fbAuth.onAuthStateChanged(function (user) {
+    if (!user) return;
+    user.getIdTokenResult().then(function (result) {
+      var role    = (result.claims && result.claims.role) || '';
+      var params  = new URLSearchParams(window.location.search);
       var returnTo = params.get('returnTo');
-      window.location.replace(returnTo || '/portal/app/');
-    }
+      if (returnTo) {
+        window.location.replace(returnTo);
+        return;
+      }
+      var staffRoles = ['super_admin', 'staff_admin', 'field_staff'];
+      window.location.replace(staffRoles.indexOf(role) !== -1 ? '/admin/' : '/portal/app/');
+    });
   });
 
   var form    = document.getElementById('login-form');
@@ -118,7 +138,7 @@ footer a{color:rgba(255,255,255,.5)!important}
     e.preventDefault();
     errBox.classList.remove('visible');
     btnSign.disabled = true;
-    btnSign.textContent = 'Signing in…';
+    btnSign.textContent = 'Signing in\u2026';
 
     var email    = document.getElementById('email').value.trim();
     var password = document.getElementById('password').value;
@@ -128,38 +148,27 @@ footer a{color:rgba(255,255,255,.5)!important}
       return;
     }
 
-    var result = await window.shcSupabase.auth.signInWithPassword({
-      email: email, password: password
-    });
+    try {
+      var cred = await fbAuth.signInWithEmailAndPassword(email, password);
+      var tokenResult = await cred.user.getIdTokenResult(true);
+      var role = (tokenResult.claims && tokenResult.claims.role) || '';
 
-    if (result.error) {
-      // Do not reveal whether the account exists
-      showError('Sign-in failed. Check your email and password and try again.');
-      return;
-    }
+      // Disabling is handled by Firebase Auth — disabled accounts throw auth/user-disabled.
+      // Also check the active flag from Firestore if needed (auth.js handles this for the SPA).
 
-    // Check that the account is still active
-    var profileResult = await window.shcSupabase
-      .from('profiles').select('active, role').eq('id', result.data.user.id).single();
-    if (profileResult.data && !profileResult.data.active) {
-      await window.shcSupabase.auth.signOut();
-      showError('Your account has been deactivated. Contact SHC for assistance.');
-      return;
-    }
+      var params   = new URLSearchParams(window.location.search);
+      var returnTo = params.get('returnTo');
+      if (returnTo) { window.location.replace(returnTo); return; }
 
-    var params = new URLSearchParams(window.location.search);
-    var returnTo = params.get('returnTo');
-
-    // Staff go to admin; clients go to the portal app
-    var role = profileResult.data && profileResult.data.role;
-    if (!returnTo) {
-      if (role === 'super_admin' || role === 'staff_admin' || role === 'field_staff') {
-        returnTo = '/admin/';
-      } else {
-        returnTo = '/portal/app/';
+      var staffRoles = ['super_admin', 'staff_admin', 'field_staff'];
+      window.location.replace(staffRoles.indexOf(role) !== -1 ? '/admin/' : '/portal/app/');
+    } catch (err) {
+      var msg = 'Sign-in failed. Check your email and password and try again.';
+      if (err.code === 'auth/user-disabled') {
+        msg = 'Your account has been deactivated. Contact SHC for assistance.';
       }
+      showError(msg);
     }
-    window.location.replace(returnTo);
   });
 
 })();

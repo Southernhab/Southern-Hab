@@ -1,0 +1,68 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs20"
+  },
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      ".firebaserc.example",
+      ".gitignore",
+      ".env*",
+      "node_modules/**",
+      "functions/**",
+      "supabase-archive/**",
+      ".agents/**",
+      ".local/**",
+      "scripts/**",
+      "netlify-site/**",
+      "portal/firebase-config.js",
+      "admin/firebase-config.js"
+    ],
+    "rewrites": [
+      {
+        "source": "/portal/app",
+        "destination": "/portal/app/index.html"
+      },
+      {
+        "source": "/portal/app/**",
+        "destination": "/portal/app/index.html"
+      },
+      {
+        "source": "/admin",
+        "destination": "/admin/index.html"
+      },
+      {
+        "source": "/admin/**",
+        "destination": "/admin/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "/portal/app/**",
+        "headers": [
+          { "key": "X-Frame-Options", "value": "DENY" },
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "Cache-Control", "value": "no-store" }
+        ]
+      },
+      {
+        "source": "/admin/**",
+        "headers": [
+          { "key": "X-Frame-Options", "value": "DENY" },
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "Cache-Control", "value": "no-store" }
+        ]
+      }
+    ]
+  }
+}
