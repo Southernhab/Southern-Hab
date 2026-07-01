@@ -1,0 +1,93 @@
+name: Deploy Netlify Frontend
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'functions/**'
+      - 'firestore.rules'
+      - 'firestore.indexes.json'
+      - 'storage.rules'
+      - 'supabase-archive/**'
+      - 'scripts/**'
+      - '**.md'
+      - '.github/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deploy target'
+        required: false
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - preview
+
+jobs:
+  check-breadcrumbs:
+    name: Breadcrumb validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run breadcrumb check
+        run: node scripts/check-breadcrumbs.js
+
+  deploy-netlify:
+    name: Deploy to Netlify
+    runs-on: ubuntu-latest
+    needs: check-breadcrumbs
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Netlify CLI
+        run: npm install -g netlify-cli
+
+      - name: Generate Firebase config files
+        run: |
+          echo "window.__SHC_FIREBASE_CONFIG__={apiKey:'$FIREBASE_API_KEY',authDomain:'$FIREBASE_AUTH_DOMAIN',projectId:'$FIREBASE_PROJECT_ID',storageBucket:'$FIREBASE_STORAGE_BUCKET',messagingSenderId:'$FIREBASE_MESSAGING_SENDER_ID',appId:'$FIREBASE_APP_ID',functionsUrl:'https://us-central1-$FIREBASE_PROJECT_ID.cloudfunctions.net'};" > portal/firebase-config.js
+          cp portal/firebase-config.js admin/firebase-config.js
+        env:
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+
+      - name: Run breadcrumb check (pre-deploy)
+        run: node scripts/check-breadcrumbs.js
+
+      - name: Deploy to production
+        if: github.event_name == 'push' || inputs.environment == 'production'
+        run: |
+          netlify deploy \
+            --dir . \
+            --prod \
+            --message "Deploy from GitHub Actions — ${{ github.sha }}"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Deploy preview
+        if: inputs.environment == 'preview'
+        run: |
+          netlify deploy \
+            --dir . \
+            --message "Preview from GitHub Actions — ${{ github.sha }}"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
