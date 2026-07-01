@@ -1,0 +1,241 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Messages — SHC Landowner Portal</title>
+<link rel="stylesheet" href="/portal/portal.css">
+<style>
+.messages-layout { display: grid; grid-template-columns: 300px 1fr; gap: 0; background: #fff; border: 1px solid var(--border); border-radius: 4px; min-height: 520px; }
+.msg-thread-list { border-right: 1px solid var(--border); overflow-y: auto; }
+.msg-detail { display: flex; flex-direction: column; }
+.msg-detail-header { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.msg-detail-header h3 { font-size: 15px; margin: 0 0 3px; }
+.msg-detail-meta { font-size: 12px; color: #999; }
+.msg-detail-body { flex: 1; padding: 20px; overflow-y: auto; }
+.bubble { margin-bottom: 16px; }
+.bubble-shc { text-align: left; }
+.bubble-client { text-align: right; }
+.bubble-inner { display: inline-block; max-width: 80%; padding: 10px 14px; border-radius: 4px; font-size: 13.5px; line-height: 1.55; text-align: left; }
+.bubble-shc .bubble-inner { background: var(--cream); color: var(--charcoal); }
+.bubble-client .bubble-inner { background: var(--forest); color: #fff; }
+.bubble-sender { font-size: 11px; color: #aaa; margin-bottom: 3px; }
+.bubble-client .bubble-sender { text-align: right; }
+.msg-compose { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: flex-end; }
+.msg-compose textarea { flex: 1; border: 1px solid var(--border); border-radius: 3px; padding: 8px 12px; font-family: var(--font-body); font-size: 13.5px; resize: none; min-height: 60px; }
+@media(max-width: 700px) {
+  .messages-layout { grid-template-columns: 1fr; }
+  .msg-thread-list { border-right: none; border-bottom: 1px solid var(--border); max-height: 240px; }
+}
+</style>
+</head><body>
+
+<aside class="portal-sidebar" id="portal-sidebar">
+  <div class="sidebar-brand">
+    <a href="/"><span class="sidebar-wordmark">Southern Habitat</span><span class="sidebar-sub">Consulting LLC</span></a>
+    <div class="sidebar-portal-label">Landowner Portal</div>
+  </div>
+  <div class="sidebar-client">
+    <span class="sidebar-client-name">James Hawthorne</span>
+    <span class="sidebar-client-prop">Hawthorne Tract · 847 ac</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="/portal/overview/"><span class="nav-icon">◉</span> Overview</a>
+    <a href="/portal/property/"><span class="nav-icon">⬚</span> My Property</a>
+    <a href="/portal/work/"><span class="nav-icon">⚒</span> Work &amp; Projects</a>
+    <a href="/portal/wildlife/"><span class="nav-icon">◎</span> Wildlife Analysis</a>
+    <a href="/portal/plan/"><span class="nav-icon">▦</span> Plan &amp; Budget</a>
+    <a href="/portal/reports/"><span class="nav-icon">◻</span> Reports &amp; Files</a>
+    <a href="/portal/messages/" class="active"><span class="nav-icon">✉</span> Messages <span class="nav-badge">3</span></a>
+    <a href="/portal/map/"><span class="nav-icon">⊕</span> Property Map</a>
+    <a href="/portal/account/"><span class="nav-icon">○</span> Account</a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="/portal/" class="sign-out-link">Sign Out</a> · <a href="/">Main Website</a>
+  </div>
+</aside>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="portal-main">
+  <header class="portal-topbar">
+    <div class="topbar-left">
+      <button class="topbar-menu-btn" aria-label="Open navigation" aria-expanded="false">☰</button>
+      <div class="property-selector">
+        <span class="prop-label">Property</span>
+        <select aria-label="Select property"><option>Hawthorne Tract — 847 ac</option></select>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <a href="/portal/messages/">✉ Messages <span class="msg-badge">3</span></a>
+      <a href="/portal/account/">James H.</a>
+    </div>
+  </header>
+
+  <div class="portal-page">
+    <div class="page-heading" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div>
+        <h1>Messages</h1>
+        <p class="page-sub">Communication with your SHC team · Replies typically within 1–2 business days</p>
+      </div>
+      <button class="btn btn-primary" onclick="document.getElementById('compose-panel').style.display=document.getElementById('compose-panel').style.display==='none'?'block':'none'">+ New Message</button>
+    </div>
+
+    <!-- Compose panel (hidden by default) -->
+    <div id="compose-panel" style="display:none;margin-bottom:18px">
+      <div class="panel">
+        <div class="panel-header"><h2>New Message to SHC</h2></div>
+        <div class="panel-body">
+          <form id="compose-form">
+            <div class="two-col" style="margin-bottom:14px">
+              <div class="field-group" style="margin-bottom:0">
+                <label for="msg-subject">Subject</label>
+                <input type="text" id="msg-subject" name="subject" placeholder="Brief description of your question or request" required>
+              </div>
+              <div class="field-group" style="margin-bottom:0">
+                <label for="msg-category">Category</label>
+                <select id="msg-category" name="category">
+                  <option>General Question</option>
+                  <option>Site-Visit Request</option>
+                  <option>Proposal Request</option>
+                  <option>Project Question</option>
+                  <option>Report Question</option>
+                  <option>Property Issue</option>
+                  <option>Photograph Upload</option>
+                </select>
+              </div>
+            </div>
+            <div class="two-col" style="margin-bottom:14px">
+              <div class="field-group" style="margin-bottom:0">
+                <label for="msg-related">Related to (optional)</label>
+                <select id="msg-related" name="related">
+                  <option value="">— Not specific —</option>
+                  <option>Full property</option>
+                  <option>Sec. 1 — Bottomland Hardwood</option>
+                  <option>Sec. 2 — Open Fields &amp; Food Plots</option>
+                  <option>Sec. 3 — Ridge Pines</option>
+                  <option>Sec. 4 — Creek Corridor</option>
+                  <option>Sec. 5 — Mixed Upland Transition</option>
+                  <option>Longleaf Underplanting — Section 3</option>
+                  <option>Follow-Up Herbicide — Section 1</option>
+                  <option>Invoice #2026-047</option>
+                  <option>Spring 2026 Camera Survey Report</option>
+                </select>
+              </div>
+              <div class="field-group" style="margin-bottom:0">
+                <label for="msg-priority">Priority</label>
+                <select id="msg-priority" name="priority">
+                  <option>Normal</option>
+                  <option>Time-Sensitive</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-group" style="margin-bottom:14px">
+              <label for="msg-body">Message</label>
+              <textarea id="msg-body" name="body" rows="4" placeholder="Describe your question or request in detail…" required></textarea>
+            </div>
+            <div style="display:flex;gap:10px">
+              <button type="submit" class="btn btn-primary">Send Message</button>
+              <button type="button" class="btn btn-ghost" onclick="document.getElementById('compose-panel').style.display='none'">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message threads -->
+    <div class="messages-layout">
+      <div class="msg-thread-list">
+        <div style="padding:10px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--moss);border-bottom:1px solid #F0EDE6">Conversations</div>
+
+        <div class="msg-item msg-unread active">
+          <div class="msg-item-header">
+            <span class="msg-sender">SHC — Richard</span>
+            <span class="msg-date">Jun 18</span>
+          </div>
+          <div class="msg-subject">Longleaf Underplanting — Section 3</div>
+          <div class="msg-preview">Please review the attached estimate and let us know…</div>
+        </div>
+
+        <div class="msg-item msg-unread">
+          <div class="msg-item-header">
+            <span class="msg-sender">SHC — Richard</span>
+            <span class="msg-date">Jun 10</span>
+          </div>
+          <div class="msg-subject">Invoice #2026-047 — Prescribed Fire</div>
+          <div class="msg-preview">The invoice for the May prescribed fire is now uploaded…</div>
+        </div>
+
+        <div class="msg-item msg-unread">
+          <div class="msg-item-header">
+            <span class="msg-sender">SHC — Richard</span>
+            <span class="msg-date">May 29</span>
+          </div>
+          <div class="msg-subject">Prescribed fire completed — Open Fields</div>
+          <div class="msg-preview">We completed the burn today. Conditions were excellent…</div>
+        </div>
+
+        <div class="msg-item">
+          <div class="msg-item-header">
+            <span class="msg-sender">James Hawthorne</span>
+            <span class="msg-date">May 12</span>
+          </div>
+          <div class="msg-subject">RE: Deer harvest report</div>
+          <div class="msg-preview">Thanks for getting this uploaded. I had a few questions…</div>
+        </div>
+
+        <div class="msg-item">
+          <div class="msg-item-header">
+            <span class="msg-sender">SHC — Richard</span>
+            <span class="msg-date">Apr 7</span>
+          </div>
+          <div class="msg-subject">Spring camera survey complete</div>
+          <div class="msg-preview">The 45-day deployment is wrapped up. Report is now…</div>
+        </div>
+
+        <div class="msg-item">
+          <div class="msg-item-header">
+            <span class="msg-sender">James Hawthorne</span>
+            <span class="msg-date">Mar 28</span>
+          </div>
+          <div class="msg-subject">Question about Section 5 clearing</div>
+          <div class="msg-preview">Is the crew planning to leave the large oaks along the…</div>
+        </div>
+      </div>
+
+      <!-- Message detail -->
+      <div class="msg-detail">
+        <div class="msg-detail-header">
+          <h3>Longleaf Underplanting — Section 3</h3>
+          <div class="msg-detail-meta">SHC — Richard · June 18, 2026 · Related to: Longleaf Underplanting Project</div>
+        </div>
+        <div class="msg-detail-body">
+          <div class="bubble bubble-shc">
+            <div class="bubble-sender">SHC — Richard · Jun 18, 2026</div>
+            <div class="bubble-inner">
+              James, following the commercial thin in 2022, Section 3 is now in a good position for longleaf underplanting. I've uploaded an estimate to your Reports &amp; Files section.<br><br>I'm recommending we proceed with 140 acres in fall–winter 2026, with the remaining 138 acres in 2027–2028. There are cost-share opportunities through EQIP and WHIP+ that could significantly reduce your out-of-pocket cost — potentially down to $2,000–$4,000 for Phase 1 if you qualify.<br><br>Please review the estimate and let me know if you'd like to proceed, have questions, or want me to prepare a formal proposal. No obligation in responding here.
+            </div>
+          </div>
+
+          <div class="bubble bubble-client">
+            <div class="bubble-sender">James Hawthorne · Jun 19, 2026</div>
+            <div class="bubble-inner">
+              Richard, thanks for putting this together. The EQIP angle is interesting — I wasn't aware we could stack WHIP+ on top of that. Can you walk me through the application timeline? I'd like to understand when we'd need to commit if we want the cost-share for this fall's planting.
+            </div>
+          </div>
+
+          <div class="bubble bubble-shc">
+            <div class="bubble-sender">SHC — Richard · Jun 20, 2026</div>
+            <div class="bubble-inner">
+              Great question. EQIP and WHIP+ are separate programs and can sometimes be combined, though it depends on which practices qualify and what NRCS approves. The next EQIP signup window for our area is typically late summer. If you want to pursue cost-share for fall 2026 planting, we would need to get you in front of your local NRCS office within the next 4–6 weeks.<br><br>The short answer: if cost-share is important to you, we should move on this quickly. I can accompany you to the NRCS office or handle the preliminary paperwork if you'd like to proceed. Just say the word.
+            </div>
+          </div>
+        </div>
+        <div class="msg-compose">
+          <textarea placeholder="Reply to SHC…" rows="2" aria-label="Message reply"></textarea>
+          <button class="btn btn-primary" onclick="alert('Reply sent. SHC will respond within 1–2 business days.')">Send</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="/portal/portal.js"></script>
+</body></html>

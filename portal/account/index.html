@@ -1,0 +1,195 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Account — SHC Landowner Portal</title>
+<link rel="stylesheet" href="/portal/portal.css">
+</head><body>
+
+<aside class="portal-sidebar" id="portal-sidebar">
+  <div class="sidebar-brand">
+    <a href="/"><span class="sidebar-wordmark">Southern Habitat</span><span class="sidebar-sub">Consulting LLC</span></a>
+    <div class="sidebar-portal-label">Landowner Portal</div>
+  </div>
+  <div class="sidebar-client">
+    <span class="sidebar-client-name">James Hawthorne</span>
+    <span class="sidebar-client-prop">Hawthorne Tract · 847 ac</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="/portal/overview/"><span class="nav-icon">◉</span> Overview</a>
+    <a href="/portal/property/"><span class="nav-icon">⬚</span> My Property</a>
+    <a href="/portal/work/"><span class="nav-icon">⚒</span> Work &amp; Projects</a>
+    <a href="/portal/wildlife/"><span class="nav-icon">◎</span> Wildlife Analysis</a>
+    <a href="/portal/plan/"><span class="nav-icon">▦</span> Plan &amp; Budget</a>
+    <a href="/portal/reports/"><span class="nav-icon">◻</span> Reports &amp; Files</a>
+    <a href="/portal/messages/"><span class="nav-icon">✉</span> Messages <span class="nav-badge">3</span></a>
+    <a href="/portal/map/"><span class="nav-icon">⊕</span> Property Map</a>
+    <a href="/portal/account/" class="active"><span class="nav-icon">○</span> Account</a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="/portal/" class="sign-out-link">Sign Out</a> · <a href="/">Main Website</a>
+  </div>
+</aside>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="portal-main">
+  <header class="portal-topbar">
+    <div class="topbar-left">
+      <button class="topbar-menu-btn" aria-label="Open navigation" aria-expanded="false">☰</button>
+      <div class="property-selector">
+        <span class="prop-label">Property</span>
+        <select aria-label="Select property"><option>Hawthorne Tract — 847 ac</option></select>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <a href="/portal/messages/">✉ Messages <span class="msg-badge">3</span></a>
+      <a href="/portal/account/">James H.</a>
+    </div>
+  </header>
+
+  <div class="portal-page">
+    <div class="page-heading">
+      <h1>Account</h1>
+      <p class="page-sub">Your profile, property access, and portal preferences</p>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <!-- Profile -->
+        <div class="panel">
+          <div class="panel-header"><h2>Profile</h2></div>
+          <div class="panel-body">
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px">
+              <div style="width:52px;height:52px;border-radius:50%;background:var(--forest);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-family:var(--font-heading);flex-shrink:0">J</div>
+              <div>
+                <div style="font-size:16px;font-weight:600;color:var(--charcoal)">James Hawthorne</div>
+                <div style="font-size:13px;color:var(--moss)">james.hawthorne@example.com</div>
+                <div style="font-size:12px;color:#aaa;margin-top:2px">Client since March 2021</div>
+              </div>
+            </div>
+            <form onsubmit="alert('Profile saved.');return false">
+              <div class="field-group">
+                <label for="acc-name">Full Name</label>
+                <input type="text" id="acc-name" value="James Hawthorne">
+              </div>
+              <div class="field-group">
+                <label for="acc-email">Email Address</label>
+                <input type="email" id="acc-email" value="james.hawthorne@example.com">
+              </div>
+              <div class="field-group">
+                <label for="acc-phone">Phone Number</label>
+                <input type="tel" id="acc-phone" value="(251) 555-0147">
+              </div>
+              <div class="field-group">
+                <label for="acc-mailing">Mailing Address</label>
+                <input type="text" id="acc-mailing" value="1842 Pinhurst Road, Fairhope, AL 36532">
+              </div>
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Change password -->
+        <div class="panel">
+          <div class="panel-header"><h2>Change Password</h2></div>
+          <div class="panel-body">
+            <form onsubmit="alert('Password updated.');return false">
+              <div class="field-group">
+                <label for="acc-pw-current">Current Password</label>
+                <input type="password" id="acc-pw-current" placeholder="••••••••">
+              </div>
+              <div class="field-group">
+                <label for="acc-pw-new">New Password</label>
+                <input type="password" id="acc-pw-new" placeholder="••••••••">
+              </div>
+              <div class="field-group">
+                <label for="acc-pw-confirm">Confirm New Password</label>
+                <input type="password" id="acc-pw-confirm" placeholder="••••••••">
+              </div>
+              <button type="submit" class="btn btn-secondary">Update Password</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <!-- Property access -->
+        <div class="panel">
+          <div class="panel-header"><h2>Property Access</h2></div>
+          <div class="panel-body">
+            <p style="font-size:13px;color:var(--moss);margin-bottom:14px">Your portal account has access to the following properties. Contact SHC to add or remove property access.</p>
+            <div style="background:var(--cream);border:1px solid var(--border);border-radius:4px;padding:14px 16px;margin-bottom:10px">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <div>
+                  <div style="font-size:14px;font-weight:600;color:var(--charcoal)">Hawthorne Tract</div>
+                  <div style="font-size:12.5px;color:var(--moss);margin-top:2px">847 acres · Baldwin County, Alabama</div>
+                  <div style="font-size:12px;color:#aaa;margin-top:2px">Active since March 2021</div>
+                </div>
+                <span class="chip chip-active">Active</span>
+              </div>
+            </div>
+            <p style="font-size:12px;color:#aaa">To add another property to your account, contact SHC at <a href="mailto:richard@southernhabitatconsulting.com" style="color:var(--gold)">richard@southernhabitatconsulting.com</a>.</p>
+          </div>
+        </div>
+
+        <!-- Notification preferences -->
+        <div class="panel">
+          <div class="panel-header"><h2>Notification Preferences</h2></div>
+          <div class="panel-body">
+            <p style="font-size:13px;color:var(--moss);margin-bottom:16px">Choose which notifications you receive by email.</p>
+            <form onsubmit="alert('Preferences saved.');return false">
+              <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">
+                <label style="display:flex;align-items:center;gap:10px;font-size:13.5px;cursor:pointer">
+                  <input type="checkbox" checked style="accent-color:var(--forest);width:15px;height:15px"> New reports or documents published
+                </label>
+                <label style="display:flex;align-items:center;gap:10px;font-size:13.5px;cursor:pointer">
+                  <input type="checkbox" checked style="accent-color:var(--forest);width:15px;height:15px"> New invoice or payment due
+                </label>
+                <label style="display:flex;align-items:center;gap:10px;font-size:13.5px;cursor:pointer">
+                  <input type="checkbox" checked style="accent-color:var(--forest);width:15px;height:15px"> SHC message or reply
+                </label>
+                <label style="display:flex;align-items:center;gap:10px;font-size:13.5px;cursor:pointer">
+                  <input type="checkbox" checked style="accent-color:var(--forest);width:15px;height:15px"> Project requiring your review or direction
+                </label>
+                <label style="display:flex;align-items:center;gap:10px;font-size:13.5px;cursor:pointer">
+                  <input type="checkbox" style="accent-color:var(--forest);width:15px;height:15px"> Work completed on property
+                </label>
+                <label style="display:flex;align-items:center;gap:10px;font-size:13.5px;cursor:pointer">
+                  <input type="checkbox" style="accent-color:var(--forest);width:15px;height:15px"> SHC weekly activity summary
+                </label>
+              </div>
+              <button type="submit" class="btn btn-secondary">Save Preferences</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Contact SHC -->
+        <div class="panel">
+          <div class="panel-header"><h2>Your SHC Contact</h2></div>
+          <div class="panel-body">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
+              <div style="width:44px;height:44px;border-radius:50%;background:var(--pine);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-family:var(--font-heading);flex-shrink:0">R</div>
+              <div>
+                <div style="font-size:14px;font-weight:600;color:var(--charcoal)">Richard</div>
+                <div style="font-size:12.5px;color:var(--moss)">Southern Habitat Consulting LLC</div>
+              </div>
+            </div>
+            <div style="font-size:13px;color:var(--charcoal);display:flex;flex-direction:column;gap:6px">
+              <a href="tel:+12517213011" style="color:var(--gold);text-decoration:none">(251) 721-3011</a>
+              <a href="mailto:richard@southernhabitatconsulting.com" style="color:var(--gold);text-decoration:none">richard@southernhabitatconsulting.com</a>
+            </div>
+            <div style="margin-top:12px">
+              <a href="/portal/messages/" class="btn btn-secondary btn-sm">Send a Message</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sign out -->
+        <div style="margin-top:8px">
+          <a href="/portal/" class="btn btn-ghost sign-out-link" style="width:100%;justify-content:center">Sign Out of Portal</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/portal/portal.js"></script>
+</body></html>

@@ -63,6 +63,7 @@
       '<li><a href="/industrial-municipal-utility/">Industrial, Municipal &amp; Utility</a></li>' +
       '<li><a href="/private-land-services/">Private Lands</a></li>' +
       '<li><a href="/about/">About</a></li>' +
+      '<li><a href="/portal/">Client Login</a></li>' +
       '<li><a href="/contact/">Contact</a></li>' +
       '</ul>';
 

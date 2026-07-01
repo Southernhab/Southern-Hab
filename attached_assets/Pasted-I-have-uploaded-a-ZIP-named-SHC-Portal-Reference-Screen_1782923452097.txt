@@ -1,0 +1,418 @@
+I have uploaded a ZIP named SHC_Portal_Reference_Screens.zip containing screenshots of a Lovable concept prototype.
+
+This prototype is a visual reference only. Do not copy it blindly and do not replace the existing Southern Habitat Consulting public website.
+
+First inspect the complete existing codebase, including:
+
+- Framework and routing
+- Current public pages
+- Header and footer components
+- Logo assets
+- Fonts
+- CSS variables and design tokens
+- Button, card, navigation, and form components
+- Existing mobile behavior
+- Deployment configuration
+
+Create a checkpoint before making changes.
+
+PROJECT GOAL
+
+Add a Southern Habitat Consulting customer portal to the existing website.
+
+The portal should be located at:
+
+/portal
+
+Create a separate authorized staff area at:
+
+/admin
+
+The public Southern Habitat Consulting website must continue to function and retain its current appearance.
+
+Add a “Client Login” link to the public website navigation.
+
+PORTAL NAME
+
+Use:
+
+SHC Landowner Portal
+
+Tagline:
+
+Your property. Your plan. Your progress.
+
+Do not use “SHC Habitat Intelligence” as the customer-facing platform name.
+
+VISUAL DIRECTION
+
+Use the uploaded Lovable screenshots as the structural and visual reference for the portal.
+
+Retain the strongest design elements:
+
+- Dark forest-green portal sidebar
+- Warm cream or off-white content background
+- Serif page headings
+- Restrained tan and olive accents
+- Clean metric cards
+- Property selector in the top header
+- Professional charts and tables
+- Clear status chips
+- Management Attention Required section
+- Project cards
+- Five-year planning interface
+- Budget interface
+- Reports library
+
+However, the portal must use the exact Southern Habitat Consulting branding already present in this Replit website.
+
+Reuse the existing website’s:
+
+- Logo
+- Font families
+- Color variables
+- Button styling
+- Border radiuses
+- Photography style
+- Header styling where appropriate
+
+Do not create a second unrelated SHC design system.
+
+The login page should visually resemble the public website. Once signed in, the portal can use the darker application sidebar shown in the reference screenshots.
+
+Do not use trophy hunting imagery or make the portal resemble a recreational hunting-club website.
+
+PUBLIC WEBSITE INTEGRATION
+
+Preserve every existing public route and component.
+
+Add “Client Login” to the public navigation.
+
+The login page should include:
+
+- SHC logo
+- SHC Landowner Portal
+- “Your property. Your plan. Your progress.”
+- Email and password fields
+- Sign-in button
+- Request Client Access button
+- Return to Main Website link
+- A short description explaining that clients can review property progress, completed work, planned projects, wildlife analysis, reports, and projected costs
+
+PORTAL NAVIGATION
+
+Replace the Lovable prototype navigation with:
+
+1. Overview
+2. My Property
+3. Work & Projects
+4. Wildlife Analysis
+5. Plan & Budget
+6. Reports & Files
+7. Messages
+8. Property Map
+9. Account
+
+Only authorized SHC staff should see:
+
+10. Administration
+
+Use a collapsible sidebar on desktop and a mobile navigation drawer on smaller screens.
+
+OVERVIEW PAGE
+
+Do not call this “Executive Dashboard.”
+
+The Overview page should answer:
+
+- What condition is my property in?
+- What has been completed?
+- What is being worked on?
+- What is planned next?
+- What decisions does SHC need from me?
+- What is the projected cost?
+- Are habitat and wildlife results improving?
+
+Include:
+
+- Property acreage
+- Overall management progress
+- Work completed this year
+- Active projects
+- Planned projects
+- Projects requiring client review
+- Current-year projected cost
+- Five-year projected investment
+- Next scheduled activity
+- Next property review
+- Recent SHC activity
+- Management Attention Required
+- Recent photographs
+- New reports
+- Wildlife trend summary
+
+MY PROPERTY
+
+Create a property overview and individual Property Section pages.
+
+Do not make technical GIS scoring the primary client view.
+
+Each property section should display:
+
+- Name
+- Acres
+- Habitat or land-cover type
+- Current condition
+- Desired condition
+- Management stage
+- Progress toward desired condition
+- Primary objectives
+- Target species
+- Limiting factors
+- Last completed work
+- Current work
+- Recommended next action
+- Planned season and year
+- Estimated cost
+- Work history
+- Monitoring history
+- Photographs
+- Reports and files
+
+Use these default management stages:
+
+- Baseline Assessment
+- Initial Site Preparation
+- Habitat Establishment
+- Active Restoration
+- Maintenance
+- Monitoring
+- Follow-Up Treatment Required
+- Desired Condition Achieved
+- Management Rotation Continuing
+
+Detailed habitat, threat, wildlife-value, and feasibility scores may exist internally, but do not make them the dominant client-facing table columns.
+
+WORK & PROJECTS
+
+Create four primary tabs:
+
+- Past Work
+- Active Work
+- Planned Projects
+- Awaiting Your Decision
+
+Past Work records should include:
+
+- Work type
+- Property section
+- Completion date
+- Acres or quantity
+- Scope
+- SHC crew or contractor
+- Final cost
+- Treatment specifications
+- Completion notes
+- Inspection result
+- Recommended follow-up
+- Before, during, and after photographs
+- Related reports and documents
+
+Planned projects should include:
+
+- Project name
+- Property section
+- Reason for recommendation
+- Expected result
+- Priority
+- Essential, Recommended, or Optional classification
+- Planned season and year
+- Estimated cost
+- Client review status
+- Related proposal and files
+
+Allow clients to:
+
+- Ask a question
+- Request more information
+- Request a formal proposal
+- Request a schedule change
+- Indicate preliminary approval
+- Defer a project
+
+Display a notice that portal actions do not replace a signed contract or formal authorization.
+
+WILDLIFE ANALYSIS
+
+Replace the broad “Wildlife Monitoring” presentation with:
+
+- Deer Herd Analysis
+- Harvest Records
+- Thermal Drone Surveys
+- Camera Surveys
+- Turkey and Quail Monitoring
+- Feral-Swine Activity
+- Habitat Response
+
+The Deer Herd Analysis view should compare multiple years and show:
+
+- Estimated deer density
+- Direct observations
+- Bucks, does, fawns, and unclassified deer
+- Buck-to-doe ratio
+- Fawns per doe
+- Harvest by sex
+- Harvest by age class
+- Harvest per 100 acres
+- Average buck weight
+- Average doe weight
+- Average antler measurements
+- Wildlife use by property section
+
+Clearly label direct observations, calculated ratios, modeled estimates, and professional interpretations.
+
+Allow an SHC interpretation paragraph beneath every major chart.
+
+PLAN & BUDGET
+
+Combine the strongest parts of the prototype’s Five-Year Plan and Budget pages.
+
+Show:
+
+- Current-year plan
+- Five-year schedule
+- Work by property section
+- Work by management practice
+- Approved costs
+- Estimated costs
+- Committed costs
+- Invoiced costs
+- Paid costs
+- Remaining planned investment
+- Planned versus actual costs
+- Essential, Recommended, and Optional work
+- Potential cost-share funding
+
+Display estimates differently from approved or contracted costs.
+
+REPORTS & FILES
+
+Clients should be able to:
+
+- View
+- Download
+- Share
+- Ask SHC a Question
+
+Do not show “Generate Report” to clients.
+
+Report generation and publishing should be restricted to authorized SHC staff.
+
+Support:
+
+- Management plans
+- Annual property reports
+- Proposals
+- Estimates
+- Contracts
+- Invoices
+- Maps
+- Drone reports
+- Harvest reports
+- Camera reports
+- Treatment reports
+- Herbicide records
+- Burn plans
+- Inspection reports
+- Photographs
+- Videos
+- Cost-share files
+
+MESSAGES
+
+Add a client communication area for:
+
+- General questions
+- Site-visit requests
+- Proposal requests
+- Project questions
+- Report questions
+- Property issues
+- Photograph uploads
+
+Allow messages to be associated with a property, property section, project, survey, or document.
+
+PROPERTY MAP
+
+Keep the map as a supporting feature rather than the center of the portal.
+
+Simplify the default client map layers to:
+
+- Property boundary
+- Property sections
+- Roads and trails
+- Water features
+- Wildlife openings
+- Past work
+- Active work
+- Planned work
+- Survey locations
+
+Clicking a property section should open that section’s portal record.
+
+Do not display a large GIS-style layer checklist by default.
+
+ADMINISTRATION
+
+The primary Administration navigation should include:
+
+- Clients
+- Properties
+- Property Sections
+- Work History
+- Planned Projects
+- Wildlife Surveys
+- Harvest Records
+- Drone Surveys
+- Budgets
+- Reports
+- Messages
+- Users and Access
+
+Move species lists, habitat types, scoring formulas, treatment types, costs, and branding into a secondary System Settings area.
+
+Maintain a strict separation between:
+
+- Internal SHC notes
+- Draft material
+- Client-visible material
+- Published reports
+
+Never return internal notes through client-facing routes or APIs.
+
+IMPLEMENTATION PHASE
+
+For this first pass, focus on:
+
+1. Preserving the public website
+2. Adding the Client Login navigation item
+3. Building the portal shell and routes
+4. Matching the existing website branding
+5. Recreating and restructuring the Lovable screens using fictional demonstration data
+6. Making desktop, tablet, and mobile layouts work
+7. Creating the client and SHC staff navigation differences
+
+Do not begin payment processing or complex GIS integrations.
+
+Do not perform an uncontrolled full-site rewrite.
+
+After completing this visual and structural phase:
+
+- Run the application
+- Test all existing public routes
+- Test all portal routes
+- Test desktop, tablet, and mobile views
+- Fix broken navigation and layout issues
+- Provide a list of files changed
+- Create a checkpoint
+- Stop and wait for review before building the production database and authentication system
