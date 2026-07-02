@@ -81,9 +81,20 @@ jobs:
           GOOGLE_CLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
           GCLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
         run: |
-          firebase projects:list \
-            --non-interactive \
-            --debug
+          for attempt in 1 2 3 4 5; do
+            echo "Firebase authentication attempt $attempt of 5"
+
+            if firebase projects:list --non-interactive --debug; then
+              exit 0
+            fi
+
+            if [ "$attempt" -lt 5 ]; then
+              sleep $((attempt * 10))
+            fi
+          done
+
+          echo "Firebase authentication failed after 5 attempts."
+          exit 1
 
       - name: Deploy all
         if: github.event_name == 'push' || inputs.target == 'all'
@@ -94,11 +105,24 @@ jobs:
           GOOGLE_CLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
           GCLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
         run: |
-          firebase deploy \
-            --project "${{ secrets.FIREBASE_PROJECT_ID }}" \
-            --only "firestore:rules,firestore:indexes,storage,functions" \
-            --non-interactive \
-            --debug
+          for attempt in 1 2 3; do
+            echo "Firebase deployment attempt $attempt of 3"
+
+            if firebase deploy \
+              --project "${{ secrets.FIREBASE_PROJECT_ID }}" \
+              --only "firestore:rules,firestore:indexes,storage,functions" \
+              --non-interactive \
+              --debug; then
+              exit 0
+            fi
+
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 15))
+            fi
+          done
+
+          echo "Firebase deployment failed after 3 attempts."
+          exit 1
 
       - name: Deploy rules only
         if: github.event_name == 'workflow_dispatch' && inputs.target == 'rules-only'
@@ -109,11 +133,24 @@ jobs:
           GOOGLE_CLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
           GCLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
         run: |
-          firebase deploy \
-            --project "${{ secrets.FIREBASE_PROJECT_ID }}" \
-            --only "firestore:rules,firestore:indexes,storage" \
-            --non-interactive \
-            --debug
+          for attempt in 1 2 3; do
+            echo "Rules deployment attempt $attempt of 3"
+
+            if firebase deploy \
+              --project "${{ secrets.FIREBASE_PROJECT_ID }}" \
+              --only "firestore:rules,firestore:indexes,storage" \
+              --non-interactive \
+              --debug; then
+              exit 0
+            fi
+
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 15))
+            fi
+          done
+
+          echo "Rules deployment failed after 3 attempts."
+          exit 1
 
       - name: Deploy functions only
         if: github.event_name == 'workflow_dispatch' && inputs.target == 'functions-only'
@@ -124,8 +161,21 @@ jobs:
           GOOGLE_CLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
           GCLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
         run: |
-          firebase deploy \
-            --project "${{ secrets.FIREBASE_PROJECT_ID }}" \
-            --only "functions" \
-            --non-interactive \
-            --debug
+          for attempt in 1 2 3; do
+            echo "Functions deployment attempt $attempt of 3"
+
+            if firebase deploy \
+              --project "${{ secrets.FIREBASE_PROJECT_ID }}" \
+              --only "functions" \
+              --non-interactive \
+              --debug; then
+              exit 0
+            fi
+
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 15))
+            fi
+          done
+
+          echo "Functions deployment failed after 3 attempts."
+          exit 1
