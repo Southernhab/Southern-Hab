@@ -45,12 +45,17 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
           create_credentials_file: true
           export_environment_variables: true
-          token_format: access_token
 
       - name: Set up Google Cloud CLI
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Verify Google authentication
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.google-auth.outputs.credentials_file_path }}
+          CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: ${{ steps.google-auth.outputs.credentials_file_path }}
+          GOOGLE_GHA_CREDS_PATH: ${{ steps.google-auth.outputs.credentials_file_path }}
+          GOOGLE_CLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
+          GCLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
         run: |
           gcloud auth list
           gcloud config set project "${{ secrets.FIREBASE_PROJECT_ID }}"
@@ -71,21 +76,27 @@ jobs:
       - name: Verify Firebase authentication
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.google-auth.outputs.credentials_file_path }}
+          CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: ${{ steps.google-auth.outputs.credentials_file_path }}
+          GOOGLE_GHA_CREDS_PATH: ${{ steps.google-auth.outputs.credentials_file_path }}
           GOOGLE_CLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
           GCLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
         run: |
-          firebase projects:list --non-interactive --debug
+          firebase projects:list \
+            --non-interactive \
+            --debug
 
       - name: Deploy all
         if: github.event_name == 'push' || inputs.target == 'all'
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.google-auth.outputs.credentials_file_path }}
+          CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: ${{ steps.google-auth.outputs.credentials_file_path }}
+          GOOGLE_GHA_CREDS_PATH: ${{ steps.google-auth.outputs.credentials_file_path }}
           GOOGLE_CLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
           GCLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
         run: |
           firebase deploy \
             --project "${{ secrets.FIREBASE_PROJECT_ID }}" \
-            --only firestore:rules,firestore:indexes,storage,functions \
+            --only "firestore:rules,firestore:indexes,storage,functions" \
             --non-interactive \
             --debug
 
@@ -93,12 +104,14 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && inputs.target == 'rules-only'
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.google-auth.outputs.credentials_file_path }}
+          CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: ${{ steps.google-auth.outputs.credentials_file_path }}
+          GOOGLE_GHA_CREDS_PATH: ${{ steps.google-auth.outputs.credentials_file_path }}
           GOOGLE_CLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
           GCLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
         run: |
           firebase deploy \
             --project "${{ secrets.FIREBASE_PROJECT_ID }}" \
-            --only firestore:rules,firestore:indexes,storage \
+            --only "firestore:rules,firestore:indexes,storage" \
             --non-interactive \
             --debug
 
@@ -106,11 +119,13 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && inputs.target == 'functions-only'
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.google-auth.outputs.credentials_file_path }}
+          CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: ${{ steps.google-auth.outputs.credentials_file_path }}
+          GOOGLE_GHA_CREDS_PATH: ${{ steps.google-auth.outputs.credentials_file_path }}
           GOOGLE_CLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
           GCLOUD_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
         run: |
           firebase deploy \
             --project "${{ secrets.FIREBASE_PROJECT_ID }}" \
-            --only functions \
+            --only "functions" \
             --non-interactive \
             --debug
