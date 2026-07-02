@@ -2,22 +2,24 @@ name: Deploy Netlify Frontend
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths-ignore:
-      - 'functions/**'
-      - 'firestore.rules'
-      - 'firestore.indexes.json'
-      - 'storage.rules'
-      - 'supabase-archive/**'
-      - 'scripts/**'
-      - '**.md'
-      - '.github/**'
+      - "functions/**"
+      - "firestore.rules"
+      - "firestore.indexes.json"
+      - "storage.rules"
+      - "supabase-archive/**"
+      - "scripts/**"
+      - "**.md"
+      - ".github/**"
+
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Deploy target'
+        description: "Deploy target"
         required: false
-        default: 'production'
+        default: "production"
         type: choice
         options:
           - production
@@ -35,7 +37,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Run breadcrumb check
         run: node scripts/check-breadcrumbs.js
@@ -43,30 +45,104 @@ jobs:
       - name: Generate Firebase config files
         run: |
           cat > portal/firebase-config.js <<'EOF'
-          window.__SHC_FIREBASE_CONFIG__={apiKey:'${{ secrets.FIREBASE_API_KEY }}',authDomain:'${{ secrets.FIREBASE_AUTH_DOMAIN }}',projectId:'${{ secrets.FIREBASE_PROJECT_ID }}',storageBucket:'${{ secrets.FIREBASE_STORAGE_BUCKET }}',messagingSenderId:'${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}',appId:'${{ secrets.FIREBASE_APP_ID }}',functionsUrl:'https://us-central1-${{ secrets.FIREBASE_PROJECT_ID }}.cloudfunctions.net'};
+          window.__SHC_FIREBASE_CONFIG__={
+            apiKey:'${{ secrets.FIREBASE_API_KEY }}',
+            authDomain:'${{ secrets.FIREBASE_AUTH_DOMAIN }}',
+            projectId:'${{ secrets.FIREBASE_PROJECT_ID }}',
+            storageBucket:'${{ secrets.FIREBASE_STORAGE_BUCKET }}',
+            messagingSenderId:'${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}',
+            appId:'${{ secrets.FIREBASE_APP_ID }}',
+            functionsUrl:'https://us-central1-${{ secrets.FIREBASE_PROJECT_ID }}.cloudfunctions.net'
+          };
           EOF
+
           cp portal/firebase-config.js admin/firebase-config.js
 
+      - name: Verify Netlify secrets exist
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          if [ -z "$NETLIFY_AUTH_TOKEN" ]; then
+            echo "::error::NETLIFY_AUTH_TOKEN is missing or empty."
+            exit 1
+          fi
+
+          if [ -z "$NETLIFY_SITE_ID" ]; then
+            echo "::error::NETLIFY_SITE_ID is missing or empty."
+            exit 1
+          fi
+
+          echo "Both Netlify secrets are present."
+          echo "NETLIFY_SITE_ID length: ${#NETLIFY_SITE_ID} characters"
+
+      - name: Verify Netlify token
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          HTTP_STATUS=$(curl --silent \
+            --output /tmp/netlify-user.json \
+            --write-out "%{http_code}" \
+            --header "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
+            "https://api.netlify.com/api/v1/user")
+
+          echo "Netlify token verification returned HTTP $HTTP_STATUS"
+
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "::error::The Netlify access token is invalid, expired, or unauthorized."
+            exit 1
+          fi
+
+          echo "Netlify access token is valid."
+
+      - name: Verify access to Netlify project
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          HTTP_STATUS=$(curl --silent \
+            --output /tmp/netlify-site.json \
+            --write-out "%{http_code}" \
+            --header "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
+            "https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID")
+
+          echo "Netlify project verification returned HTTP $HTTP_STATUS"
+
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "::error::The Project ID is incorrect, or this token cannot access that Netlify project."
+            exit 1
+          fi
+
+          SITE_NAME=$(jq -r '.name // "unknown"' /tmp/netlify-site.json)
+          SITE_URL=$(jq -r '.url // "unknown"' /tmp/netlify-site.json)
+
+          echo "Authorized Netlify project: $SITE_NAME"
+          echo "Netlify project URL: $SITE_URL"
+
       - name: Install Netlify CLI
-        run: npm install -g netlify-cli
+        run: npm install --global netlify-cli
 
       - name: Deploy to production
         if: github.event_name == 'push' || inputs.environment == 'production'
-        run: |
-          netlify deploy \
-            --dir . \
-            --prod \
-            --message "Deploy from GitHub Actions — ${GITHUB_SHA::7}"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          netlify deploy \
+            --dir "." \
+            --prod \
+            --auth "$NETLIFY_AUTH_TOKEN" \
+            --site "$NETLIFY_SITE_ID" \
+            --message "Deploy from GitHub Actions — ${GITHUB_SHA::7}"
 
       - name: Deploy preview
-        if: inputs.environment == 'preview'
-        run: |
-          netlify deploy \
-            --dir . \
-            --message "Preview — ${GITHUB_SHA::7}"
+        if: github.event_name == 'workflow_dispatch' && inputs.environment == 'preview'
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          netlify deploy \
+            --dir "." \
+            --auth "$NETLIFY_AUTH_TOKEN" \
+            --site "$NETLIFY_SITE_ID" \
+            --message "Preview — ${GITHUB_SHA::7}"
