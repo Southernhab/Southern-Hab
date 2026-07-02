@@ -112,6 +112,7 @@ jobs:
               --project "${{ secrets.FIREBASE_PROJECT_ID }}" \
               --only "firestore:rules,firestore:indexes,storage,functions" \
               --non-interactive \
+              --force \
               --debug; then
               exit 0
             fi
@@ -168,6 +169,7 @@ jobs:
               --project "${{ secrets.FIREBASE_PROJECT_ID }}" \
               --only "functions" \
               --non-interactive \
+              --force \
               --debug; then
               exit 0
             fi
