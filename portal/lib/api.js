@@ -161,15 +161,47 @@
     formatDate:     formatDate,
 
     // ── Properties for the current user ──────────────────────────────────────
-    getMyProperties: async function () {
-      var clientIds = await window.shcAuth.getClientIds();
-      if (!clientIds.length) return [];
-      var snap = await db.collection('properties')
-        .where('clientId', 'in', clientIds)
-        .where('status', '==', 'active')
-        .orderBy('name')
-        .get();
-      return snapToArr(snap).map(convertTimestamps);
+  getMyProperties: async function () {
+  var clientIds = await window.shcAuth.getClientIds();
+
+  console.log('SHC clientIds from token:', clientIds);
+
+  if (!clientIds.length) return [];
+
+  var all = [];
+
+  // Firestore "in" supports up to 10 values. This keeps the query simple
+  // and avoids composite-index issues from combining status + orderBy.
+  for (var i = 0; i < clientIds.length; i += 10) {
+    var batch = clientIds.slice(i, i + 10);
+
+    var snap = await db.collection('properties')
+      .where('clientId', 'in', batch)
+      .get();
+
+    all = all.concat(snapToArr(snap));
+  }
+
+  all = all
+    .filter(function (p) {
+      return (p.status || 'active') === 'active';
+    })
+    .map(convertTimestamps)
+    .sort(function (a, b) {
+      return String(a.name || '').localeCompare(String(b.name || ''));
+    });
+
+  console.log('SHC properties returned for client:', all.map(function (p) {
+    return {
+      id: p.id,
+      name: p.name,
+      clientId: p.clientId,
+      status: p.status
+    };
+  }));
+
+  return all;
+},
     },
 
     // ── Portal overview for one property ─────────────────────────────────────
