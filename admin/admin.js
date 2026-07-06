@@ -393,110 +393,269 @@
     });
   }
 
-  async function renderPropertyWorkspace(propertyId) {
-    loading();
+async function renderPropertyWorkspace(propertyId) {
+  loading();
+
+  try {
+    var properties = await api.staff.getAllProperties();
+    var property = properties.find(function (p) { return p.id === propertyId; });
+
+    if (!property) {
+      setContent('<div class="portal-page">' + errBox('Property not found.') + '</div>');
+      return;
+    }
+
+    var projects = await getProjectsForProperty(propertyId);
+    var documents = await api.staff.getDocumentsForProperty(propertyId).catch(function () { return []; });
+
+    var projectRows = projects.map(function (p) {
+      return '<tr>' +
+        '<td><strong>' + esc(p.name || 'Untitled Project') + '</strong><br><span style="font-size:12px;color:var(--moss)">' + esc((p.description || '').slice(0, 90)) + ((p.description || '').length > 90 ? '…' : '') + '</span></td>' +
+        '<td>' + chip(p.status || 'draft', statusColor(p.status || 'draft')) + '</td>' +
+        '<td>' + esc(p.classification || '—') + '</td>' +
+        '<td>' + formatCurrency(projectEstimatedCents(p)) + '</td>' +
+        '<td>' + chip(p.clientReviewStatus || p.client_review_status || 'not_requested', (p.clientReviewStatus || p.client_review_status) === 'awaiting_review' ? 'gold' : 'gray') + '</td>' +
+        '<td>' + ((p.clientVisible || p.client_visible) ? chip('Published','green') : chip('Internal','gray')) + '</td>' +
+        '<td><button class="btn btn-ghost btn-sm" data-project-edit="' + esc(p.id) + '">Edit</button></td>' +
+      '</tr>';
+    }).join('');
+
+    var documentRows = documents.map(function (d) {
+      return '<tr>' +
+        '<td><strong>' + esc(d.title || 'Untitled File') + '</strong><br><span style="font-size:12px;color:var(--moss)">' + esc(d.original_filename || d.originalFilename || '') + '</span></td>' +
+        '<td>' + esc(d.document_type || d.documentType || 'Report') + '</td>' +
+        '<td>' + chip(d.document_status || d.documentStatus || 'draft', (d.document_status || d.documentStatus) === 'published' ? 'green' : 'gray') + '</td>' +
+        '<td>' + ((d.client_visible || d.clientVisible) ? chip('Client Visible','green') : chip('Internal','gray')) + '</td>' +
+        '<td>' + formatDate(d.published_at || d.publishedAt) + '</td>' +
+        '<td style="white-space:nowrap">' +
+          '<button class="btn btn-ghost btn-sm" data-doc-open="' + esc(d.id) + '">Open</button> ' +
+          '<button class="btn btn-ghost btn-sm" data-doc-archive="' + esc(d.id) + '">Archive</button>' +
+        '</td>' +
+      '</tr>';
+    }).join('');
+
+    document.getElementById('admin-section-title').textContent = 'Property Workspace';
+
+    setContent(
+      '<div class="portal-page">' +
+        '<div class="page-heading">' +
+          '<div>' +
+            '<button id="back-to-properties" class="btn btn-ghost btn-sm" type="button" style="margin-bottom:8px">← Back to Properties</button>' +
+            '<h1>' + esc(property.name) + '</h1>' +
+            '<p class="page-sub">' +
+              esc((property.clients && property.clients.display_name) || 'No client shown') +
+              ' · ' + (property.acreage ? Math.round(property.acreage) + ' acres' : 'acreage not set') +
+              (property.county ? ' · ' + esc(property.county) : '') +
+              (property.state ? ', ' + esc(property.state) : '') +
+            '</p>' +
+          '</div>' +
+          '<div>' +
+            '<button id="workspace-edit-property" class="btn btn-ghost btn-sm" type="button">Edit Property</button> ' +
+            '<button id="workspace-add-project" class="btn" type="button" style="background:var(--forest);color:#fff;border:none;padding:.55rem 1.1rem;font-size:13px;font-weight:600;cursor:pointer;border-radius:3px">+ Add Project</button>' +
+          '</div>' +
+        '</div>' +
+
+        '<div id="prop-form-wrap" style="display:none"></div>' +
+        '<div id="project-form-wrap" style="display:none"></div>' +
+        '<div id="document-form-wrap" style="display:none"></div>' +
+
+        '<div class="two-col" style="margin-bottom:20px">' +
+          '<div class="panel"><div class="panel-header"><h2>Management Objectives</h2></div><div class="panel-body-p">' +
+            '<p style="font-size:13px;color:var(--charcoal)">' + esc(property.primaryObjectives || property.primary_objectives || 'No objectives entered yet.') + '</p>' +
+          '</div></div>' +
+          '<div class="panel"><div class="panel-header"><h2>Client-Visible Summary</h2></div><div class="panel-body-p">' +
+            '<p style="font-size:13px;color:var(--charcoal)">' + esc(property.clientManagementSummary || property.management_summary_client || 'No client summary entered yet.') + '</p>' +
+          '</div></div>' +
+        '</div>' +
+
+        '<div class="panel" style="margin-bottom:20px">' +
+          '<div class="panel-header"><h2>Projects &amp; Recommendations</h2></div>' +
+          '<div class="panel-body-p" style="padding-top:0">' +
+            '<p style="font-size:13px;color:var(--moss);margin:0 0 14px">Create work recommendations, estimated costs, review status, and client-visible project updates for this property.</p>' +
+          '</div>' +
+          '<table class="data-table">' +
+            '<thead><tr>' +
+              '<th>Project</th><th>Status</th><th>Classification</th><th>Estimated</th><th>Client Review</th><th>Visibility</th><th>Action</th>' +
+            '</tr></thead>' +
+            '<tbody>' + (projectRows || '<tr><td colspan="7" style="text-align:center;color:var(--moss)">No projects for this property yet. Click + Add Project.</td></tr>') + '</tbody>' +
+          '</table>' +
+        '</div>' +
+
+        '<div class="panel">' +
+          '<div class="panel-header">' +
+            '<h2>Reports &amp; Files</h2>' +
+            '<button id="workspace-upload-document" class="btn btn-ghost btn-sm" type="button">+ Upload Report/File</button>' +
+          '</div>' +
+          '<div class="panel-body-p" style="padding-top:0">' +
+            '<p style="font-size:13px;color:var(--moss);margin:0 0 14px">Manage downloadable client reports, drone summaries, wildlife analysis reports, maps, invoices, and supporting files for this property.</p>' +
+          '</div>' +
+          '<table class="data-table">' +
+            '<thead><tr>' +
+              '<th>Title</th><th>Type</th><th>Status</th><th>Visibility</th><th>Published</th><th>Action</th>' +
+            '</tr></thead>' +
+            '<tbody>' + (documentRows || '<tr><td colspan="6" style="text-align:center;color:var(--moss)">No reports or files uploaded for this property yet.</td></tr>') + '</tbody>' +
+          '</table>' +
+        '</div>' +
+      '</div>'
+    );
+
+    document.getElementById('back-to-properties').addEventListener('click', function () {
+      window.location.hash = '#properties';
+      renderProperties();
+    });
+
+    document.getElementById('workspace-edit-property').addEventListener('click', function () {
+      showPropertyForm(property);
+    });
+
+    document.getElementById('workspace-add-project').addEventListener('click', function () {
+      showProjectForm(null, propertyId, function () {
+        renderPropertyWorkspace(propertyId);
+      });
+    });
+
+    document.getElementById('workspace-upload-document').addEventListener('click', function () {
+      showDocumentUploadForm(property, function () {
+        renderPropertyWorkspace(propertyId);
+      });
+    });
+
+    document.querySelectorAll('[data-project-edit]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var project = projects.find(function (p) { return p.id === btn.dataset.projectEdit; });
+        if (project) {
+          showProjectForm(project, propertyId, function () {
+            renderPropertyWorkspace(propertyId);
+          });
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-doc-open]').forEach(function (btn) {
+      btn.addEventListener('click', async function () {
+        try {
+          var url = await api.staff.getAdminDocumentUrl(btn.dataset.docOpen);
+          window.open(url, '_blank');
+        } catch (e) {
+          alert('Could not open file: ' + e.message);
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-doc-archive]').forEach(function (btn) {
+      btn.addEventListener('click', async function () {
+        if (!confirm('Archive this document and hide it from the client portal?')) return;
+        try {
+          await api.staff.updateDocument(btn.dataset.docArchive, {
+            documentStatus: 'archived',
+            clientVisible: false
+          });
+          renderPropertyWorkspace(propertyId);
+        } catch (e) {
+          alert('Archive failed: ' + e.message);
+        }
+      });
+    });
+
+  } catch (e) {
+    setContent('<div class="portal-page">' + errBox('Could not open property workspace: ' + e.message) + '</div>');
+  }
+}
+  async function showDocumentUploadForm(property, afterSave) {
+  var wrap = document.getElementById('document-form-wrap');
+  if (!wrap) return;
+
+  var clientId = property.clientId || property.client_id || '';
+
+  wrap.style.display = '';
+  wrap.innerHTML =
+    '<div class="panel" style="margin-bottom:20px;border-color:var(--forest)">' +
+      '<div class="panel-header">' +
+        '<h2>Upload Report/File</h2>' +
+        '<button class="btn btn-ghost btn-sm" id="cancel-document-form" type="button">Cancel</button>' +
+      '</div>' +
+      '<div class="panel-body-p">' +
+        '<form id="document-form" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">' +
+
+          '<div style="grid-column:1/-1">' +
+            '<label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">File *</label>' +
+            '<input name="file" type="file" required accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.kml,.kmz,.zip" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px;background:#fff;color:var(--charcoal)">' +
+          '</div>' +
+
+          adminField('Title', 'title', '', 'required') +
+
+          '<div>' +
+            '<label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Document Type</label>' +
+            '<select name="document_type" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px;background:#fff;color:var(--charcoal)">' +
+              '<option value="Property Overview Report">Property Overview Report</option>' +
+              '<option value="Wildlife Analysis Report">Wildlife Analysis Report</option>' +
+              '<option value="Drone Survey Report">Drone Survey Report</option>' +
+              '<option value="Work Plan / Budget Memo">Work Plan / Budget Memo</option>' +
+              '<option value="Map / GIS File">Map / GIS File</option>' +
+              '<option value="Invoice / Estimate">Invoice / Estimate</option>' +
+              '<option value="Photo Documentation">Photo Documentation</option>' +
+              '<option value="Other Supporting File">Other Supporting File</option>' +
+            '</select>' +
+          '</div>' +
+
+          '<div>' +
+            '<label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Status</label>' +
+            '<select name="document_status" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px;background:#fff;color:var(--charcoal)">' +
+              '<option value="published">Published</option>' +
+              '<option value="draft">Draft / Internal</option>' +
+            '</select>' +
+          '</div>' +
+
+          '<div style="display:flex;align-items:end;padding-bottom:8px">' +
+            '<label style="display:flex;gap:.5rem;align-items:center;font-size:13px;color:var(--charcoal);font-weight:600">' +
+              '<input type="checkbox" name="client_visible" checked> Visible in client portal' +
+            '</label>' +
+          '</div>' +
+
+          '<div style="grid-column:1/-1">' +
+            '<div id="document-form-msg" style="display:none;font-size:12.5px;margin-bottom:8px"></div>' +
+            '<button type="submit" class="btn" style="background:var(--forest);color:#fff;border:none;padding:.6rem 1.2rem;font-size:13px;font-weight:600;cursor:pointer;border-radius:3px">Upload Report/File</button>' +
+          '</div>' +
+
+        '</form>' +
+      '</div>' +
+    '</div>';
+
+  document.getElementById('cancel-document-form').addEventListener('click', function () {
+    wrap.style.display = 'none';
+  });
+
+  document.getElementById('document-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    var msgEl = document.getElementById('document-form-msg');
+    var fd = new FormData(e.target);
+    var file = fd.get('file');
+
+    msgEl.style.display = '';
+    msgEl.style.color = 'var(--moss)';
+    msgEl.textContent = 'Uploading file...';
 
     try {
-      var properties = await api.staff.getAllProperties();
-      var property = properties.find(function (p) { return p.id === propertyId; });
-
-      if (!property) {
-        setContent('<div class="portal-page">' + errBox('Property not found.') + '</div>');
-        return;
-      }
-
-      var projects = await getProjectsForProperty(propertyId);
-
-      var projectRows = projects.map(function (p) {
-        return '<tr>' +
-          '<td><strong>' + esc(p.name || 'Untitled Project') + '</strong><br><span style="font-size:12px;color:var(--moss)">' + esc((p.description || '').slice(0, 90)) + ((p.description || '').length > 90 ? '…' : '') + '</span></td>' +
-          '<td>' + chip(p.status || 'draft', statusColor(p.status || 'draft')) + '</td>' +
-          '<td>' + esc(p.classification || '—') + '</td>' +
-          '<td>' + formatCurrency(projectEstimatedCents(p)) + '</td>' +
-          '<td>' + chip(p.clientReviewStatus || p.client_review_status || 'not_requested', (p.clientReviewStatus || p.client_review_status) === 'awaiting_review' ? 'gold' : 'gray') + '</td>' +
-          '<td>' + ((p.clientVisible || p.client_visible) ? chip('Published','green') : chip('Internal','gray')) + '</td>' +
-          '<td><button class="btn btn-ghost btn-sm" data-project-edit="' + esc(p.id) + '">Edit</button></td>' +
-        '</tr>';
-      }).join('');
-
-      document.getElementById('admin-section-title').textContent = 'Property Workspace';
-
-      setContent(
-        '<div class="portal-page">' +
-          '<div class="page-heading">' +
-            '<div>' +
-              '<button id="back-to-properties" class="btn btn-ghost btn-sm" type="button" style="margin-bottom:8px">← Back to Properties</button>' +
-              '<h1>' + esc(property.name) + '</h1>' +
-              '<p class="page-sub">' +
-                esc((property.clients && property.clients.display_name) || 'No client shown') +
-                ' · ' + (property.acreage ? Math.round(property.acreage) + ' acres' : 'acreage not set') +
-                (property.county ? ' · ' + esc(property.county) : '') +
-                (property.state ? ', ' + esc(property.state) : '') +
-              '</p>' +
-            '</div>' +
-            '<div>' +
-              '<button id="workspace-edit-property" class="btn btn-ghost btn-sm" type="button">Edit Property</button> ' +
-              '<button id="workspace-add-project" class="btn" type="button" style="background:var(--forest);color:#fff;border:none;padding:.55rem 1.1rem;font-size:13px;font-weight:600;cursor:pointer;border-radius:3px">+ Add Project</button>' +
-            '</div>' +
-          '</div>' +
-
-          '<div id="prop-form-wrap" style="display:none"></div>' +
-          '<div id="project-form-wrap" style="display:none"></div>' +
-
-          '<div class="two-col" style="margin-bottom:20px">' +
-            '<div class="panel"><div class="panel-header"><h2>Management Objectives</h2></div><div class="panel-body-p">' +
-              '<p style="font-size:13px;color:var(--charcoal)">' + esc(property.primaryObjectives || property.primary_objectives || 'No objectives entered yet.') + '</p>' +
-            '</div></div>' +
-            '<div class="panel"><div class="panel-header"><h2>Client-Visible Summary</h2></div><div class="panel-body-p">' +
-              '<p style="font-size:13px;color:var(--charcoal)">' + esc(property.clientManagementSummary || property.management_summary_client || 'No client summary entered yet.') + '</p>' +
-            '</div></div>' +
-          '</div>' +
-
-          '<div class="panel">' +
-            '<div class="panel-header"><h2>Projects &amp; Recommendations</h2></div>' +
-            '<div class="panel-body-p" style="padding-top:0">' +
-              '<p style="font-size:13px;color:var(--moss);margin:0 0 14px">Create work recommendations, estimated costs, review status, and client-visible project updates for this property.</p>' +
-            '</div>' +
-            '<table class="data-table">' +
-              '<thead><tr>' +
-                '<th>Project</th><th>Status</th><th>Classification</th><th>Estimated</th><th>Client Review</th><th>Visibility</th><th>Action</th>' +
-              '</tr></thead>' +
-              '<tbody>' + (projectRows || '<tr><td colspan="7" style="text-align:center;color:var(--moss)">No projects for this property yet. Click + Add Project.</td></tr>') + '</tbody>' +
-            '</table>' +
-          '</div>' +
-        '</div>'
-      );
-
-      document.getElementById('back-to-properties').addEventListener('click', function () {
-        window.location.hash = '#properties';
-        renderProperties();
+      await api.staff.uploadDocumentForProperty({
+        clientId: clientId,
+        propertyId: property.id,
+        file: file,
+        title: fd.get('title'),
+        documentType: fd.get('document_type'),
+        documentStatus: fd.get('document_status'),
+        clientVisible: fd.get('client_visible') === 'on'
       });
 
-      document.getElementById('workspace-edit-property').addEventListener('click', function () {
-        showPropertyForm(property);
-      });
+      wrap.style.display = 'none';
 
-      document.getElementById('workspace-add-project').addEventListener('click', function () {
-        showProjectForm(null, propertyId, function () {
-          renderPropertyWorkspace(propertyId);
-        });
-      });
-
-      document.querySelectorAll('[data-project-edit]').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var project = projects.find(function (p) { return p.id === btn.dataset.projectEdit; });
-          if (project) {
-            showProjectForm(project, propertyId, function () {
-              renderPropertyWorkspace(propertyId);
-            });
-          }
-        });
-      });
-    } catch (e) {
-      setContent('<div class="portal-page">' + errBox('Could not open property workspace: ' + e.message) + '</div>');
+      if (afterSave) afterSave();
+    } catch (err) {
+      msgEl.style.color = '#7a2020';
+      msgEl.textContent = 'Upload failed: ' + err.message;
     }
-  }
-
+  });
+}
   async function getProjectsForProperty(propertyId) {
     var projects = await api.staff.getAllProjects();
     return projects.filter(function (p) { return p.propertyId === propertyId; });
@@ -504,14 +663,25 @@
 
   // ── PROJECTS ──────────────────────────────────────────────────────────────
   async function renderProjects() {
-    loading();
-    try {
-      var result = await api.staff.getAllProjects();
+  loading();
 
-      var rows = result.map(function (p) {
+  try {
+    var properties = await api.staff.getAllProperties();
+    var projects = await api.staff.getAllProjects();
+
+    var projectsByProperty = {};
+    projects.forEach(function (p) {
+      var key = p.propertyId || 'unassigned';
+      if (!projectsByProperty[key]) projectsByProperty[key] = [];
+      projectsByProperty[key].push(p);
+    });
+
+    var propertyCards = properties.map(function (prop) {
+      var propProjects = projectsByProperty[prop.id] || [];
+
+      var rows = propProjects.map(function (p) {
         return '<tr>' +
           '<td><strong>' + esc(p.name || 'Untitled Project') + '</strong></td>' +
-          '<td>' + esc((p.properties && p.properties.name) || '—') + '</td>' +
           '<td>' + chip(p.status || 'draft', statusColor(p.status || 'draft')) + '</td>' +
           '<td>' + esc(p.classification || '—') + '</td>' +
           '<td>' + formatCurrency(projectEstimatedCents(p)) + '</td>' +
@@ -521,42 +691,102 @@
         '</tr>';
       }).join('');
 
-      setContent(
-        '<div class="portal-page">' +
-          '<div class="page-heading">' +
-            '<div>' +
-              '<h1>Projects</h1>' +
-              '<p class="page-sub">Create and manage landowner-facing work recommendations, cost estimates, and review status.</p>' +
-            '</div>' +
-            '<button id="new-project-btn" class="btn" style="background:var(--forest);color:#fff;border:none;padding:.55rem 1.1rem;font-size:13px;font-weight:600;cursor:pointer;border-radius:3px">+ New Project</button>' +
+      return '<div class="panel" style="margin-bottom:20px">' +
+        '<div class="panel-header">' +
+          '<div>' +
+            '<h2>' + esc(prop.name || 'Unnamed Property') + '</h2>' +
+            '<p style="font-size:12.5px;color:var(--moss);margin:.2rem 0 0">' +
+              esc((prop.clients && prop.clients.display_name) || 'No client shown') +
+              ' · ' + (prop.acreage ? Math.round(prop.acreage) + ' acres' : 'acreage not set') +
+              (prop.county ? ' · ' + esc(prop.county) : '') +
+              (prop.state ? ', ' + esc(prop.state) : '') +
+              ' · ' + propProjects.length + ' project' + (propProjects.length === 1 ? '' : 's') +
+            '</p>' +
           '</div>' +
-          '<div id="project-form-wrap" style="display:none"></div>' +
-          '<div class="panel">' +
-            '<table class="data-table">' +
-              '<thead><tr>' +
-                '<th>Project</th><th>Property</th><th>Status</th><th>Classification</th><th>Estimated</th><th>Client Review</th><th>Visibility</th><th>Action</th>' +
-              '</tr></thead>' +
-              '<tbody>' + (rows || '<tr><td colspan="8" style="text-align:center;color:var(--moss)">No projects found. Click + New Project.</td></tr>') + '</tbody>' +
-            '</table>' +
+          '<div>' +
+            '<button class="btn btn-ghost btn-sm" data-prop-open="' + esc(prop.id) + '">Open Property</button> ' +
+            '<button class="btn btn-ghost btn-sm" data-prop-project="' + esc(prop.id) + '">+ Add Project</button>' +
           '</div>' +
-        '</div>'
-      );
+        '</div>' +
+        '<table class="data-table">' +
+          '<thead><tr>' +
+            '<th>Project</th><th>Status</th><th>Classification</th><th>Estimated</th><th>Client Review</th><th>Visibility</th><th>Action</th>' +
+          '</tr></thead>' +
+          '<tbody>' + (rows || '<tr><td colspan="7" style="text-align:center;color:var(--moss)">No projects for this property yet.</td></tr>') + '</tbody>' +
+        '</table>' +
+      '</div>';
+    }).join('');
 
-      document.getElementById('new-project-btn').addEventListener('click', function () {
-        showProjectForm(null, null, renderProjects);
+    var unassigned = projectsByProperty.unassigned || [];
+    var unassignedCard = '';
+
+    if (unassigned.length) {
+      var unassignedRows = unassigned.map(function (p) {
+        return '<tr>' +
+          '<td><strong>' + esc(p.name || 'Untitled Project') + '</strong></td>' +
+          '<td>' + chip(p.status || 'draft', statusColor(p.status || 'draft')) + '</td>' +
+          '<td>' + esc(p.classification || '—') + '</td>' +
+          '<td>' + formatCurrency(projectEstimatedCents(p)) + '</td>' +
+          '<td>' + chip(p.client_review_status || p.clientReviewStatus || 'not_requested', (p.client_review_status || p.clientReviewStatus) === 'awaiting_review' ? 'gold' : 'gray') + '</td>' +
+          '<td>' + ((p.client_visible || p.clientVisible) ? chip('Published','green') : chip('Internal','gray')) + '</td>' +
+          '<td><button class="btn btn-ghost btn-sm" data-project-edit="' + esc(p.id) + '">Edit</button></td>' +
+        '</tr>';
+      }).join('');
+
+      unassignedCard =
+        '<div class="panel" style="margin-bottom:20px;border-color:#e8a0a0">' +
+          '<div class="panel-header"><h2>Unassigned Projects</h2></div>' +
+          '<table class="data-table">' +
+            '<thead><tr><th>Project</th><th>Status</th><th>Classification</th><th>Estimated</th><th>Client Review</th><th>Visibility</th><th>Action</th></tr></thead>' +
+            '<tbody>' + unassignedRows + '</tbody>' +
+          '</table>' +
+        '</div>';
+    }
+
+    setContent(
+      '<div class="portal-page">' +
+        '<div class="page-heading">' +
+          '<div>' +
+            '<h1>Projects by Property</h1>' +
+            '<p class="page-sub">Projects are grouped under each property so staff can work the same way the client portal is organized.</p>' +
+          '</div>' +
+          '<button id="new-project-btn" class="btn" style="background:var(--forest);color:#fff;border:none;padding:.55rem 1.1rem;font-size:13px;font-weight:600;cursor:pointer;border-radius:3px">+ New Project</button>' +
+        '</div>' +
+        '<div id="project-form-wrap" style="display:none"></div>' +
+        unassignedCard +
+        (propertyCards || '<div class="content-empty">No properties found. Create a property before adding projects.</div>') +
+      '</div>'
+    );
+
+    document.getElementById('new-project-btn').addEventListener('click', function () {
+      showProjectForm(null, null, renderProjects);
+    });
+
+    document.querySelectorAll('[data-prop-open]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        renderPropertyWorkspace(btn.dataset.propOpen);
       });
+    });
 
-      document.querySelectorAll('[data-project-edit]').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var project = result.find(function (p) { return p.id === btn.dataset.projectEdit; });
-          if (project) showProjectForm(project, project.propertyId, renderProjects);
+    document.querySelectorAll('[data-prop-project]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        showProjectForm(null, btn.dataset.propProject, function () {
+          renderProjects();
         });
       });
-    } catch (e) {
-      setContent('<div class="portal-page">' + errBox('Could not load projects: ' + e.message) + '</div>');
-    }
-  }
+    });
 
+    document.querySelectorAll('[data-project-edit]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var project = projects.find(function (p) { return p.id === btn.dataset.projectEdit; });
+        if (project) showProjectForm(project, project.propertyId, renderProjects);
+      });
+    });
+
+  } catch (e) {
+    setContent('<div class="portal-page">' + errBox('Could not load projects: ' + e.message) + '</div>');
+  }
+}
     async function showProjectForm(project, selectedPropertyId, afterSave) {
     var wrap = document.getElementById('project-form-wrap');
 
