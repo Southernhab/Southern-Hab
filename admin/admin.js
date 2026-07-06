@@ -248,28 +248,67 @@
     loading();
     try {
       var result = await api.staff.getAllProperties();
+
       var rows = result.map(function (p) {
-        return '<tr><td>' + esc(p.name) + '</td><td>' + esc((p.clients && p.clients.display_name) || '—') + '</td>' +
+        return '<tr>' +
+          '<td><strong>' + esc(p.name) + '</strong></td>' +
+          '<td>' + esc((p.clients && p.clients.display_name) || '—') + '</td>' +
           '<td>' + (p.acreage ? Math.round(p.acreage) + ' ac' : '—') + '</td>' +
-          '<td>' + esc(p.county || '—') + ', ' + esc(p.state || '') + '</td>' +
-          '<td>' + chip(p.status, statusColor(p.status)) + '</td>' +
-          '<td>' + api.formatDate(p.next_review_date) + '</td>' +
-          '<td><button class="btn btn-ghost btn-sm" data-prop-edit="' + p.id + '">Edit</button></td></tr>';
+          '<td>' + esc(p.county || '—') + (p.state ? ', ' + esc(p.state) : '') + '</td>' +
+          '<td>' + chip(p.status || 'active', statusColor(p.status || 'active')) + '</td>' +
+          '<td>' + formatDate(p.next_review_date) + '</td>' +
+          '<td style="white-space:nowrap">' +
+            '<button class="btn btn-ghost btn-sm" data-prop-open="' + esc(p.id) + '">Open</button> ' +
+            '<button class="btn btn-ghost btn-sm" data-prop-project="' + esc(p.id) + '">Add Project</button> ' +
+            '<button class="btn btn-ghost btn-sm" data-prop-edit="' + esc(p.id) + '">Edit</button>' +
+          '</td>' +
+        '</tr>';
       }).join('');
 
       setContent(
-        '<div class="portal-page"><div class="page-heading"><h1>Properties</h1>' +
-        '<button class="btn" id="new-prop-btn" style="background:var(--forest);color:#fff;border:none;padding:.55rem 1.1rem;font-size:13px;font-weight:600;cursor:pointer;border-radius:3px">+ New Property</button></div>' +
-        '<div id="prop-form-wrap" style="display:none"></div>' +
-        '<div class="panel"><table class="data-table"><thead><tr><th>Property</th><th>Client</th><th>Acreage</th><th>County</th><th>Status</th><th>Next Review</th><th></th></tr></thead>' +
-        '<tbody>' + (rows || '<tr><td colspan="7" style="text-align:center;color:var(--moss)">No properties yet.</td></tr>') + '</tbody></table></div></div>'
+        '<div class="portal-page">' +
+          '<div class="page-heading">' +
+            '<div>' +
+              '<h1>Properties</h1>' +
+              '<p class="page-sub">Open a property to manage its projects, recommendations, estimated costs, and client-visible work.</p>' +
+            '</div>' +
+            '<button class="btn" id="new-prop-btn" style="background:var(--forest);color:#fff;border:none;padding:.55rem 1.1rem;font-size:13px;font-weight:600;cursor:pointer;border-radius:3px">+ New Property</button>' +
+          '</div>' +
+          '<div id="prop-form-wrap" style="display:none"></div>' +
+          '<div id="project-form-wrap" style="display:none"></div>' +
+          '<div class="panel">' +
+            '<table class="data-table">' +
+              '<thead><tr>' +
+                '<th>Property</th><th>Client</th><th>Acreage</th><th>County</th><th>Status</th><th>Next Review</th><th>Actions</th>' +
+              '</tr></thead>' +
+              '<tbody>' + (rows || '<tr><td colspan="7" style="text-align:center;color:var(--moss)">No properties yet.</td></tr>') + '</tbody>' +
+            '</table>' +
+          '</div>' +
+        '</div>'
       );
 
-      document.getElementById('new-prop-btn').addEventListener('click', function () { showPropertyForm(null, result); });
+      document.getElementById('new-prop-btn').addEventListener('click', function () {
+        showPropertyForm(null);
+      });
+
+      document.querySelectorAll('[data-prop-open]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          renderPropertyWorkspace(btn.dataset.propOpen);
+        });
+      });
+
+      document.querySelectorAll('[data-prop-project]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showProjectForm(null, btn.dataset.propProject, function () {
+            renderPropertyWorkspace(btn.dataset.propProject);
+          });
+        });
+      });
+
       document.querySelectorAll('[data-prop-edit]').forEach(function (btn) {
         btn.addEventListener('click', function () {
           var prop = result.find(function (p) { return p.id === btn.dataset.propEdit; });
-          if (prop) showPropertyForm(prop, result);
+          if (prop) showPropertyForm(prop);
         });
       });
     } catch (e) {
@@ -277,12 +316,11 @@
     }
   }
 
-  async function showPropertyForm(property, allProperties) {
+  async function showPropertyForm(property) {
     var wrap = document.getElementById('prop-form-wrap');
     if (!wrap) return;
-    var isEdit = !!property;
 
-    // Load clients for dropdown
+    var isEdit = !!property;
     var clients = await api.staff.getAllClients().catch(function () { return []; });
 
     wrap.style.display = '';
@@ -290,40 +328,178 @@
       '<button class="btn btn-ghost btn-sm" id="cancel-prop-form">Cancel</button></div><div class="panel-body-p">' +
       '<form id="prop-form" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">' +
         '<div style="grid-column:1/-1"><label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Client *</label>' +
-          '<select name="client_id" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' +
-          clients.map(function (c) { return '<option value="' + c.id + '"' + ((property && property.client_id === c.id) ? ' selected' : '') + '>' + esc(c.display_name) + '</option>'; }).join('') +
+          '<select name="client_id" required style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' +
+            '<option value="">Select client</option>' +
+            clients.map(function (c) {
+              var selected = property && property.clientId === c.id ? ' selected' : '';
+              return '<option value="' + esc(c.id) + '"' + selected + '>' + esc(c.display_name || c.displayName || c.legalName || c.id) + '</option>';
+            }).join('') +
           '</select></div>' +
-        adminField('Property Name',      'name',             (property && property.name) || '',            'required') +
-        adminField('Acreage',            'acreage',          (property && property.acreage) || '',          'type=number step=0.01') +
-        adminField('County',             'county',           (property && property.county) || '') +
-        adminField('State',              'state',            (property && property.state) || 'AL') +
-        adminField('Physical Address',   'physical_address', (property && property.physical_address) || '') +
-        adminField('Next Review Date',   'next_review_date', (property && property.next_review_date) || '', 'type=date') +
-        adminField('Primary Objectives', 'primary_objectives', (property && property.primary_objectives) || '') +
+        adminField('Property Name',      'name',               (property && property.name) || '', 'required') +
+        adminField('Acreage',            'acreage',            (property && property.acreage) || '', 'type=number step=0.01') +
+        adminField('County',             'county',             (property && property.county) || '') +
+        adminField('State',              'state',              (property && property.state) || 'AL') +
+        adminField('Physical Address',   'physical_address',   (property && (property.physicalAddress || property.physical_address)) || '') +
+        adminField('Next Review Date',   'next_review_date',   projectDateValue(property && property.next_review_date), 'type=date') +
+        adminField('Primary Objectives', 'primary_objectives', (property && (property.primaryObjectives || property.primary_objectives)) || '') +
         '<div style="grid-column:1/-1"><label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Client-Visible Management Summary</label>' +
-          '<textarea name="management_summary_client" rows="3" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' + esc((property && property.management_summary_client) || '') + '</textarea></div>' +
+          '<textarea name="management_summary_client" rows="3" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' + esc((property && (property.clientManagementSummary || property.management_summary_client)) || '') + '</textarea></div>' +
         '<div style="grid-column:1/-1"><label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Internal Notes (staff only — never visible to clients)</label>' +
           '<textarea name="ownership_notes_internal" rows="2" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' + esc((property && property.ownership_notes_internal) || '') + '</textarea></div>' +
+        '<div style="grid-column:1/-1">' +
+          '<label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Status</label>' +
+          '<select name="status" style="border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' +
+            ['active','inactive','archived'].map(function (s) {
+              return '<option value="' + s + '"' + ((property && property.status === s) ? ' selected' : '') + '>' + s + '</option>';
+            }).join('') +
+          '</select>' +
+        '</div>' +
         '<div style="grid-column:1/-1">' +
           '<div id="prop-form-msg" style="display:none;font-size:12.5px;margin-bottom:8px"></div>' +
           '<button type="submit" class="btn" style="background:var(--forest);color:#fff;border:none;padding:.6rem 1.2rem;font-size:13px;font-weight:600;cursor:pointer;border-radius:3px">' + (isEdit ? 'Save Changes' : 'Create Property') + '</button>' +
         '</div>' +
       '</form></div></div>';
 
-    document.getElementById('cancel-prop-form').addEventListener('click', function () { wrap.style.display = 'none'; });
+    document.getElementById('cancel-prop-form').addEventListener('click', function () {
+      wrap.style.display = 'none';
+    });
+
     document.getElementById('prop-form').addEventListener('submit', async function (e) {
       e.preventDefault();
       var data = Object.fromEntries(new FormData(e.target));
       var msgEl = document.getElementById('prop-form-msg');
+
       try {
-        if (isEdit) { await api.staff.updateProperty(property.id, data); }
-        else { await api.staff.createProperty(data); }
+        if (isEdit) {
+          await api.staff.updateProperty(property.id, data);
+        } else {
+          await api.staff.createProperty(data);
+        }
+
         wrap.style.display = 'none';
-        renderProperties();
+
+        if (window.location.hash.replace('#','') === 'properties') {
+          renderProperties();
+        } else if (isEdit && property && property.id) {
+          renderPropertyWorkspace(property.id);
+        } else {
+          renderProperties();
+        }
       } catch (err) {
-        msgEl.style.display = ''; msgEl.style.color = '#7a2020'; msgEl.textContent = 'Error: ' + err.message;
+        msgEl.style.display = '';
+        msgEl.style.color = '#7a2020';
+        msgEl.textContent = 'Error: ' + err.message;
       }
     });
+  }
+
+  async function renderPropertyWorkspace(propertyId) {
+    loading();
+
+    try {
+      var properties = await api.staff.getAllProperties();
+      var property = properties.find(function (p) { return p.id === propertyId; });
+
+      if (!property) {
+        setContent('<div class="portal-page">' + errBox('Property not found.') + '</div>');
+        return;
+      }
+
+      var projects = await getProjectsForProperty(propertyId);
+
+      var projectRows = projects.map(function (p) {
+        return '<tr>' +
+          '<td><strong>' + esc(p.name || 'Untitled Project') + '</strong><br><span style="font-size:12px;color:var(--moss)">' + esc((p.description || '').slice(0, 90)) + ((p.description || '').length > 90 ? '…' : '') + '</span></td>' +
+          '<td>' + chip(p.status || 'draft', statusColor(p.status || 'draft')) + '</td>' +
+          '<td>' + esc(p.classification || '—') + '</td>' +
+          '<td>' + formatCurrency(projectEstimatedCents(p)) + '</td>' +
+          '<td>' + chip(p.clientReviewStatus || p.client_review_status || 'not_requested', (p.clientReviewStatus || p.client_review_status) === 'awaiting_review' ? 'gold' : 'gray') + '</td>' +
+          '<td>' + ((p.clientVisible || p.client_visible) ? chip('Published','green') : chip('Internal','gray')) + '</td>' +
+          '<td><button class="btn btn-ghost btn-sm" data-project-edit="' + esc(p.id) + '">Edit</button></td>' +
+        '</tr>';
+      }).join('');
+
+      document.getElementById('admin-section-title').textContent = 'Property Workspace';
+
+      setContent(
+        '<div class="portal-page">' +
+          '<div class="page-heading">' +
+            '<div>' +
+              '<button id="back-to-properties" class="btn btn-ghost btn-sm" type="button" style="margin-bottom:8px">← Back to Properties</button>' +
+              '<h1>' + esc(property.name) + '</h1>' +
+              '<p class="page-sub">' +
+                esc((property.clients && property.clients.display_name) || 'No client shown') +
+                ' · ' + (property.acreage ? Math.round(property.acreage) + ' acres' : 'acreage not set') +
+                (property.county ? ' · ' + esc(property.county) : '') +
+                (property.state ? ', ' + esc(property.state) : '') +
+              '</p>' +
+            '</div>' +
+            '<div>' +
+              '<button id="workspace-edit-property" class="btn btn-ghost btn-sm" type="button">Edit Property</button> ' +
+              '<button id="workspace-add-project" class="btn" type="button" style="background:var(--forest);color:#fff;border:none;padding:.55rem 1.1rem;font-size:13px;font-weight:600;cursor:pointer;border-radius:3px">+ Add Project</button>' +
+            '</div>' +
+          '</div>' +
+
+          '<div id="prop-form-wrap" style="display:none"></div>' +
+          '<div id="project-form-wrap" style="display:none"></div>' +
+
+          '<div class="two-col" style="margin-bottom:20px">' +
+            '<div class="panel"><div class="panel-header"><h2>Management Objectives</h2></div><div class="panel-body-p">' +
+              '<p style="font-size:13px;color:var(--charcoal)">' + esc(property.primaryObjectives || property.primary_objectives || 'No objectives entered yet.') + '</p>' +
+            '</div></div>' +
+            '<div class="panel"><div class="panel-header"><h2>Client-Visible Summary</h2></div><div class="panel-body-p">' +
+              '<p style="font-size:13px;color:var(--charcoal)">' + esc(property.clientManagementSummary || property.management_summary_client || 'No client summary entered yet.') + '</p>' +
+            '</div></div>' +
+          '</div>' +
+
+          '<div class="panel">' +
+            '<div class="panel-header"><h2>Projects &amp; Recommendations</h2></div>' +
+            '<div class="panel-body-p" style="padding-top:0">' +
+              '<p style="font-size:13px;color:var(--moss);margin:0 0 14px">Create work recommendations, estimated costs, review status, and client-visible project updates for this property.</p>' +
+            '</div>' +
+            '<table class="data-table">' +
+              '<thead><tr>' +
+                '<th>Project</th><th>Status</th><th>Classification</th><th>Estimated</th><th>Client Review</th><th>Visibility</th><th>Action</th>' +
+              '</tr></thead>' +
+              '<tbody>' + (projectRows || '<tr><td colspan="7" style="text-align:center;color:var(--moss)">No projects for this property yet. Click + Add Project.</td></tr>') + '</tbody>' +
+            '</table>' +
+          '</div>' +
+        '</div>'
+      );
+
+      document.getElementById('back-to-properties').addEventListener('click', function () {
+        window.location.hash = '#properties';
+        renderProperties();
+      });
+
+      document.getElementById('workspace-edit-property').addEventListener('click', function () {
+        showPropertyForm(property);
+      });
+
+      document.getElementById('workspace-add-project').addEventListener('click', function () {
+        showProjectForm(null, propertyId, function () {
+          renderPropertyWorkspace(propertyId);
+        });
+      });
+
+      document.querySelectorAll('[data-project-edit]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var project = projects.find(function (p) { return p.id === btn.dataset.projectEdit; });
+          if (project) {
+            showProjectForm(project, propertyId, function () {
+              renderPropertyWorkspace(propertyId);
+            });
+          }
+        });
+      });
+    } catch (e) {
+      setContent('<div class="portal-page">' + errBox('Could not open property workspace: ' + e.message) + '</div>');
+    }
+  }
+
+  async function getProjectsForProperty(propertyId) {
+    var projects = await api.staff.getAllProjects();
+    return projects.filter(function (p) { return p.propertyId === propertyId; });
   }
 
   // ── PROJECTS ──────────────────────────────────────────────────────────────
@@ -331,24 +507,201 @@
     loading();
     try {
       var result = await api.staff.getAllProjects();
+
       var rows = result.map(function (p) {
-        return '<tr><td>' + esc(p.name) + '</td><td>' + esc((p.properties && p.properties.name) || '—') + '</td>' +
-          '<td>' + chip(p.status, statusColor(p.status)) + '</td>' +
+        return '<tr>' +
+          '<td><strong>' + esc(p.name || 'Untitled Project') + '</strong></td>' +
+          '<td>' + esc((p.properties && p.properties.name) || '—') + '</td>' +
+          '<td>' + chip(p.status || 'draft', statusColor(p.status || 'draft')) + '</td>' +
           '<td>' + esc(p.classification || '—') + '</td>' +
-          '<td>' + formatCurrency(p.estimated_cost) + '</td>' +
-          '<td>' + chip(p.client_review_status || 'not_requested', p.client_review_status === 'awaiting_review' ? 'gold' : 'gray') + '</td>' +
-          '<td>' + (p.client_visible ? chip('Published','green') : chip('Internal','gray')) + '</td>' +
+          '<td>' + formatCurrency(projectEstimatedCents(p)) + '</td>' +
+          '<td>' + chip(p.client_review_status || p.clientReviewStatus || 'not_requested', (p.client_review_status || p.clientReviewStatus) === 'awaiting_review' ? 'gold' : 'gray') + '</td>' +
+          '<td>' + ((p.client_visible || p.clientVisible) ? chip('Published','green') : chip('Internal','gray')) + '</td>' +
+          '<td><button class="btn btn-ghost btn-sm" data-project-edit="' + esc(p.id) + '">Edit</button></td>' +
         '</tr>';
       }).join('');
 
       setContent(
-        '<div class="portal-page"><div class="page-heading"><h1>Projects</h1></div>' +
-        '<div class="panel"><table class="data-table"><thead><tr>' +
-          '<th>Project</th><th>Property</th><th>Status</th><th>Classification</th><th>Estimated</th><th>Client Review</th><th>Visibility</th>' +
-        '</tr></thead><tbody>' + (rows || '<tr><td colspan="7" style="text-align:center;color:var(--moss)">No projects found.</td></tr>') + '</tbody></table></div></div>'
+        '<div class="portal-page">' +
+          '<div class="page-heading">' +
+            '<div>' +
+              '<h1>Projects</h1>' +
+              '<p class="page-sub">Create and manage landowner-facing work recommendations, cost estimates, and review status.</p>' +
+            '</div>' +
+            '<button id="new-project-btn" class="btn" style="background:var(--forest);color:#fff;border:none;padding:.55rem 1.1rem;font-size:13px;font-weight:600;cursor:pointer;border-radius:3px">+ New Project</button>' +
+          '</div>' +
+          '<div id="project-form-wrap" style="display:none"></div>' +
+          '<div class="panel">' +
+            '<table class="data-table">' +
+              '<thead><tr>' +
+                '<th>Project</th><th>Property</th><th>Status</th><th>Classification</th><th>Estimated</th><th>Client Review</th><th>Visibility</th><th>Action</th>' +
+              '</tr></thead>' +
+              '<tbody>' + (rows || '<tr><td colspan="8" style="text-align:center;color:var(--moss)">No projects found. Click + New Project.</td></tr>') + '</tbody>' +
+            '</table>' +
+          '</div>' +
+        '</div>'
       );
+
+      document.getElementById('new-project-btn').addEventListener('click', function () {
+        showProjectForm(null, null, renderProjects);
+      });
+
+      document.querySelectorAll('[data-project-edit]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var project = result.find(function (p) { return p.id === btn.dataset.projectEdit; });
+          if (project) showProjectForm(project, project.propertyId, renderProjects);
+        });
+      });
     } catch (e) {
       setContent('<div class="portal-page">' + errBox('Could not load projects: ' + e.message) + '</div>');
+    }
+  }
+
+  async function showProjectForm(project, selectedPropertyId, afterSave) {
+    var wrap = document.getElementById('project-form-wrap');
+
+    if (!wrap) {
+      setContent('<div class="portal-page"><div id="project-form-wrap"></div></div>');
+      wrap = document.getElementById('project-form-wrap');
+    }
+
+    var isEdit = !!project;
+    var properties = await api.staff.getAllProperties().catch(function () { return []; });
+    var activePropertyId = selectedPropertyId || (project && project.propertyId) || '';
+
+    wrap.style.display = '';
+    wrap.innerHTML = '<div class="panel" style="margin-bottom:20px"><div class="panel-header"><h2>' + (isEdit ? 'Edit Project' : 'New Project') + '</h2>' +
+      '<button class="btn btn-ghost btn-sm" id="cancel-project-form">Cancel</button></div><div class="panel-body-p">' +
+      '<form id="project-form" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">' +
+        '<div style="grid-column:1/-1"><label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Property *</label>' +
+          '<select name="property_id" required style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' +
+            '<option value="">Select property</option>' +
+            properties.map(function (p) {
+              var label = p.name + ((p.clients && p.clients.display_name) ? ' — ' + p.clients.display_name : '');
+              return '<option value="' + esc(p.id) + '"' + (activePropertyId === p.id ? ' selected' : '') + '>' + esc(label) + '</option>';
+            }).join('') +
+          '</select></div>' +
+
+        adminField('Project Name', 'name', (project && project.name) || '', 'required') +
+
+        '<div><label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Status</label>' +
+          '<select name="status" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' +
+            projectStatusOptions(project && project.status).join('') +
+          '</select></div>' +
+
+        adminField('Classification', 'classification', (project && project.classification) || 'Habitat management', '') +
+        adminField('Estimated Cost', 'estimated_cost', projectEstimatedDollars(project), 'type=number step=0.01 min=0') +
+
+        '<div><label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Client Review Status</label>' +
+          '<select name="client_review_status" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' +
+            projectReviewOptions(project && (project.client_review_status || project.clientReviewStatus)).join('') +
+          '</select></div>' +
+
+        '<div style="display:flex;align-items:end;padding-bottom:8px">' +
+          '<label style="display:flex;gap:.5rem;align-items:center;font-size:13px;color:var(--charcoal);font-weight:600">' +
+            '<input type="checkbox" name="client_visible" ' + ((project && (project.client_visible || project.clientVisible)) ? 'checked' : '') + '> Visible in client portal' +
+          '</label>' +
+        '</div>' +
+
+        adminField('Planned Start Date', 'planned_start_date', projectDateValue(project && (project.planned_start_date || project.plannedStartDate)), 'type=date') +
+        adminField('Target Completion Date', 'target_completion_date', projectDateValue(project && (project.target_completion_date || project.targetCompletionDate)), 'type=date') +
+
+        '<div style="grid-column:1/-1"><label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Scope / Staff Description</label>' +
+          '<textarea name="description" rows="4" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' + esc((project && project.description) || '') + '</textarea></div>' +
+
+        '<div style="grid-column:1/-1"><label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Client-Facing Notes</label>' +
+          '<textarea name="client_notes" rows="4" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' + esc((project && (project.client_notes || project.clientNotes)) || '') + '</textarea></div>' +
+
+        '<div style="grid-column:1/-1">' +
+          '<div id="project-form-msg" style="display:none;font-size:12.5px;margin-bottom:8px"></div>' +
+          '<button type="submit" class="btn" style="background:var(--forest);color:#fff;border:none;padding:.6rem 1.2rem;font-size:13px;font-weight:600;cursor:pointer;border-radius:3px">' + (isEdit ? 'Save Project' : 'Create Project') + '</button>' +
+        '</div>' +
+      '</form></div></div>';
+
+    document.getElementById('cancel-project-form').addEventListener('click', function () {
+      wrap.style.display = 'none';
+    });
+
+    document.getElementById('project-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      var data = Object.fromEntries(new FormData(e.target));
+      var msgEl = document.getElementById('project-form-msg');
+      var prop = properties.find(function (p) { return p.id === data.property_id; });
+
+      if (!prop) {
+        msgEl.style.display = '';
+        msgEl.style.color = '#7a2020';
+        msgEl.textContent = 'Choose a property before saving the project.';
+        return;
+      }
+
+      var estimate = data.estimated_cost === '' ? null : Math.round(Number(data.estimated_cost) * 100);
+
+      var payload = {
+        propertyId: data.property_id,
+        clientId: prop.clientId || '',
+        name: data.name || '',
+        status: data.status || 'draft',
+        classification: data.classification || '',
+        estimatedCostCents: estimate,
+        clientReviewStatus: data.client_review_status || 'not_requested',
+        clientVisible: data.client_visible === 'on',
+        plannedStartDate: data.planned_start_date || null,
+        targetCompletionDate: data.target_completion_date || null,
+        description: data.description || '',
+        clientNotes: data.client_notes || ''
+      };
+
+      if (isEdit) payload.id = project.id;
+
+      try {
+        await api.staff.upsertProject(payload);
+        wrap.style.display = 'none';
+        if (afterSave) afterSave();
+        else renderProjects();
+      } catch (err) {
+        msgEl.style.display = '';
+        msgEl.style.color = '#7a2020';
+        msgEl.textContent = 'Error: ' + err.message;
+      }
+    });
+  }
+
+  function projectStatusOptions(current) {
+    return ['draft','active','scheduled','in_progress','complete','deferred','cancelled','archived'].map(function (s) {
+      return '<option value="' + s + '"' + (current === s ? ' selected' : '') + '>' + s + '</option>';
+    });
+  }
+
+  function projectReviewOptions(current) {
+    return ['not_requested','awaiting_review','preliminary_approval','approved','defer','request_proposal','question'].map(function (s) {
+      return '<option value="' + s + '"' + (current === s ? ' selected' : '') + '>' + s + '</option>';
+    });
+  }
+
+  function projectEstimatedCents(project) {
+    if (!project) return null;
+    if (project.estimatedCostCents !== null && project.estimatedCostCents !== undefined) return project.estimatedCostCents;
+    if (project.estimated_cost !== null && project.estimated_cost !== undefined) return Math.round(Number(project.estimated_cost) * 100);
+    return null;
+  }
+
+  function projectEstimatedDollars(project) {
+    if (!project) return '';
+    if (project.estimatedCostCents !== null && project.estimatedCostCents !== undefined) return project.estimatedCostCents / 100;
+    if (project.estimated_cost !== null && project.estimated_cost !== undefined) return project.estimated_cost;
+    return '';
+  }
+
+  function projectDateValue(value) {
+    if (!value) return '';
+    if (typeof value.toDate === 'function') return value.toDate().toISOString().slice(0, 10);
+    if (typeof value === 'string') return value.slice(0, 10);
+    try {
+      return new Date(value).toISOString().slice(0, 10);
+    } catch (e) {
+      return '';
     }
   }
 
