@@ -170,8 +170,8 @@ getMyProperties: async function () {
 
   var all = [];
 
-  // Firestore "in" supports up to 10 values. Keep the query simple
-  // and filter/sort in JavaScript to avoid composite-index problems.
+      // Firestore "in" supports up to 10 values.
+      // Keep the query simple and filter/sort in JavaScript to avoid composite-index problems.
   for (var i = 0; i < clientIds.length; i += 10) {
     var batch = clientIds.slice(i, i + 10);
 
@@ -843,7 +843,94 @@ getMyProperties: async function () {
       getAdminDocumentUrl: async function (documentId) {
         return await window.shcApi.getDocumentUrl(documentId);
       },
+      // ── Documents / Reports for admin property workspace ──────────────────
+      getDocumentsForProperty: async function (propertyId) {
+        var snap = await db.collection('documents')
+          .where('propertyId', '==', propertyId)
+          .orderBy('publishedAt', 'desc')
+          .get();
 
+        return snapToArr(snap).map(normDocument);
+      },
+
+      uploadDocumentForProperty: async function (payload) {
+        var user = window.shcFirebaseAuth.currentUser;
+        if (!user) throw new Error('Not authenticated.');
+        if (!payload.file) throw new Error('Choose a file to upload.');
+        if (!payload.clientId) throw new Error('Missing clientId.');
+        if (!payload.propertyId) throw new Error('Missing propertyId.');
+
+        var originalName = payload.file.name || 'uploaded-file';
+        var safeName = originalName
+          .toLowerCase()
+          .replace(/[^a-z0-9.\-_]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+
+        var storagePath = 'documents/' +
+          payload.clientId + '/' +
+          payload.propertyId + '/' +
+          Date.now() + '-' + safeName;
+
+        await storage.ref().child(storagePath).put(payload.file, {
+          contentType: payload.file.type || 'application/octet-stream',
+          customMetadata: {
+            clientId: payload.clientId,
+            propertyId: payload.propertyId,
+            uploadedBy: user.uid
+          }
+        });
+
+        var status = payload.documentStatus || 'published';
+
+        var docData = {
+          clientId: payload.clientId,
+          propertyId: payload.propertyId,
+          title: payload.title || originalName,
+          documentType: payload.documentType || 'Report',
+          originalFilename: originalName,
+          storagePath: storagePath,
+          contentType: payload.file.type || 'application/octet-stream',
+          documentStatus: status,
+          clientVisible: payload.clientVisible === true,
+          publishedAt: status === 'draft' ? null : now(),
+          createdAt: now(),
+          createdBy: user.uid,
+          updatedAt: now(),
+          updatedBy: user.uid
+        };
+
+        var ref = await db.collection('documents').add(docData);
+
+        return {
+          id: ref.id,
+          storagePath: storagePath
+        };
+      },
+
+      updateDocument: async function (id, data) {
+        var user = window.shcFirebaseAuth.currentUser;
+        if (!user) throw new Error('Not authenticated.');
+
+        var update = {
+          updatedAt: now(),
+          updatedBy: user.uid
+        };
+
+        if (data.title !== undefined) update.title = data.title;
+        if (data.documentType !== undefined) update.documentType = data.documentType;
+        if (data.documentStatus !== undefined) update.documentStatus = data.documentStatus;
+        if (data.clientVisible !== undefined) update.clientVisible = data.clientVisible;
+
+        if (data.documentStatus === 'published') {
+          update.publishedAt = now();
+        }
+
+        await db.collection('documents').doc(id).update(update);
+      },
+
+      getAdminDocumentUrl: async function (documentId) {
+        return await window.shcApi.getDocumentUrl(documentId);
+      },
       // ── Audit log ────────────────────────────────────────────────────────────
       getAuditLog: async function (opts) {
         var q = db.collection('auditLogs').orderBy('createdAt', 'desc').limit(200);
