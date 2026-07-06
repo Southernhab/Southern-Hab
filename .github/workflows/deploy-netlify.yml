@@ -42,23 +42,90 @@ jobs:
       - name: Run breadcrumb check
         run: node scripts/check-breadcrumbs.js
 
-      - name: Generate Firebase config files
+      - name: Verify Firebase frontend secrets
+        env:
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
         run: |
-          cat > portal/firebase-config.js <<'EOF'
-          window.__SHC_FIREBASE_CONFIG__={
-            apiKey:'${{ secrets.FIREBASE_API_KEY }}',
-            authDomain:'${{ secrets.FIREBASE_AUTH_DOMAIN }}',
-            projectId:'${{ secrets.FIREBASE_PROJECT_ID }}',
-            storageBucket:'${{ secrets.FIREBASE_STORAGE_BUCKET }}',
-            messagingSenderId:'${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}',
-            appId:'${{ secrets.FIREBASE_APP_ID }}',
-            functionsUrl:'https://us-central1-${{ secrets.FIREBASE_PROJECT_ID }}.cloudfunctions.net'
+          missing=0
+
+          for name in \
+            FIREBASE_API_KEY \
+            FIREBASE_AUTH_DOMAIN \
+            FIREBASE_PROJECT_ID \
+            FIREBASE_STORAGE_BUCKET \
+            FIREBASE_MESSAGING_SENDER_ID \
+            FIREBASE_APP_ID
+          do
+            value="${!name}"
+            if [ -z "$value" ]; then
+              echo "::error::$name is missing or empty."
+              missing=1
+            else
+              echo "$name is present."
+            fi
+          done
+
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Build deploy directory
+        run: |
+          rm -rf _site
+          mkdir -p _site
+
+          rsync -a ./ _site/ \
+            --exclude ".git" \
+            --exclude "_site" \
+            --exclude "node_modules" \
+            --exclude "functions/node_modules"
+
+          # Remove ignore files inside the deploy folder so generated files are not excluded.
+          rm -f _site/.gitignore
+          rm -f _site/.netlifyignore
+
+      - name: Generate Firebase config files
+        env:
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        run: |
+          mkdir -p _site/portal
+          mkdir -p _site/admin
+
+          cat > _site/portal/firebase-config.js <<EOF
+          window.__SHC_FIREBASE_CONFIG__ = {
+            apiKey: "$FIREBASE_API_KEY",
+            authDomain: "$FIREBASE_AUTH_DOMAIN",
+            projectId: "$FIREBASE_PROJECT_ID",
+            storageBucket: "$FIREBASE_STORAGE_BUCKET",
+            messagingSenderId: "$FIREBASE_MESSAGING_SENDER_ID",
+            appId: "$FIREBASE_APP_ID",
+            functionsUrl: "https://us-central1-$FIREBASE_PROJECT_ID.cloudfunctions.net"
           };
           EOF
 
-          cp portal/firebase-config.js admin/firebase-config.js
+          cp _site/portal/firebase-config.js _site/admin/firebase-config.js
 
-      - name: Verify required Netlify secrets
+          test -s _site/portal/firebase-config.js
+          test -s _site/admin/firebase-config.js
+
+          if grep -q '""' _site/portal/firebase-config.js; then
+            echo "::error::Generated Firebase config still contains an empty value."
+            exit 1
+          fi
+
+          echo "Generated Firebase config files for portal and admin."
+
+      - name: Verify Netlify secrets
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
@@ -103,21 +170,15 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         run: |
-          RAW_LENGTH=${#NETLIFY_SITE_ID}
-
           CLEAN_SITE_ID=$(printf '%s' "$NETLIFY_SITE_ID" \
             | grep -Eo '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}' \
             | head -n 1 \
             | tr '[:upper:]' '[:lower:]')
 
-          echo "Stored NETLIFY_SITE_ID length: $RAW_LENGTH"
-
           if [ -z "$CLEAN_SITE_ID" ]; then
             echo "::error::NETLIFY_SITE_ID does not contain a valid UUID-format Project ID."
             exit 1
           fi
-
-          echo "Normalized Project ID: $CLEAN_SITE_ID"
 
           HTTP_STATUS=$(curl --silent \
             --output /tmp/netlify-sites.json \
@@ -135,16 +196,6 @@ jobs:
 
           SITE_COUNT=$(jq 'length' /tmp/netlify-sites.json)
           echo "Projects visible to this token: $SITE_COUNT"
-
-          echo "Accessible Netlify projects:"
-          jq -r '
-            .[] |
-            "  Name: \(.name // "unknown")
-             ID: \(.id // "unknown")
-             Custom domain: \(.custom_domain // "none")
-             URL: \(.url // "none")
-            "
-          ' /tmp/netlify-sites.json
 
           ID_MATCH=$(jq -r \
             --arg site_id "$CLEAN_SITE_ID" \
@@ -168,39 +219,28 @@ jobs:
             echo "The stored Project ID matches a project visible to the token."
           elif [ -n "$DOMAIN_MATCH" ]; then
             RESOLVED_SITE_ID="$DOMAIN_MATCH"
-            echo "::warning::The stored Project ID did not match, but the production project was found by its custom domain."
-            echo "Using the Project ID returned directly by Netlify."
+            echo "::warning::Stored Project ID did not match, but the production project was found by custom domain."
           else
-            echo "::error::The token is valid, but it cannot see the project assigned to southernhabitatconsulting.com."
-            echo "::error::Review the token user and the accessible-project list printed above."
+            echo "::error::The token is valid, but it cannot see the Southern Habitat Netlify project."
             exit 1
           fi
 
-          echo "Resolved Netlify Project ID: $RESOLVED_SITE_ID"
           echo "NETLIFY_RESOLVED_SITE_ID=$RESOLVED_SITE_ID" >> "$GITHUB_ENV"
 
-      - name: Verify resolved project directly
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      - name: Verify deploy directory contents
         run: |
-          HTTP_STATUS=$(curl --silent \
-            --output /tmp/resolved-netlify-site.json \
-            --write-out "%{http_code}" \
-            --header "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
-            "https://api.netlify.com/api/v1/sites/$NETLIFY_RESOLVED_SITE_ID")
+          echo "Checking generated config files in deploy directory..."
+          ls -la _site/portal/firebase-config.js
+          ls -la _site/admin/firebase-config.js
 
-          echo "Resolved-project verification returned HTTP $HTTP_STATUS"
+          echo "Checking major frontend routes..."
+          test -f _site/index.html
+          test -f _site/contact/index.html
+          test -f _site/portal/index.html
+          test -f _site/admin/index.html
+          test -f _site/netlify.toml
 
-          if [ "$HTTP_STATUS" != "200" ]; then
-            echo "::error::Netlify listed the project but would not allow direct access to it."
-            exit 1
-          fi
-
-          SITE_NAME=$(jq -r '.name // "unknown"' /tmp/resolved-netlify-site.json)
-          SITE_DOMAIN=$(jq -r '.custom_domain // .url // "unknown"' /tmp/resolved-netlify-site.json)
-
-          echo "Resolved project name: $SITE_NAME"
-          echo "Resolved production domain: $SITE_DOMAIN"
+          echo "Deploy directory is ready."
 
       - name: Install Netlify CLI
         run: npm install --global netlify-cli
@@ -211,7 +251,7 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         run: |
           netlify deploy \
-            --dir "." \
+            --dir "_site" \
             --prod \
             --auth "$NETLIFY_AUTH_TOKEN" \
             --site "$NETLIFY_RESOLVED_SITE_ID" \
@@ -223,7 +263,7 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         run: |
           netlify deploy \
-            --dir "." \
+            --dir "_site" \
             --auth "$NETLIFY_AUTH_TOKEN" \
             --site "$NETLIFY_RESOLVED_SITE_ID" \
             --message "Preview from GitHub Actions - ${GITHUB_SHA::7}"
