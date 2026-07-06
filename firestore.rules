@@ -3,7 +3,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ── Helper functions ────────────────────────────────────────────────────
+    // ── Auth helpers ────────────────────────────────────────────────────────
     function isAuthenticated() {
       return request.auth != null;
     }
@@ -40,14 +40,40 @@ service cloud.firestore {
       return role() == 'client_owner';
     }
 
+    // ── Client access helpers ────────────────────────────────────────────────
     function clientCanAccess(clientId) {
       return isAuthenticated()
         && isClient()
+        && clientId is string
         && clientId in clientIds();
+    }
+
+    function hasClientId(data) {
+      return data.keys().hasAny(['clientId']);
+    }
+
+    function hasPropertyId(data) {
+      return data.keys().hasAny(['propertyId']);
+    }
+
+    function hasBudgetId(data) {
+      return data.keys().hasAny(['budgetId']);
+    }
+
+    function hasMessageId(data) {
+      return data.keys().hasAny(['messageId']);
     }
 
     function propertyClientId(propertyId) {
       return get(/databases/$(database)/documents/properties/$(propertyId)).data.clientId;
+    }
+
+    function budgetClientId(budgetId) {
+      return get(/databases/$(database)/documents/budgets/$(budgetId)).data.clientId;
+    }
+
+    function messageClientId(messageId) {
+      return get(/databases/$(database)/documents/messages/$(messageId)).data.clientId;
     }
 
     function clientCanAccessProperty(propertyId) {
@@ -57,9 +83,49 @@ service cloud.firestore {
         && propertyClientId(propertyId) in clientIds();
     }
 
-    function clientCanAccessResource() {
-      return clientCanAccess(resource.data.clientId)
-        || clientCanAccessProperty(resource.data.propertyId);
+    function clientCanAccessBudget(budgetId) {
+      return isAuthenticated()
+        && isClient()
+        && budgetId is string
+        && budgetClientId(budgetId) in clientIds();
+    }
+
+    function clientCanAccessMessage(messageId) {
+      return isAuthenticated()
+        && isClient()
+        && messageId is string
+        && messageClientId(messageId) in clientIds();
+    }
+
+    function clientCanAccessRecord(data) {
+      return (
+          hasClientId(data)
+          && clientCanAccess(data.clientId)
+        )
+        || (
+          hasPropertyId(data)
+          && clientCanAccessProperty(data.propertyId)
+        )
+        || (
+          hasBudgetId(data)
+          && clientCanAccessBudget(data.budgetId)
+        )
+        || (
+          hasMessageId(data)
+          && clientCanAccessMessage(data.messageId)
+        );
+    }
+
+    function isClientVisible(data) {
+      return data.keys().hasAny(['clientVisible'])
+        && data.clientVisible == true;
+    }
+
+    function clientCanReadVisibleRecord(data) {
+      return isAuthenticated()
+        && isClient()
+        && isClientVisible(data)
+        && clientCanAccessRecord(data);
     }
 
     // ── Users ────────────────────────────────────────────────────────────────
@@ -70,7 +136,12 @@ service cloud.firestore {
 
     // ── Clients ──────────────────────────────────────────────────────────────
     match /clients/{clientId} {
-      allow read: if isAuthenticated() && (isStaff() || clientCanAccess(clientId));
+      allow read: if isAuthenticated()
+        && (
+          isStaff()
+          || clientCanAccess(clientId)
+        );
+
       allow write: if isAdmin();
     }
 
@@ -83,8 +154,10 @@ service cloud.firestore {
       allow read: if isAuthenticated()
         && (
           isStaff()
-          || clientCanAccess(resource.data.clientId)
+          || clientCanAccessRecord(resource.data)
+          || uid() == resource.data.userId
         );
+
       allow write: if isAdmin();
     }
 
@@ -95,6 +168,7 @@ service cloud.firestore {
           isStaff()
           || clientCanAccess(resource.data.clientId)
         );
+
       allow write: if isAdmin();
     }
 
@@ -102,13 +176,15 @@ service cloud.firestore {
       allow read, write: if isStaff();
     }
 
-    // ── Property Sections ────────────────────────────────────────────────────
+    // ── Property Sections / My Property tab ──────────────────────────────────
     match /propertySections/{sectionId} {
       allow read: if isAuthenticated()
         && (
           isStaff()
-          || clientCanAccessResource()
+          || clientCanReadVisibleRecord(resource.data)
+          || clientCanAccessRecord(resource.data)
         );
+
       allow write: if isStaff();
     }
 
@@ -116,16 +192,14 @@ service cloud.firestore {
       allow read, write: if isStaff();
     }
 
-    // ── Projects ─────────────────────────────────────────────────────────────
+    // ── Projects / Overview + Work & Projects tabs ──────────────────────────
     match /projects/{projectId} {
       allow read: if isAuthenticated()
         && (
           isStaff()
-          || (
-            resource.data.clientVisible == true
-            && clientCanAccessResource()
-          )
+          || clientCanReadVisibleRecord(resource.data)
         );
+
       allow write: if isStaff();
     }
 
@@ -133,32 +207,30 @@ service cloud.firestore {
       allow read, write: if isStaff();
     }
 
-    // ── Project Actions ──────────────────────────────────────────────────────
+    // ── Project Actions / client responses ──────────────────────────────────
     match /projectActions/{actionId} {
       allow read: if isAuthenticated()
         && (
           isStaff()
-          || clientCanAccessResource()
+          || clientCanAccessRecord(resource.data)
         );
 
       allow create: if isAuthenticated()
         && isClient()
         && clientCanAccess(request.resource.data.clientId)
-        && request.resource.data.clientUserId == uid();
+        && request.resource.data.userId == uid();
 
       allow update, delete: if isAdmin();
     }
 
-    // ── Work History ─────────────────────────────────────────────────────────
+    // ── Work History / Overview + Work & Projects tabs ──────────────────────
     match /workHistory/{workId} {
       allow read: if isAuthenticated()
         && (
           isStaff()
-          || (
-            resource.data.clientVisible == true
-            && clientCanAccessResource()
-          )
+          || clientCanReadVisibleRecord(resource.data)
         );
+
       allow write: if isStaff();
     }
 
@@ -167,50 +239,41 @@ service cloud.firestore {
       allow read: if isAuthenticated()
         && (
           isStaff()
-          || (
-            resource.data.clientVisible == true
-            && clientCanAccessResource()
-          )
+          || clientCanReadVisibleRecord(resource.data)
         );
+
       allow write: if isStaff();
     }
 
-    // ── Wildlife Surveys ─────────────────────────────────────────────────────
+    // ── Wildlife Analysis tab ────────────────────────────────────────────────
     match /wildlifeSurveys/{surveyId} {
       allow read: if isAuthenticated()
         && (
           isStaff()
-          || (
-            resource.data.clientVisible == true
-            && clientCanAccessResource()
-          )
+          || clientCanReadVisibleRecord(resource.data)
         );
+
       allow write: if isStaff();
     }
 
-    // ── Harvest Records ──────────────────────────────────────────────────────
     match /harvestRecords/{recordId} {
       allow read: if isAuthenticated()
         && (
           isStaff()
-          || (
-            resource.data.clientVisible == true
-            && clientCanAccessResource()
-          )
+          || clientCanReadVisibleRecord(resource.data)
         );
+
       allow write: if isStaff();
     }
 
-    // ── Budgets ──────────────────────────────────────────────────────────────
+    // ── Plan & Budget tab ────────────────────────────────────────────────────
     match /budgets/{budgetId} {
       allow read: if isAuthenticated()
         && (
           isStaff()
-          || (
-            resource.data.clientVisible == true
-            && clientCanAccessResource()
-          )
+          || clientCanReadVisibleRecord(resource.data)
         );
+
       allow write: if isAdmin();
     }
 
@@ -218,23 +281,24 @@ service cloud.firestore {
       allow read: if isAuthenticated()
         && (
           isStaff()
-          || clientCanAccess(resource.data.clientId)
-          || clientCanAccessProperty(resource.data.propertyId)
+          || clientCanReadVisibleRecord(resource.data)
+          || clientCanAccessRecord(resource.data)
         );
+
       allow write: if isAdmin();
     }
 
-    // ── Documents ────────────────────────────────────────────────────────────
+    // ── Reports & Files tab ──────────────────────────────────────────────────
     match /documents/{docId} {
       allow read: if isAuthenticated()
         && (
           isStaff()
           || (
-            resource.data.clientVisible == true
-            && resource.data.documentStatus == 'published'
-            && clientCanAccessResource()
+            resource.data.documentStatus == 'published'
+            && clientCanReadVisibleRecord(resource.data)
           )
         );
+
       allow write: if isAdmin();
     }
 
@@ -247,58 +311,54 @@ service cloud.firestore {
       allow read: if isAuthenticated()
         && (
           isStaff()
-          || (
-            resource.data.clientVisible == true
-            && clientCanAccessResource()
-          )
+          || clientCanReadVisibleRecord(resource.data)
         );
+
       allow write: if isStaff();
     }
 
-    // ── ArcGIS Maps ──────────────────────────────────────────────────────────
+    // ── Property Map tab ─────────────────────────────────────────────────────
     match /arcgisMaps/{mapId} {
       allow read: if isAuthenticated()
         && (
           isStaff()
           || (
-            resource.data.clientVisible == true
-            && resource.data.active == true
-            && clientCanAccessResource()
+            resource.data.active == true
+            && clientCanReadVisibleRecord(resource.data)
           )
         );
+
       allow write: if isAdmin();
     }
 
-    // ── Map Files ────────────────────────────────────────────────────────────
     match /mapFiles/{fileId} {
       allow read: if isAuthenticated()
         && (
           isStaff()
-          || clientCanAccessResource()
+          || clientCanReadVisibleRecord(resource.data)
+          || clientCanAccessRecord(resource.data)
         );
+
       allow write: if isStaff();
     }
 
-    // ── Messages ─────────────────────────────────────────────────────────────
+    // ── Messages tab ─────────────────────────────────────────────────────────
     match /messages/{messageId} {
       allow read: if isAuthenticated()
         && (
           isStaff()
-          || (
-            resource.data.clientVisible == true
-            && clientCanAccessResource()
-          )
+          || clientCanReadVisibleRecord(resource.data)
         );
 
       allow create: if isAuthenticated()
         && isClient()
-        && clientCanAccess(request.resource.data.clientId)
-        && request.resource.data.clientVisible == true;
+        && request.resource.data.clientVisible == true
+        && clientCanAccess(request.resource.data.clientId);
 
       allow update: if isAuthenticated()
         && (
           isStaff()
-          || clientCanAccessResource()
+          || clientCanAccessRecord(resource.data)
         );
 
       allow delete: if isAdmin();
@@ -310,7 +370,7 @@ service cloud.firestore {
           isStaff()
           || (
             resource.data.internalOnly == false
-            && clientCanAccess(resource.data.clientId)
+            && clientCanAccessRecord(resource.data)
           )
         );
 
@@ -319,16 +379,16 @@ service cloud.firestore {
           isStaff()
           || (
             isClient()
-            && clientCanAccess(request.resource.data.clientId)
             && request.resource.data.internalOnly == false
             && request.resource.data.senderId == uid()
+            && clientCanAccess(request.resource.data.clientId)
           )
         );
 
       allow update, delete: if isAdmin();
     }
 
-    // ── Inquiries ────────────────────────────────────────────────────────────
+    // ── Website Inquiries ────────────────────────────────────────────────────
     match /inquiries/{inquiryId} {
       allow read, write: if isStaff();
     }
@@ -369,7 +429,7 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    // ── Catch-all ────────────────────────────────────────────────────────────
+    // ── Default deny ─────────────────────────────────────────────────────────
     match /{document=**} {
       allow read, write: if false;
     }
