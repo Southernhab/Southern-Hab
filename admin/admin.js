@@ -624,6 +624,10 @@
         '<div style="grid-column:1/-1"><label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Client-Facing Notes</label>' +
           '<textarea name="client_notes" rows="4" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' + esc((project && (project.client_notes || project.clientNotes)) || '') + '</textarea></div>' +
 
+               '<div id="project-map-wrap" style="grid-column:1/-1">' +
+          renderProjectMapFields((project && (project.projectMap || project.project_map)) || {}) +
+        '</div>' +
+
         '<div id="service-details-wrap" style="grid-column:1/-1">' +
           renderServiceDetails(activeServiceType, existingServiceDetails) +
         '</div>' +
@@ -671,6 +675,7 @@
       var estimate = data.estimated_cost === '' ? null : Math.round(Number(data.estimated_cost) * 100);
       var template = getServiceTemplate(data.service_type);
       var serviceDetails = collectServiceDetails(form);
+      var projectMap = collectProjectMap(form);
 
       var payload = {
         propertyId: data.property_id,
@@ -692,7 +697,10 @@
         service_type: data.service_type,
         serviceLabel: template ? template.label : data.service_type,
         serviceDetails: serviceDetails,
-        serviceTemplateVersion: 1
+        service_details: serviceDetails,
+        serviceTemplateVersion: 1,
+        projectMap: projectMap,
+        project_map: projectMap
       };
 
       if (isEdit) payload.id = project.id;
@@ -709,7 +717,104 @@
       }
     });
   }
+  function renderProjectMapFields(map) {
+    map = map || {};
 
+    return '<div style="background:#eef5f0;border:1px solid var(--border);padding:12px 14px;border-radius:4px;margin-bottom:12px">' +
+      '<h3 style="margin:0 0 6px;font-size:15px;color:var(--forest)">Project Map</h3>' +
+      '<p style="font-size:12.5px;color:var(--moss);margin:0 0 12px">Add a map, GIS link, coordinates, or notes tied to this project. This is useful for treatment blocks, burn units, food plots, camera locations, access roads, and survey areas.</p>' +
+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">' +
+
+        '<div>' +
+          '<label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Map Type</label>' +
+          '<select name="map_type" data-project-map="1" data-map-key="mapType" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px;background:#fff;color:var(--charcoal)">' +
+            mapOption('None yet', '', map.mapType) +
+            mapOption('Google My Maps / embedded map', 'google_my_maps', map.mapType) +
+            mapOption('Static map image', 'static_image', map.mapType) +
+            mapOption('GIS layer / Drive link', 'gis_layer', map.mapType) +
+            mapOption('Treatment block map', 'treatment_block', map.mapType) +
+            mapOption('Burn unit map', 'burn_unit', map.mapType) +
+            mapOption('Food plot map', 'food_plot', map.mapType) +
+            mapOption('Camera location map', 'camera_locations', map.mapType) +
+            mapOption('Road / access map', 'road_access', map.mapType) +
+            mapOption('Other', 'other', map.mapType) +
+          '</select>' +
+        '</div>' +
+
+        mapInput('Map Title', 'mapTitle', map.mapTitle || '', 'text') +
+        mapInput('Latitude / Center Point', 'centerLat', map.centerLat || '', 'text') +
+        mapInput('Longitude / Center Point', 'centerLng', map.centerLng || '', 'text') +
+        mapInput('Zoom Level', 'zoom', map.zoom || '', 'number') +
+
+        '<div style="grid-column:1/-1">' +
+          '<label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Map Embed URL</label>' +
+          '<input name="map_embed_url" data-project-map="1" data-map-key="embedUrl" value="' + esc(map.embedUrl || '') + '" placeholder="Paste Google My Maps embed URL or iframe src here" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px;background:#fff;color:var(--charcoal)">' +
+          '<p style="font-size:11.5px;color:var(--moss);margin:4px 0 0">For Google My Maps, use the URL from Share/Embed and paste only the src URL if possible.</p>' +
+        '</div>' +
+
+        '<div style="grid-column:1/-1">' +
+          '<label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Static Map Image URL</label>' +
+          '<input name="map_image_url" data-project-map="1" data-map-key="imageUrl" value="' + esc(map.imageUrl || '') + '" placeholder="Optional link to a map screenshot, Drive image, or hosted image" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px;background:#fff;color:var(--charcoal)">' +
+        '</div>' +
+
+        '<div style="grid-column:1/-1">' +
+          '<label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">GIS / Drive Layer Link</label>' +
+          '<input name="map_layer_url" data-project-map="1" data-map-key="layerUrl" value="' + esc(map.layerUrl || '') + '" placeholder="Optional Google Drive, KML, KMZ, shapefile folder, ArcGIS, or map layer link" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px;background:#fff;color:var(--charcoal)">' +
+        '</div>' +
+
+        '<div style="grid-column:1/-1">' +
+          '<label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Map Notes</label>' +
+          '<textarea name="map_notes" data-project-map="1" data-map-key="notes" rows="3" placeholder="Describe blocks, roads, burn units, camera sets, food plots, treatment areas, or areas still needing field verification." style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px;background:#fff;color:var(--charcoal)">' + esc(map.notes || '') + '</textarea>' +
+        '</div>' +
+
+        renderProjectMapPreview(map) +
+
+      '</div>' +
+    '</div>';
+  }
+
+  function mapInput(label, key, value, type) {
+    return '<div>' +
+      '<label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">' + esc(label) + '</label>' +
+      '<input data-project-map="1" data-map-key="' + esc(key) + '" value="' + esc(value || '') + '" type="' + esc(type || 'text') + '" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px;background:#fff;color:var(--charcoal)">' +
+    '</div>';
+  }
+
+  function mapOption(label, value, current) {
+    return '<option value="' + esc(value) + '"' + (String(current || '') === String(value) ? ' selected' : '') + '>' + esc(label) + '</option>';
+  }
+
+  function renderProjectMapPreview(map) {
+    if (!map) return '';
+
+    if (map.embedUrl) {
+      return '<div style="grid-column:1/-1;margin-top:4px">' +
+        '<label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Current Map Preview</label>' +
+        '<iframe src="' + esc(map.embedUrl) + '" style="width:100%;height:320px;border:1px solid var(--border);border-radius:4px;background:#fff" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>' +
+      '</div>';
+    }
+
+    if (map.imageUrl) {
+      return '<div style="grid-column:1/-1;margin-top:4px">' +
+        '<label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Current Map Image</label>' +
+        '<img src="' + esc(map.imageUrl) + '" alt="Project map" style="max-width:100%;border:1px solid var(--border);border-radius:4px;background:#fff">' +
+      '</div>';
+    }
+
+    return '';
+  }
+
+  function collectProjectMap(form) {
+    var map = {};
+    form.querySelectorAll('[data-project-map="1"]').forEach(function (el) {
+      var key = el.dataset.mapKey;
+      if (!key) return;
+      map[key] = el.value || '';
+    });
+
+    return map;
+  }
   function serviceTypeOptions(current) {
     return Object.keys(getServiceTemplates()).map(function (key) {
       var t = getServiceTemplates()[key];
