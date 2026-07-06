@@ -557,7 +557,7 @@
     }
   }
 
-  async function showProjectForm(project, selectedPropertyId, afterSave) {
+    async function showProjectForm(project, selectedPropertyId, afterSave) {
     var wrap = document.getElementById('project-form-wrap');
 
     if (!wrap) {
@@ -568,11 +568,23 @@
     var isEdit = !!project;
     var properties = await api.staff.getAllProperties().catch(function () { return []; });
     var activePropertyId = selectedPropertyId || (project && project.propertyId) || '';
+    var activeServiceType = (project && (project.serviceType || project.service_type)) || '';
+    var existingServiceDetails = (project && (project.serviceDetails || project.service_details)) || {};
 
     wrap.style.display = '';
     wrap.innerHTML = '<div class="panel" style="margin-bottom:20px"><div class="panel-header"><h2>' + (isEdit ? 'Edit Project' : 'New Project') + '</h2>' +
       '<button class="btn btn-ghost btn-sm" id="cancel-project-form">Cancel</button></div><div class="panel-body-p">' +
       '<form id="project-form" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">' +
+
+        '<div style="grid-column:1/-1">' +
+          '<label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Service Type *</label>' +
+          '<select name="service_type" id="service-type-select" required style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' +
+            '<option value="">Select service type</option>' +
+            serviceTypeOptions(activeServiceType).join('') +
+          '</select>' +
+          '<p style="font-size:12px;color:var(--moss);margin:6px 0 0">This controls the project template, scope language, and service-specific specification fields.</p>' +
+        '</div>' +
+
         '<div style="grid-column:1/-1"><label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Property *</label>' +
           '<select name="property_id" required style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' +
             '<option value="">Select property</option>' +
@@ -589,7 +601,7 @@
             projectStatusOptions(project && project.status).join('') +
           '</select></div>' +
 
-        adminField('Classification', 'classification', (project && project.classification) || 'Habitat management', '') +
+        adminField('Classification', 'classification', (project && project.classification) || '', '') +
         adminField('Estimated Cost', 'estimated_cost', projectEstimatedDollars(project), 'type=number step=0.01 min=0') +
 
         '<div><label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Client Review Status</label>' +
@@ -612,17 +624,30 @@
         '<div style="grid-column:1/-1"><label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Client-Facing Notes</label>' +
           '<textarea name="client_notes" rows="4" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' + esc((project && (project.client_notes || project.clientNotes)) || '') + '</textarea></div>' +
 
+        '<div id="service-details-wrap" style="grid-column:1/-1">' +
+          renderServiceDetails(activeServiceType, existingServiceDetails) +
+        '</div>' +
+
         '<div style="grid-column:1/-1">' +
           '<div id="project-form-msg" style="display:none;font-size:12.5px;margin-bottom:8px"></div>' +
           '<button type="submit" class="btn" style="background:var(--forest);color:#fff;border:none;padding:.6rem 1.2rem;font-size:13px;font-weight:600;cursor:pointer;border-radius:3px">' + (isEdit ? 'Save Project' : 'Create Project') + '</button>' +
         '</div>' +
       '</form></div></div>';
 
+    var form = document.getElementById('project-form');
+    var serviceSelect = document.getElementById('service-type-select');
+
     document.getElementById('cancel-project-form').addEventListener('click', function () {
       wrap.style.display = 'none';
     });
 
-    document.getElementById('project-form').addEventListener('submit', async function (e) {
+    serviceSelect.addEventListener('change', function () {
+      var serviceType = serviceSelect.value;
+      applyServiceTemplate(form, serviceType);
+      document.getElementById('service-details-wrap').innerHTML = renderServiceDetails(serviceType, {});
+    });
+
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
       var data = Object.fromEntries(new FormData(e.target));
@@ -636,21 +661,38 @@
         return;
       }
 
+      if (!data.service_type) {
+        msgEl.style.display = '';
+        msgEl.style.color = '#7a2020';
+        msgEl.textContent = 'Choose a service type before saving the project.';
+        return;
+      }
+
       var estimate = data.estimated_cost === '' ? null : Math.round(Number(data.estimated_cost) * 100);
+      var template = getServiceTemplate(data.service_type);
+      var serviceDetails = collectServiceDetails(form);
 
       var payload = {
         propertyId: data.property_id,
-        clientId: prop.clientId || '',
+        clientId: prop.clientId || prop.client_id || '',
         name: data.name || '',
         status: data.status || 'draft',
         classification: data.classification || '',
         estimatedCostCents: estimate,
+        estimated_cost: estimate,
         clientReviewStatus: data.client_review_status || 'not_requested',
+        client_review_status: data.client_review_status || 'not_requested',
         clientVisible: data.client_visible === 'on',
+        client_visible: data.client_visible === 'on',
         plannedStartDate: data.planned_start_date || null,
         targetCompletionDate: data.target_completion_date || null,
         description: data.description || '',
-        clientNotes: data.client_notes || ''
+        clientNotes: data.client_notes || '',
+        serviceType: data.service_type,
+        service_type: data.service_type,
+        serviceLabel: template ? template.label : data.service_type,
+        serviceDetails: serviceDetails,
+        serviceTemplateVersion: 1
       };
 
       if (isEdit) payload.id = project.id;
@@ -668,6 +710,379 @@
     });
   }
 
+  function serviceTypeOptions(current) {
+    return Object.keys(getServiceTemplates()).map(function (key) {
+      var t = getServiceTemplates()[key];
+      return '<option value="' + key + '"' + (current === key ? ' selected' : '') + '>' + esc(t.label) + '</option>';
+    });
+  }
+
+  function getServiceTemplate(key) {
+    return getServiceTemplates()[key] || null;
+  }
+
+  function getServiceTemplates() {
+    return {
+      prescribed_fire: {
+        label: 'Prescribed Fire',
+        defaultName: 'Prescribed Fire Implementation',
+        classification: 'Prescribed fire / burn-unit management',
+        description: 'Plan and implement prescribed fire to improve wildlife habitat, reduce fuel loading, stimulate native herbaceous response, and maintain fire-adapted plant communities.',
+        clientNotes: 'Southern Habitat Consulting will evaluate burn-unit readiness, firebreak condition, smoke-sensitive areas, weather windows, and staffing needs before scheduling the burn.',
+        fields: [
+          { name:'burnUnitName', label:'Burn Unit Name / Block', type:'text' },
+          { name:'acres', label:'Burn Acres', type:'number', step:'0.01' },
+          { name:'burnObjective', label:'Primary Burn Objective', type:'select', options:['Fuel reduction','Longleaf / wiregrass restoration','Wildlife habitat improvement','Midstory reduction','Site preparation','Hardwood control','Training / demonstration burn'] },
+          { name:'burnSeason', label:'Preferred Burn Season', type:'select', options:['Dormant season','Growing season','Either season','Weather-window dependent'] },
+          { name:'fuelType', label:'Dominant Fuel Type', type:'select', options:['Pine straw / grass','Longleaf pine savanna fuel','Mixed pine-hardwood litter','Old field / grass','Cutover / slash','Unknown — field verification needed'] },
+          { name:'firebreakStatus', label:'Firebreak Condition', type:'select', options:['Existing and ready','Existing but needs maintenance','Needs new firebreaks','Roads serve as breaks','Unknown — inspect first'] },
+          { name:'smokeConcerns', label:'Smoke-Sensitive Areas', type:'textarea' },
+          { name:'crewEquipment', label:'Crew / Equipment Notes', type:'textarea' },
+          { name:'permitStatus', label:'Permit / Notification Status', type:'select', options:['Not started','Burn permit needed','Landowner to obtain','SHC to coordinate','Complete'] },
+          { name:'prescriptionNotes', label:'Prescription Notes', type:'textarea' }
+        ]
+      },
+
+      thermal_drone_survey: {
+        label: 'Thermal Drone Survey',
+        defaultName: 'Thermal Drone Survey',
+        classification: 'Thermal drone wildlife / habitat survey',
+        description: 'Conduct a thermal drone survey to identify wildlife activity, detect target species, evaluate access constraints, or document management areas.',
+        clientNotes: 'Thermal drone work is most effective during appropriate weather, light, and temperature conditions. SHC will coordinate the preferred flight window and deliver summary findings.',
+        fields: [
+          { name:'surveyObjective', label:'Survey Objective', type:'select', options:['Wildlife detection','Deer survey support','Feral hog detection','Predator activity','Post-treatment inspection','Access / infrastructure review','Other'] },
+          { name:'targetSpecies', label:'Target Species', type:'text' },
+          { name:'flightAreaAcres', label:'Approximate Flight Area Acres', type:'number', step:'0.01' },
+          { name:'flightWindow', label:'Preferred Flight Window', type:'select', options:['Pre-dawn','Night','Evening','Weather-dependent','Any suitable window'] },
+          { name:'deliverable', label:'Deliverable', type:'select', options:['Summary memo','Map with observations','Photos / screenshots','Full report','GIS files if available'] },
+          { name:'accessNotes', label:'Access / Launch Notes', type:'textarea' }
+        ]
+      },
+
+      camera_survey: {
+        label: 'Camera Survey',
+        defaultName: 'Trail Camera Survey',
+        classification: 'Wildlife camera survey',
+        description: 'Deploy and analyze trail cameras to evaluate wildlife use, deer herd structure, predator activity, or property-level management trends.',
+        clientNotes: 'SHC will set cameras based on survey objectives and provide a summary of findings, observations, and recommended next steps.',
+        fields: [
+          { name:'surveyObjective', label:'Survey Objective', type:'select', options:['Deer herd survey','Buck age structure','Doe/fawn recruitment','Turkey activity','Predator activity','Feral hog activity','General wildlife inventory'] },
+          { name:'cameraCount', label:'Number of Cameras', type:'number', step:'1' },
+          { name:'surveyDays', label:'Survey Duration — Days', type:'number', step:'1' },
+          { name:'baitAttractant', label:'Bait / Attractant', type:'select', options:['Corn','Mineral site','No bait','Existing feeder','Scrape / scent post','Other'] },
+          { name:'cameraSpacing', label:'Camera Spacing / Coverage Notes', type:'textarea' },
+          { name:'deliverable', label:'Deliverable', type:'select', options:['Photo summary','Survey report','Harvest recommendations','Population index summary','Map + photos'] }
+        ]
+      },
+
+      camera_deployment: {
+        label: 'Camera Deployment',
+        defaultName: 'Trail Camera Deployment',
+        classification: 'Camera deployment / monitoring',
+        description: 'Install, check, and maintain trail cameras for property monitoring, wildlife activity documentation, or management follow-up.',
+        clientNotes: 'SHC will deploy cameras in strategic locations and provide updates based on the selected check schedule and monitoring objective.',
+        fields: [
+          { name:'deploymentObjective', label:'Deployment Objective', type:'select', options:['Wildlife monitoring','Feeder monitoring','Trespass / access monitoring','Post-treatment wildlife response','Turkey activity','Predator / hog activity'] },
+          { name:'cameraCount', label:'Number of Cameras', type:'number', step:'1' },
+          { name:'checkFrequency', label:'Check Frequency', type:'select', options:['Weekly','Every 2 weeks','Monthly','Seasonal','Cellular camera remote monitoring'] },
+          { name:'cameraType', label:'Camera Type', type:'select', options:['Standard SD card','Cellular camera','Client-owned camera','SHC-provided camera'] },
+          { name:'locationNotes', label:'Location Notes', type:'textarea' }
+        ]
+      },
+
+      vegetation_analysis_survey: {
+        label: 'Vegetation Analysis Survey',
+        defaultName: 'Vegetation Analysis Survey',
+        classification: 'Vegetation survey / habitat assessment',
+        description: 'Evaluate plant community condition, browse pressure, invasive species presence, structure, mast availability, and habitat response to management.',
+        clientNotes: 'SHC will document vegetation conditions and provide practical recommendations tied to wildlife habitat goals and future management activities.',
+        fields: [
+          { name:'surveyMethod', label:'Survey Method', type:'select', options:['Rapid habitat assessment','Transects','Sample plots','Photo points','Browse survey','Invasive species mapping','Combined approach'] },
+          { name:'targetHabitat', label:'Target Habitat Type', type:'select', options:['Pine stand','Longleaf savanna','Hardwood bottomland','Old field','Food plot edges','Wetland / riparian','Mixed habitat'] },
+          { name:'surveyAcres', label:'Survey Acres', type:'number', step:'0.01' },
+          { name:'metrics', label:'Metrics to Document', type:'textarea' },
+          { name:'deliverable', label:'Deliverable', type:'select', options:['Summary memo','Full report','GIS map','Photo-point set','Management recommendation list'] }
+        ]
+      },
+
+      herbicide_application: {
+        label: 'Herbicide Application',
+        defaultName: 'Herbicide Application',
+        classification: 'Herbicide application / vegetation management',
+        description: 'Apply targeted herbicide treatment to control invasive, competing, or undesirable vegetation according to label requirements and project objectives.',
+        clientNotes: 'SHC will confirm treatment targets, site conditions, timing, label requirements, application method, and follow-up needs before completing herbicide work.',
+        fields: [
+          { name:'treatmentTarget', label:'Treatment Target', type:'select', options:['Cogongrass','Chinese privet','Tallowtree','Sweetgum / hardwood competition','Midstory hardwoods','Brush / ROW vegetation','Aquatic vegetation','General invasive control','Other'] },
+          { name:'treatmentAcres', label:'Treatment Acres', type:'number', step:'0.01' },
+          { name:'applicationMethod', label:'Application Method', type:'select', options:['Broadcast spray','Foliar spot spray','Basal bark','Cut stump','Hack-and-squirt','Backpack application','UTV sprayer','Truck skid sprayer','Aquatic treatment','Other'] },
+          { name:'herbicideProduct', label:'Herbicide Product / Active Ingredient', type:'select', options:['Garlon XRT / triclopyr','Glyphosate','Imazapyr','Oust Extra / sulfometuron + metsulfuron','Milestone / aminopyralid','2,4-D','Aquatic-approved glyphosate','TBD after label review','Other'] },
+          { name:'herbicideRate', label:'Application Rate / Mix', type:'text' },
+          { name:'carrierVolumeGpa', label:'Carrier Volume — GPA', type:'text' },
+          { name:'adjuvant', label:'Surfactant / Adjuvant', type:'text' },
+          { name:'timingWindow', label:'Treatment Timing Window', type:'select', options:['Spring','Summer','Fall','Dormant season','Growing season','After green-up','After mowing/regrowth','Weather-dependent'] },
+          { name:'weatherLimitations', label:'Weather / Drift Limitations', type:'textarea' },
+          { name:'ppeNotes', label:'PPE / Label Notes', type:'textarea' },
+          { name:'followUp', label:'Follow-Up Recommendation', type:'textarea' }
+        ]
+      },
+
+      invasive_species_control: {
+        label: 'Invasive Species Control',
+        defaultName: 'Invasive Species Control',
+        classification: 'Invasive species control',
+        description: 'Identify, prioritize, and treat invasive species using mechanical, chemical, or integrated control methods.',
+        clientNotes: 'SHC will prioritize invasive species based on spread risk, habitat impact, treatment feasibility, and landowner objectives.',
+        fields: [
+          { name:'targetSpecies', label:'Target Species', type:'text' },
+          { name:'infestationLevel', label:'Infestation Level', type:'select', options:['Scattered','Patchy','Moderate','Heavy','Severe / landscape-level','Unknown — survey needed'] },
+          { name:'controlMethod', label:'Control Method', type:'select', options:['Herbicide','Mechanical removal','Cut stump','Basal bark','Foliar spray','Integrated control','Monitoring only'] },
+          { name:'treatmentAcres', label:'Treatment Acres', type:'number', step:'0.01' },
+          { name:'priority', label:'Priority', type:'select', options:['High','Medium','Low','Monitor'] },
+          { name:'notes', label:'Treatment Notes', type:'textarea' }
+        ]
+      },
+
+      tsi_forestry: {
+        label: 'Timber Stand Improvement / Forestry Support',
+        defaultName: 'Timber Stand Improvement',
+        classification: 'TSI / forestry support',
+        description: 'Improve stand condition and wildlife value through thinning recommendations, hardwood control, release work, or forestry support activities.',
+        clientNotes: 'SHC will evaluate stand condition and recommend practical improvements tied to wildlife habitat, access, and long-term landowner objectives.',
+        fields: [
+          { name:'standType', label:'Stand Type', type:'select', options:['Pine plantation','Natural pine','Mixed pine-hardwood','Hardwood stand','Cutover','Longleaf restoration area','Unknown'] },
+          { name:'treatmentObjective', label:'Treatment Objective', type:'select', options:['Release desired trees','Improve wildlife structure','Reduce hardwood competition','Prepare for burn','Improve access','Pre-commercial improvement','Other'] },
+          { name:'treatmentAcres', label:'Treatment Acres', type:'number', step:'0.01' },
+          { name:'method', label:'Method', type:'select', options:['Herbicide stem treatment','Mechanical thinning support','Marking / layout','Basal area assessment','Consultation only','Other'] },
+          { name:'notes', label:'Stand Notes', type:'textarea' }
+        ]
+      },
+
+      longleaf_site_prep: {
+        label: 'Longleaf Site Prep / Planting Support',
+        defaultName: 'Longleaf Site Prep and Planting Support',
+        classification: 'Longleaf restoration',
+        description: 'Prepare suitable areas for longleaf restoration through site-prep recommendations, treatment planning, planting layout, and follow-up monitoring.',
+        clientNotes: 'SHC will evaluate site readiness, competing vegetation, planting density, treatment timing, and establishment needs before implementation.',
+        fields: [
+          { name:'prepAcres', label:'Site-Prep Acres', type:'number', step:'0.01' },
+          { name:'currentCondition', label:'Current Site Condition', type:'select', options:['Cutover','Old field','Pine stand conversion','Mixed hardwood competition','Pasture conversion','Existing longleaf stand','Unknown'] },
+          { name:'prepMethod', label:'Site-Prep Method', type:'select', options:['Herbicide only','Mechanical + herbicide','Burn + herbicide','Burn only','Planting layout only','Other'] },
+          { name:'plantingDensity', label:'Target Planting Density', type:'select', options:['622 TPA','605 TPA','500 TPA','Custom density','Not determined'] },
+          { name:'plantingWindow', label:'Planting Window', type:'select', options:['Winter','Early spring','Weather-dependent','Future phase'] },
+          { name:'notes', label:'Restoration Notes', type:'textarea' }
+        ]
+      },
+
+      food_plot_planting: {
+        label: 'Food Plot Planting',
+        defaultName: 'Food Plot Planting',
+        classification: 'Food plot establishment / wildlife forage',
+        description: 'Prepare, plant, and document food plot areas to improve seasonal wildlife forage and hunting property value.',
+        clientNotes: 'SHC will confirm food plot acreage, soil needs, seed blend, planting timing, and equipment access before implementation.',
+        fields: [
+          { name:'plotAcres', label:'Food Plot Acres', type:'number', step:'0.01' },
+          { name:'season', label:'Planting Season', type:'select', options:['Fall / cool season','Spring / warm season','Perennial','Summer annual','Custom'] },
+          { name:'seedBlend', label:'Seed Blend', type:'textarea' },
+          { name:'limeFertilizer', label:'Lime / Fertilizer Plan', type:'textarea' },
+          { name:'sitePrep', label:'Site Prep Method', type:'select', options:['Disk only','Spray + disk','Mow + spray + disk','No-till drill','Broadcast + drag','Other'] },
+          { name:'equipment', label:'Equipment Needed', type:'textarea' }
+        ]
+      },
+
+      road_grading_access: {
+        label: 'Road Grading / Access Work',
+        defaultName: 'Road Grading and Access Improvement',
+        classification: 'Road access / grading',
+        description: 'Improve property access through road grading, water-control shaping, trail maintenance, or equipment access improvements.',
+        clientNotes: 'SHC will evaluate access needs, drainage concerns, equipment requirements, and priority road segments before scheduling work.',
+        fields: [
+          { name:'roadLength', label:'Road / Trail Length', type:'text' },
+          { name:'workType', label:'Work Type', type:'select', options:['Light grading','Heavy grading','Road reshaping','Trail clearing','Water bar installation','Culvert attention needed','Gravel / material placement','Other'] },
+          { name:'accessIssue', label:'Primary Access Issue', type:'select', options:['Ruts','Standing water','Erosion','Overgrown trail','Poor drainage','Soft roadbed','Equipment access','Other'] },
+          { name:'equipmentNeeded', label:'Equipment Needed', type:'select', options:['Tractor','Skid steer','Dozer','Motor grader','Excavator','Hand clearing','Subcontractor likely needed'] },
+          { name:'erosionNotes', label:'Drainage / Erosion Notes', type:'textarea' }
+        ]
+      },
+
+      firebreak_installation: {
+        label: 'Firebreak Installation / Maintenance',
+        defaultName: 'Firebreak Installation and Maintenance',
+        classification: 'Firebreak / burn preparation',
+        description: 'Install or maintain firebreaks to support prescribed fire, access, and property protection objectives.',
+        clientNotes: 'SHC will evaluate burn-unit boundaries, access points, existing breaks, vegetation, slope, and equipment needs before work begins.',
+        fields: [
+          { name:'breakLength', label:'Firebreak Length', type:'text' },
+          { name:'breakType', label:'Firebreak Type', type:'select', options:['Disked line','Bladed line','Mowed line','Existing road','Wetline support','Combination'] },
+          { name:'condition', label:'Current Condition', type:'select', options:['None exists','Needs mowing','Needs disking','Needs grading','Ready with minor touch-up','Unknown'] },
+          { name:'equipmentNeeded', label:'Equipment Needed', type:'select', options:['Tractor + disk','Dozer','Skid steer','Mower','Hand tools','Subcontractor likely needed'] },
+          { name:'notes', label:'Firebreak Notes', type:'textarea' }
+        ]
+      },
+
+      wildlife_management_plan: {
+        label: 'Wildlife Management Plan',
+        defaultName: 'Wildlife Management Plan',
+        classification: 'Wildlife management planning',
+        description: 'Develop a property-specific wildlife management plan with objectives, habitat priorities, implementation steps, and monitoring recommendations.',
+        clientNotes: 'SHC will organize management recommendations by priority, expected benefit, cost range, and practical implementation schedule.',
+        fields: [
+          { name:'primarySpecies', label:'Primary Target Species', type:'select', options:['White-tailed deer','Wild turkey','Bobwhite quail','Waterfowl','General wildlife','Multi-species'] },
+          { name:'planScope', label:'Plan Scope', type:'select', options:['Basic plan','Full property plan','Annual update','Implementation plan','EQIP / agency support plan','Client presentation version'] },
+          { name:'propertyAcres', label:'Planning Acres', type:'number', step:'0.01' },
+          { name:'priorityIssues', label:'Priority Issues', type:'textarea' },
+          { name:'deliverable', label:'Deliverable', type:'select', options:['PDF plan','Map + recommendations','Annual task list','Full report + task orders'] }
+        ]
+      },
+
+      deer_management_consult: {
+        label: 'Deer Herd / Harvest Consultation',
+        defaultName: 'Deer Herd and Harvest Consultation',
+        classification: 'Deer management consultation',
+        description: 'Evaluate deer herd goals, harvest strategy, habitat conditions, camera data, and property-level deer management recommendations.',
+        clientNotes: 'SHC will review available harvest records, camera observations, property objectives, and habitat limitations before recommending harvest or habitat changes.',
+        fields: [
+          { name:'objective', label:'Primary Objective', type:'select', options:['Increase buck age class','Improve herd balance','Improve fawn recruitment','Reduce browse pressure','Trophy management','Family hunting property','General guidance'] },
+          { name:'dataAvailable', label:'Data Available', type:'select', options:['Camera survey','Harvest records','Observation logs','None yet','Partial data'] },
+          { name:'consultType', label:'Consult Type', type:'select', options:['Phone/desktop review','Field visit','Full report','Annual harvest plan','Camera survey add-on'] },
+          { name:'notes', label:'Deer Management Notes', type:'textarea' }
+        ]
+      },
+
+      nuisance_wildlife_control: {
+        label: 'Nuisance Wildlife Control',
+        defaultName: 'Nuisance Wildlife Control',
+        classification: 'Nuisance wildlife / damage management',
+        description: 'Evaluate and address nuisance wildlife damage or conflicts using appropriate control, exclusion, monitoring, or removal strategies.',
+        clientNotes: 'SHC will confirm target species, damage type, access, legal requirements, and the most practical response option before implementation.',
+        fields: [
+          { name:'targetSpecies', label:'Target Species', type:'select', options:['Beaver','Feral hog','Coyote','Raccoon','Skunk','Armadillo','Nutria','Otter','Alligator','Other'] },
+          { name:'damageType', label:'Damage Type', type:'select', options:['Timber flooding','Road / culvert damage','Food plot damage','Pasture damage','Pond / bank damage','Predation concern','Structural conflict','Other'] },
+          { name:'controlMethod', label:'Control Method', type:'select', options:['Site assessment','Trapping','Removal coordination','Exclusion','Monitoring','Agency permit support','Other'] },
+          { name:'urgency', label:'Urgency', type:'select', options:['Routine','High priority','Emergency / active damage','Monitor only'] },
+          { name:'notes', label:'Wildlife Control Notes', type:'textarea' }
+        ]
+      },
+
+      pond_aquatic_management: {
+        label: 'Pond / Aquatic Vegetation Management',
+        defaultName: 'Pond and Aquatic Vegetation Management',
+        classification: 'Pond / aquatic vegetation management',
+        description: 'Assess pond or aquatic vegetation issues and recommend treatment, monitoring, or maintenance actions.',
+        clientNotes: 'SHC will evaluate aquatic vegetation type, treatment area, timing, access, and label-compliant treatment options before implementation.',
+        fields: [
+          { name:'waterbodyType', label:'Waterbody Type', type:'select', options:['Farm pond','Retention pond','Canal / ditch','Wetland edge','Lake edge','Unknown'] },
+          { name:'targetVegetation', label:'Target Vegetation', type:'text' },
+          { name:'treatmentArea', label:'Treatment Area', type:'text' },
+          { name:'method', label:'Management Method', type:'select', options:['Aquatic herbicide','Mechanical removal','Shoreline treatment','Monitoring only','Integrated approach'] },
+          { name:'notes', label:'Aquatic Notes', type:'textarea' }
+        ]
+      },
+
+      gis_mapping_documentation: {
+        label: 'GIS Mapping / Documentation',
+        defaultName: 'GIS Mapping and Field Documentation',
+        classification: 'GIS mapping / field documentation',
+        description: 'Create maps, treatment documentation, field notes, or property layers for landowner planning and project tracking.',
+        clientNotes: 'SHC will organize field observations and management areas into clear maps or documentation for client review.',
+        fields: [
+          { name:'mapType', label:'Map Type', type:'select', options:['Property overview','Treatment map','Burn-unit map','Food plot map','Invasive species map','Access map','Before/after documentation'] },
+          { name:'deliverable', label:'Deliverable', type:'select', options:['PDF map','GIS files','Portal map layer','Photo report','Treatment documentation package'] },
+          { name:'fieldDataNeeded', label:'Field Data Needed', type:'textarea' },
+          { name:'notes', label:'Mapping Notes', type:'textarea' }
+        ]
+      },
+
+      custom: {
+        label: 'Custom / Other Service',
+        defaultName: 'Custom SHC Service',
+        classification: 'Custom service',
+        description: 'Custom Southern Habitat Consulting project or recommendation.',
+        clientNotes: 'SHC will define the scope, cost, timing, and deliverables after reviewing the property objective.',
+        fields: [
+          { name:'serviceDescription', label:'Service Description', type:'textarea' },
+          { name:'objective', label:'Objective', type:'textarea' },
+          { name:'deliverable', label:'Deliverable', type:'text' },
+          { name:'notes', label:'Notes', type:'textarea' }
+        ]
+      }
+    };
+  }
+
+  function renderServiceDetails(serviceType, details) {
+    var template = getServiceTemplate(serviceType);
+
+    if (!template) {
+      return '<div style="background:#f8f6ef;border:1px solid var(--border);padding:12px 14px;border-radius:4px">' +
+        '<h3 style="margin:0 0 6px;font-size:15px;color:var(--forest)">Service Details</h3>' +
+        '<p style="font-size:13px;color:var(--moss);margin:0">Choose a service type to show service-specific fields.</p>' +
+      '</div>';
+    }
+
+    return '<div style="background:#f8f6ef;border:1px solid var(--border);padding:12px 14px;border-radius:4px">' +
+      '<h3 style="margin:0 0 6px;font-size:15px;color:var(--forest)">Service Details — ' + esc(template.label) + '</h3>' +
+      '<p style="font-size:12.5px;color:var(--moss);margin:0 0 12px">These fields save with the project as structured service specifications.</p>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">' +
+        template.fields.map(function (f) { return renderServiceField(f, details ? details[f.name] : ''); }).join('') +
+      '</div>' +
+    '</div>';
+  }
+
+  function renderServiceField(f, value) {
+    var val = value === null || value === undefined ? '' : value;
+    var commonStyle = 'width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px;background:#fff;color:var(--charcoal)';
+    var label = '<label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">' + esc(f.label) + '</label>';
+    var fieldName = 'detail_' + f.name;
+
+    if (f.type === 'textarea') {
+      return '<div style="grid-column:1/-1">' + label +
+        '<textarea data-service-detail="1" data-detail-key="' + esc(f.name) + '" name="' + esc(fieldName) + '" rows="3" style="' + commonStyle + '">' + esc(val) + '</textarea>' +
+      '</div>';
+    }
+
+    if (f.type === 'select') {
+      return '<div>' + label +
+        '<select data-service-detail="1" data-detail-key="' + esc(f.name) + '" name="' + esc(fieldName) + '" style="' + commonStyle + '">' +
+          '<option value="">Select</option>' +
+          (f.options || []).map(function (opt) {
+            return '<option value="' + esc(opt) + '"' + (String(val) === String(opt) ? ' selected' : '') + '>' + esc(opt) + '</option>';
+          }).join('') +
+        '</select>' +
+      '</div>';
+    }
+
+    return '<div>' + label +
+      '<input data-service-detail="1" data-detail-key="' + esc(f.name) + '" name="' + esc(fieldName) + '" value="' + esc(val) + '" type="' + esc(f.type || 'text') + '" ' + (f.step ? 'step="' + esc(f.step) + '"' : '') + ' style="' + commonStyle + '">' +
+    '</div>';
+  }
+
+  function collectServiceDetails(form) {
+    var details = {};
+    form.querySelectorAll('[data-service-detail="1"]').forEach(function (el) {
+      var key = el.dataset.detailKey;
+      details[key] = el.value;
+    });
+    return details;
+  }
+
+  function applyServiceTemplate(form, serviceType) {
+    var template = getServiceTemplate(serviceType);
+    if (!template) return;
+
+    setIfEmpty(form.elements.name, template.defaultName);
+    setIfEmpty(form.elements.classification, template.classification);
+    setIfEmpty(form.elements.description, template.description);
+    setIfEmpty(form.elements.client_notes, template.clientNotes);
+
+    if (form.elements.status && !form.elements.status.value) {
+      form.elements.status.value = 'draft';
+    }
+  }
+
+  function setIfEmpty(el, value) {
+    if (!el || value === undefined || value === null) return;
+    if (!el.value || !String(el.value).trim()) el.value = value;
+  }
+
   function projectStatusOptions(current) {
     return ['draft','active','scheduled','in_progress','complete','deferred','cancelled','archived'].map(function (s) {
       return '<option value="' + s + '"' + (current === s ? ' selected' : '') + '>' + s + '</option>';
@@ -683,14 +1098,14 @@
   function projectEstimatedCents(project) {
     if (!project) return null;
     if (project.estimatedCostCents !== null && project.estimatedCostCents !== undefined) return project.estimatedCostCents;
-    if (project.estimated_cost !== null && project.estimated_cost !== undefined) return Math.round(Number(project.estimated_cost) * 100);
+    if (project.estimated_cost !== null && project.estimated_cost !== undefined) return Number(project.estimated_cost) > 10000 ? Number(project.estimated_cost) : Math.round(Number(project.estimated_cost) * 100);
     return null;
   }
 
   function projectEstimatedDollars(project) {
     if (!project) return '';
     if (project.estimatedCostCents !== null && project.estimatedCostCents !== undefined) return project.estimatedCostCents / 100;
-    if (project.estimated_cost !== null && project.estimated_cost !== undefined) return project.estimated_cost;
+    if (project.estimated_cost !== null && project.estimated_cost !== undefined) return Number(project.estimated_cost) > 10000 ? Number(project.estimated_cost) / 100 : project.estimated_cost;
     return '';
   }
 
@@ -704,6 +1119,7 @@
       return '';
     }
   }
+
 
   // ── INQUIRIES ─────────────────────────────────────────────────────────────
   async function renderInquiries() {
