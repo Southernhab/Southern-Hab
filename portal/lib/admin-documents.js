@@ -14,6 +14,20 @@
     return;
   }
 
+  var ALLOWED_MIME_TYPES = [
+    'application/pdf',
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/webp',
+    'text/csv',
+    'application/json',
+    'application/vnd.google-earth.kml+xml',
+    'application/vnd.google-earth.kmz',
+    'application/zip',
+    'application/octet-stream'
+  ];
+
   function toIso(value) {
     if (!value) return null;
     if (typeof value.toDate === 'function') return value.toDate().toISOString();
@@ -57,15 +71,25 @@
     if (!payload.clientId) throw new Error('Missing client assignment.');
     if (!payload.propertyId) throw new Error('Missing property assignment.');
 
+    var contentType = payload.file.type || 'application/octet-stream';
+    if (ALLOWED_MIME_TYPES.indexOf(contentType) === -1) {
+      throw new Error('This file type is not permitted. Convert Word documents to PDF before uploading.');
+    }
+    if (payload.file.size > 50 * 1024 * 1024) {
+      throw new Error('The file exceeds the 50 MB upload limit.');
+    }
+
     var originalName = payload.file.name || 'uploaded-file';
     var safeName = originalName.toLowerCase()
       .replace(/[^a-z0-9.\-_]+/g, '-')
       .replace(/^-+|-+$/g, '') || 'uploaded-file';
     var status = payload.documentStatus || 'published';
-    var path = 'documents/' + payload.clientId + '/' + payload.propertyId + '/' + Date.now() + '-' + safeName;
+
+    // This path matches storage.rules: clients/{clientId}/documents/{filename}
+    var path = 'clients/' + payload.clientId + '/documents/' + Date.now() + '-' + safeName;
 
     await storage.ref().child(path).put(payload.file, {
-      contentType: payload.file.type || 'application/octet-stream',
+      contentType: contentType,
       customMetadata: {
         clientId: payload.clientId,
         propertyId: payload.propertyId,
@@ -80,7 +104,7 @@
       documentType: payload.documentType || 'Report',
       originalFilename: originalName,
       storagePath: path,
-      contentType: payload.file.type || 'application/octet-stream',
+      contentType: contentType,
       documentStatus: status,
       clientVisible: payload.clientVisible === true && status === 'published',
       publishedAt: status === 'published' ? FieldValue.serverTimestamp() : null,
