@@ -10,3 +10,6 @@ form{background:#fff;border:1px solid var(--line);padding:26px}input,select,text
 
 /* Expanded horizontal SHC brand lockup */
 .logo{height:76px!important;min-width:285px!important;gap:10px;text-decoration:none!important}.logo-emblem{display:flex;width:76px;height:68px;align-items:center;justify-content:center;overflow:hidden;flex:0 0 76px}.logo-emblem img{width:100%!important;height:100%!important;max-width:none!important;object-fit:contain}.logo-text{display:flex;flex-direction:column;justify-content:center;line-height:1.05}.logo-text strong{font:700 18px var(--font-heading);color:var(--forest);white-space:nowrap}.logo-text small{font:700 9px var(--font-body);letter-spacing:.18em;color:var(--moss);margin-top:4px}.logo-text em{font:600 10px var(--font-body);font-style:normal;color:var(--gold);margin-top:6px;white-space:nowrap}@media(max-width:600px){.logo{height:64px!important;min-width:215px!important;gap:7px}.logo-emblem{width:56px;height:54px;flex-basis:56px}.logo-text strong{font-size:14px}.logo-text small{font-size:7px}.logo-text em{font-size:8px}}
+
+/* Portal showcase card contrast */
+.section.dark .case{background:#fff;color:var(--ink)}.section.dark .case strong,.section.dark .case p{color:var(--forest)}
