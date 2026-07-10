@@ -43,6 +43,48 @@
 
   // ── 1. Mobile hamburger nav ───────────────────────────────────────────────
   function setupMobileNav() {
+    var modernNav = document.querySelector('.site-nav');
+    if (modernNav) {
+      var modernBtn = modernNav.querySelector('.mobile-menu-btn');
+      if (!modernBtn) return;
+
+      var modernPanel = document.createElement('div');
+      modernPanel.className = 'mobile-nav-panel';
+      modernPanel.setAttribute('hidden', '');
+      modernPanel.innerHTML =
+        '<ul>' +
+        '<li><a href="/">Home</a></li>' +
+        '<li><a href="/private-land-services/">Private Lands</a></li>' +
+        '<li><a href="/industrial-municipal-utility/">Industrial &amp; Municipal</a></li>' +
+        '<li><a href="/about/">About</a></li>' +
+        '<li><a href="/portal/">Client Login</a></li>' +
+        '<li><a href="/contact/">Discuss a Project</a></li>' +
+        '</ul>';
+      modernNav.parentNode.insertBefore(modernPanel, modernNav.nextSibling);
+
+      function closeModernMenu() {
+        modernBtn.setAttribute('aria-expanded', 'false');
+        modernBtn.textContent = 'Menu';
+        modernPanel.setAttribute('hidden', '');
+      }
+
+      modernBtn.setAttribute('aria-expanded', 'false');
+      modernBtn.addEventListener('click', function () {
+        var open = modernBtn.getAttribute('aria-expanded') === 'true';
+        if (open) {
+          closeModernMenu();
+        } else {
+          modernBtn.setAttribute('aria-expanded', 'true');
+          modernBtn.textContent = 'Close';
+          modernPanel.removeAttribute('hidden');
+        }
+      });
+      modernPanel.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', closeModernMenu);
+      });
+      return;
+    }
+
     var nav = document.querySelector('nav.container-fluid');
     if (!nav) return;
 
