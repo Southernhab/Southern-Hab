@@ -290,9 +290,17 @@ getMyProperties: async function () {
         .where('propertyId', '==', propertyId)
         .where('clientVisible', '==', true);
       if (opts && opts.status) q = q.where('status', '==', opts.status);
-      q = q.orderBy('plannedStartDate', 'desc');
       var snap = await q.get();
-      return snapToArr(snap).map(normProject);
+
+      // Sort client-side so this core portal query does not depend on a
+      // separately deployed composite Firestore index.
+      return snapToArr(snap)
+        .map(normProject)
+        .sort(function (a, b) {
+          var aTime = a.planned_start_date ? new Date(a.planned_start_date).getTime() : 0;
+          var bTime = b.planned_start_date ? new Date(b.planned_start_date).getTime() : 0;
+          return bTime - aTime;
+        });
     },
 
     // ── Submit a project action (client preliminary approval, defer, etc.) ─────
