@@ -13,3 +13,6 @@ form{background:#fff;border:1px solid var(--line);padding:26px}input,select,text
 
 /* Portal showcase card contrast */
 .section.dark .case{background:#fff;color:var(--ink)}.section.dark .case strong,.section.dark .case p{color:var(--forest)}
+
+/* Example property portal card hierarchy */
+.section.dark .case{background:#fff!important;color:#252a27!important;border-left:5px solid var(--gold);padding:38px!important;box-shadow:0 10px 30px rgba(0,0,0,.18)}.section.dark .case .eyebrow{display:block!important;color:var(--gold)!important;margin-bottom:18px}.section.dark .case strong{display:block!important;color:var(--forest)!important;font:700 clamp(28px,3vw,42px) var(--font-heading);line-height:1.1;margin-bottom:20px}.section.dark .case p{display:block!important;color:#3f4a44!important;font-size:17px!important;line-height:1.65!important;margin:0!important}
