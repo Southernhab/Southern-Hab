@@ -42,6 +42,22 @@ jobs:
       - name: Run breadcrumb check
         run: node scripts/check-breadcrumbs.js
 
+      - name: Validate frontend JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          while IFS= read -r -d '' file; do
+            echo "Checking $file"
+            node --check "$file"
+          done < <(
+            find portal admin scripts \
+              -type f \
+              -name '*.js' \
+              ! -name 'firebase-config.js' \
+              -print0
+          )
+
       - name: Verify Firebase frontend secrets
         env:
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
