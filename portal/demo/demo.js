@@ -82,7 +82,7 @@
   };
 
   var views = {};
-  var mapPath = '/portal/demo/assets/pine-ridge-whitetail-habitat-map-complete.png';
+  var mapPath = '/portal/demo/assets/pine-ridge-whitetail-habitat-map-complete.jpg';
   var planPath = '/portal/demo/files/pine-ridge-property-management-prescription.pdf';
   var deerDataPath = '/portal/demo/files/pine-ridge-deer-harvest-log.csv';
   var thermalDataPath = '/portal/demo/files/pine-ridge-thermal-drone-surveys.csv';
