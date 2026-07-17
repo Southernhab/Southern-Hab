@@ -6,47 +6,87 @@
     location: 'South Alabama',
     acres: 7645,
     habitats: [
-      { name: 'Pine / evergreen forest', acres: 6532, percent: 85.4, condition: 'Primary opportunity', color: '#5e7954', meaning: 'Dominant upland matrix; inventory suitable stands for thinning, midstory work, and recurring fire.' },
-      { name: 'Woody wetland', acres: 558, percent: 7.3, condition: 'Protect', color: '#3e7882', meaning: 'Hydrologic and security cover; avoid soil disturbance and field-verify buffers.' },
-      { name: 'Open / developed', acres: 324, percent: 4.2, condition: 'Verify', color: '#b79a61', meaning: 'Rights-of-way and open ground; confirm condition and treatment value in the field.' },
+      { name: 'Pine / evergreen forest', acres: 6532, percent: 85.4, condition: 'Active management', color: '#5e7954', meaning: 'Dominant upland matrix; 1,258 acres have received thinning or selective midstory work and 1,274 acres now meet the open-pine understory standard.' },
+      { name: 'Woody wetland', acres: 558, percent: 7.3, condition: 'Protected', color: '#3e7882', meaning: 'Hydrologic and security cover; field-verified equipment exclusions and buffers are carried into each work order.' },
+      { name: 'Open / developed', acres: 324, percent: 4.2, condition: 'Managed access', color: '#b79a61', meaning: 'Rights-of-way and open ground; ten permanent openings and the primary access network are monitored here.' },
       { name: 'Open water', acres: 144, percent: 1.9, condition: 'Protect', color: '#3f88a4', meaning: 'Reservoir and pond surface; retain shoreline protection and stable crossings.' },
-      { name: 'Shrub / grass / barren', acres: 52, percent: 0.7, condition: 'Retain and rotate', color: '#c6ae57', meaning: 'Scarce young-cover resource; retain useful patches and rotate disturbance nearby.' },
+      { name: 'Shrub / grass / barren', acres: 52, percent: 0.7, condition: 'Retain and rotate', color: '#c6ae57', meaning: 'Original mapped young cover; treatment within adjacent pine now brings the rotating early-cover footprint to 302 acres.' },
       { name: 'Mixed forest', acres: 35, percent: 0.5, condition: 'Retain diversity', color: '#726f4a', meaning: 'Potential mast and diversity component; retain quality hardwoods and soft mast.' }
     ],
     overlays: [
       ['NWI non-riverine wetland', '472 acres', '6.2%', 'Documented planning constraint; overlaps the land-cover classes.'],
-      ['Modeled bedding zones', '385 acres', '5.0%', 'Five predicted security-cover zones; field confirmation is required.'],
-      ['Mapped early cover', '31 acres', '0.4%', 'The primary habitat deficit; likely understates open understory beneath pine canopy.'],
-      ['Modeled travel corridors', '4 routes', '—', 'Connections modeled along cover, drainages, and terrain.'],
-      ['Native / gravel forest roads', '31 segments', '—', 'Access network to classify as maintain, seasonal, or close and restore.']
+      ['Field-confirmed bedding zones', '412 acres', '5.4%', 'Five low-entry zones with repeated bed, track, camera, and winter thermal evidence.'],
+      ['Managed early-cover footprint', '302 acres', '4.0%', 'Current rotating footprint, increased from the 31-acre mapped baseline.'],
+      ['Monitored travel corridors', '4 routes', '—', 'All four routes have repeat camera or field-sign use; wooded screening is retained.'],
+      ['Native / gravel forest roads', '31 segments', '—', 'Eighteen maintain, seven seasonal, and six closed or scheduled for restoration.']
     ],
     projects: [
-      ['Year 1', 'Field verification and baseline inventory', 'Entire tract', 'Priority', 'Wetlands, streams, stands, roads, bedding, corridors, photo points, and vegetation plots'],
-      ['Year 1', 'Initial prescribed-fire entry', '400–700 acres', 'Planned', 'Prepare access and firebreaks; retain unburned security cover'],
-      ['Year 1', 'Thinning / midstory entry', '300–500 acres', 'Planned', 'Inventory first; prioritize suitable closed-canopy uplands'],
-      ['Year 1', 'Early-cover treatment', '50–100 acres', 'Planned', 'Create distributed 40–80 acre blocks rather than one concentrated opening'],
-      ['Year 2', 'Permanent wildlife openings', '15–25 acres', 'Planned', 'Use 2–5 acre openings; soil-test before planting'],
-      ['Annual', 'Habitat monitoring and GIS update', 'Property-wide', 'Recurring', 'Record treatments, road status, invasives, bedding evidence, and corridor use']
+      ['2024', 'Baseline field inventory and monitoring network', 'Entire tract', 'Complete', 'Verified stands, roads, wetlands, five bedding zones, four corridors, 36 photo points, and 12 thermal survey blocks'],
+      ['2024', 'Prescribed fire and understory recovery', '612 acres', 'Complete', 'First entry completed with security-cover refugia retained'],
+      ['2024', 'Thinning and selective midstory control', '386 acres', 'Complete', 'Closed-canopy uplands opened toward the 60–80 ft²/ac basal-area target'],
+      ['2025', 'Expanded prescribed-fire rotation', '1,148 acres', 'Complete', 'Burned nine units; permanent vegetation plots documented first-year response'],
+      ['2025', 'Thinning, early cover, and openings', '762 acres', 'Complete', '612 acres thinned, 132 acres of young cover established, and 18 acres of permanent openings completed'],
+      ['2026', 'Winter thermal drone survey', '2,690 sampled acres', 'Complete', 'Second standardized survey completed across 13 flight blocks'],
+      ['2026', 'Prescribed fire', '924 acres', 'Complete', 'Seven units completed; unburned pockets retained in each treatment block'],
+      ['2026', 'Thinning, early cover, and openings', '333 acres to date', 'Active', '260 acres thinned, 61 acres of young cover treated, and 12 acres of openings completed through July']
     ],
     years: [
-      [1, '400–700 ac', '300–500 ac', '50–100 ac', 'Verify constraints and establish permanent monitoring points.'],
-      [2, '1,000–1,300 ac', '500–700 ac', '100–150 ac + 15–25 ac permanent openings', 'Evaluate vegetation response and close or gate high-impact access.'],
-      [3, '1,200–1,600 ac', '500–700 ac', '100–150 ac', 'Re-enter first fire units and confirm corridor use with cameras and sign surveys.'],
-      [4, '1,200–1,600 ac', '300–500 ac', '100–150 ac', 'Shift treatment to underrepresented areas and control invasive plants.'],
-      [5, '1,200–1,600 ac', 'Maintenance / gap fill', 'Reach 600–760 ac rotating footprint', 'Complete outcome review and revise the next five-year cycle.']
+      [2024, 'Complete', '612 ac', '386 ac', '78 ac', 'Established the field baseline, monitoring stations, and first treatment blocks.'],
+      [2025, 'Complete', '1,148 ac', '612 ac', '132 ac + 18 ac openings', 'Expanded the burn rotation and confirmed use of all four travel corridors.'],
+      [2026, 'Active', '924 ac to date', '260 ac to date', '61 ac + 12 ac openings', 'Second thermal survey and harvest analysis are complete; summer vegetation monitoring is active.'],
+      [2027, 'Planned', '1,200–1,600 ac', '500–700 ac', '100–150 ac', 'Re-enter priority fire units and shift work toward underrepresented areas.'],
+      [2028, 'Planned', '1,200–1,600 ac', 'Maintenance / gap fill', 'Reach 600–760 ac', 'Complete the outcome review and revise the next five-year cycle.']
     ],
     budgets: [
-      [2026, 'Field verification and program foundation', 325000, 92000, 233000],
-      [2027, 'First full-scale treatment year', 385000, 140000, 245000],
-      [2028, 'Fire rotation and habitat expansion', 365000, 126000, 239000],
-      [2029, 'Adaptive treatment and access work', 330000, 105000, 225000],
-      [2030, 'Complete targets and next-cycle inventory', 305000, 82000, 223000]
+      [2024, 'Field verification and program foundation', 325000, 92000, 233000],
+      [2025, 'First full-scale treatment year', 385000, 140000, 245000],
+      [2026, 'Fire rotation and habitat expansion', 365000, 126000, 239000],
+      [2027, 'Adaptive treatment and access work', 330000, 105000, 225000],
+      [2028, 'Complete targets and next-cycle inventory', 305000, 82000, 223000]
+    ],
+    thermalSurveys: [
+      ['Winter 2025', 'Feb. 20–22, 2025', '2,520 ac / 12 blocks', 342, '306–381', '44.7', '1:2.3', '0.51'],
+      ['Winter 2026', 'Feb. 18–21, 2026', '2,690 ac / 13 blocks', 371, '333–414', '48.5', '1:2.0', '0.54']
+    ],
+    deerHarvest: [
+      ['2024–25', 72, 26, 46, '9.4', '2.7', '38%', 122, 38, 88, 36],
+      ['2025–26', 81, 30, 51, '10.6', '3.3', '57%', 134, 44, 93, 41]
+    ],
+    deerAgeRows: [
+      ['2024–25', 'Antlered buck', '1.5', 9, 100, 32],
+      ['2024–25', 'Antlered buck', '2.5', 7, 122, 37],
+      ['2024–25', 'Antlered buck', '3.5', 6, 138, 42],
+      ['2024–25', 'Antlered buck', '4.5', 3, 145, 46],
+      ['2024–25', 'Antlered buck', '5.5+', 1, 149, 44],
+      ['2024–25', 'Adult doe', '1.5', 10, 77, 31],
+      ['2024–25', 'Adult doe', '2.5', 16, 89, 36],
+      ['2024–25', 'Adult doe', '3.5', 9, 95, 39],
+      ['2024–25', 'Adult doe', '4.5+', 5, 97, 37],
+      ['2024–25', 'Fawn', '0.5', 6, 51, 26],
+      ['2025–26', 'Antlered buck', '1.5', 6, 104, 36],
+      ['2025–26', 'Antlered buck', '2.5', 7, 127, 41],
+      ['2025–26', 'Antlered buck', '3.5', 8, 143, 47],
+      ['2025–26', 'Antlered buck', '4.5', 6, 151, 50],
+      ['2025–26', 'Antlered buck', '5.5+', 3, 155, 48],
+      ['2025–26', 'Adult doe', '1.5', 10, 81, 36],
+      ['2025–26', 'Adult doe', '2.5', 18, 94, 41],
+      ['2025–26', 'Adult doe', '3.5', 11, 99, 44],
+      ['2025–26', 'Adult doe', '4.5+', 7, 100, 42],
+      ['2025–26', 'Fawn', '0.5', 5, 54, 31]
+    ],
+    turkeyHarvest: [
+      [2024, 'Pre-management baseline', 24, 4, 3, 1, '16.7'],
+      [2025, 'Post-management · Year 1', 27, 6, 5, 1, '22.2'],
+      [2026, 'Post-management · Year 2', 31, 8, 7, 1, '25.8']
     ]
   };
 
   var views = {};
   var mapPath = '/portal/demo/assets/pine-ridge-whitetail-habitat-map.png';
   var planPath = '/portal/demo/files/pine-ridge-property-management-prescription.pdf';
+  var deerDataPath = '/portal/demo/files/pine-ridge-deer-harvest-log.csv';
+  var thermalDataPath = '/portal/demo/files/pine-ridge-thermal-drone-surveys.csv';
+  var turkeyDataPath = '/portal/demo/files/pine-ridge-turkey-harvest-log.csv';
 
   function money(n) {
     return '$' + n.toLocaleString('en-US');
@@ -61,45 +101,47 @@
   }
 
   function limitation() {
-    return '<div class="limitation"><strong>Demonstration and planning-use data.</strong> Acreages are desktop estimates. Modeled bedding and travel features are hypotheses until field-confirmed. Property boundaries are not a legal survey, and final treatment units require on-site verification, applicable approvals, and contractor-specific planning.</div>';
+    return '<div class="limitation"><strong>Demonstration data.</strong> Wildlife records and management outcomes are representative sample data built for this private-property portal. Survey estimates are not a complete census, harvest metrics should be interpreted with effort and season timing, and property boundaries are not a legal survey.</div>';
   }
 
   function managementMap(compact) {
     return '<figure class="actual-map ' + (compact ? 'compact' : '') + '">' +
-      '<div class="map-toolbar"><div><strong>Whitetail Habitat Intelligence</strong><span>Documented layers + modeled habitat features</span></div><div class="map-actions"><a class="btn ghost" href="' + mapPath + '" target="_blank" rel="noopener">Open full map</a><a class="btn" href="' + mapPath + '" download>Download PNG</a></div></div>' +
-      '<div class="map-frame"><img src="' + mapPath + '" alt="Pine Ridge habitat intelligence map showing wetlands, early cover, five modeled bedding zones, four travel corridors, roads, creeks, and the property boundary"></div>' +
-      '<figcaption>Layers shown: property boundary, NWI wetlands, creeks, early-successional cover, modeled bedding zones BED-1 through BED-5, four modeled travel corridors, and native or gravel roads.</figcaption>' +
+      '<div class="map-toolbar"><div><strong>Demo Property Management Map</strong><span>Verified resources, habitat features, and management priorities</span></div><div class="map-actions"><a class="btn ghost" href="' + mapPath + '" target="_blank" rel="noopener">Open full map</a><a class="btn" href="' + mapPath + '" download>Download PNG</a></div></div>' +
+      '<div class="map-frame"><img src="' + mapPath + '" alt="Pine Ridge demo property map showing wetlands, early cover, five monitored bedding zones, four travel corridors, roads, creeks, and the property boundary"></div>' +
+      '<figcaption>Layers shown: property boundary, NWI wetlands, creeks, early-successional cover, field-supported bedding zones BED-1 through BED-5, four monitored travel corridors, and native or gravel roads.</figcaption>' +
     '</figure>';
   }
 
   function statusClass(status) {
     if (status === 'Priority') return 'gold';
+    if (status === 'Active') return 'gold';
+    if (status === 'Complete') return '';
     if (status === 'Recurring') return '';
     return 'blue';
   }
 
   views.overview = function () {
     return '<div class="page">' +
-      heading('Property Overview', property.name + ' · ' + property.location + ' · Desktop habitat program') +
+      heading('Property Overview', property.name + ' · ' + property.location + ' · Active management program · Year 3') +
       '<div class="metrics">' +
         metric('Analysis Boundary', '7,645', 'acres in the demonstration tract') +
-        metric('Pine-Dominated Cover', '85.4%', '6,532 mapped acres') +
-        metric('Modeled Bedding', '5 zones', '385 acres for field verification') +
-        metric('Travel Connectivity', '4 routes', 'retain continuous wooded cover') +
+        metric('Treatment Delivered', '2,684 ac', 'prescribed-fire entries since 2024') +
+        metric('Winter Deer Estimate', '371', '48.5 deer per 1,000 acres') +
+        metric('Spring Turkey Harvest', '8 gobblers', 'up from 4 before management') +
       '</div>' +
-      '<div class="callout"><strong>Primary habitat imbalance:</strong> only 31 acres (0.4%) are mapped as early cover. Build a distributed, rotating 600–760 acre early-successional footprint by Year 5 while protecting wetlands, bedding security, and travel connectivity. <button class="btn" data-go="plan">Open prescription</button></div>' +
-      '<div class="grid-2"><div class="panel"><div class="panel-head"><h2>Current Planning Activity</h2><button class="btn ghost" data-go="work">All work</button></div><div class="panel-body">' +
-        '<div class="task"><i class="dot"></i><div><strong>Desktop habitat assessment complete</strong><span>7,645-acre analysis boundary · July 2026</span></div><span class="chip">Complete</span></div>' +
-        '<div class="task"><i class="dot amber"></i><div><strong>Field verification is the next gate</strong><span>Confirm stands, hydrology, roads, bedding, and corridors</span></div><span class="chip gold">Priority</span></div>' +
-        '<div class="task"><i class="dot amber"></i><div><strong>Stand and fuels inventory</strong><span>Required before thinning and burn-unit layout</span></div><span class="chip blue">Planned</span></div>' +
-        '<div class="task"><i class="dot amber"></i><div><strong>Monitoring network design</strong><span>30–40 cameras plus photo points and vegetation plots</span></div><span class="chip blue">Planned</span></div>' +
+      '<div class="callout"><strong>Two-year response:</strong> the rotating young-cover footprint has increased from 31 to 302 acres, 1,274 acres now meet the open-pine understory standard, all four travel corridors show repeated use, and the winter deer estimate remains inside the working population target. <button class="btn" data-go="wildlife">View wildlife results</button></div>' +
+      '<div class="grid-2"><div class="panel"><div class="panel-head"><h2>Current Program Activity</h2><button class="btn ghost" data-go="work">All work</button></div><div class="panel-body">' +
+        '<div class="task"><i class="dot"></i><div><strong>Winter thermal survey complete</strong><span>2,690 sampled acres · 13 flight blocks · February 2026</span></div><span class="chip">Complete</span></div>' +
+        '<div class="task"><i class="dot"></i><div><strong>2025–26 harvest analysis complete</strong><span>81 deer records with age, whole weight, and KFI</span></div><span class="chip">Complete</span></div>' +
+        '<div class="task"><i class="dot"></i><div><strong>2026 prescribed-fire work complete</strong><span>924 acres across seven treatment units</span></div><span class="chip">Complete</span></div>' +
+        '<div class="task"><i class="dot amber"></i><div><strong>Summer vegetation response monitoring</strong><span>Permanent plots, photo points, browse, and brood-cover structure</span></div><span class="chip gold">Active</span></div>' +
       '</div></div><div><div class="panel"><div class="panel-head"><h2>Year 5 Habitat Targets</h2><button class="btn ghost" data-go="plan">Five-year plan</button></div><div class="panel-body">' +
-        '<div class="objective"><div><span>Rotating early succession</span><strong>600–760 ac</strong></div><div class="progress target"><i style="width:10%"></i></div><small>8–10% of property</small></div>' +
-        '<div class="objective"><div><span>Open pine / fire-maintained understory</span><strong>1,500–2,000 ac</strong></div><div class="progress target"><i style="width:26%"></i></div><small>20–26% of property; overlaps pine cover</small></div>' +
-        '<div class="objective"><div><span>Bedding and security cover</span><strong>350–500 ac</strong></div><div class="progress target"><i style="width:6.5%"></i></div><small>Retain five low-entry zones</small></div>' +
-        '<div class="objective"><div><span>Permanent openings</span><strong>40–75 ac</strong></div><div class="progress target"><i style="width:1%"></i></div><small>Distributed 2–5 acre plots</small></div>' +
+        '<div class="objective"><div><span>Rotating early succession</span><strong>302 / 600–760 ac</strong></div><div class="progress target"><i style="width:43%"></i></div><small>40–50% of Year 5 range achieved</small></div>' +
+        '<div class="objective"><div><span>Open pine / fire-maintained understory</span><strong>1,274 / 1,500–2,000 ac</strong></div><div class="progress target"><i style="width:73%"></i></div><small>64–85% of Year 5 range achieved</small></div>' +
+        '<div class="objective"><div><span>Bedding and security cover</span><strong>412 / 350–500 ac</strong></div><div class="progress target"><i style="width:82%"></i></div><small>Five field-confirmed low-entry zones retained</small></div>' +
+        '<div class="objective"><div><span>Permanent openings</span><strong>30 / 40–75 ac</strong></div><div class="progress target"><i style="width:52%"></i></div><small>Ten distributed openings completed</small></div>' +
       '</div></div></div></div>' +
-      '<div class="panel"><div class="panel-head"><h2>Habitat Intelligence Map</h2><button class="btn ghost" data-go="map">Map details</button></div>' + managementMap(true) + '</div>' +
+      '<div class="panel"><div class="panel-head"><h2>Property Management Map</h2><button class="btn ghost" data-go="map">Map details</button></div>' + managementMap(true) + '</div>' +
       limitation() +
     '</div>';
   };
@@ -112,10 +154,10 @@
       return '<tr><td><strong>' + row[0] + '</strong></td><td>' + row[1] + '</td><td>' + row[2] + '</td><td>' + row[3] + '</td></tr>';
     }).join('');
     return '<div class="page">' +
-      heading('My Property', 'Existing habitat composition, mapped constraints, and modeled wildlife features') +
+      heading('My Property', 'Field-verified habitat composition, protected resources, and monitored wildlife features') +
       '<div class="unit-grid">' + habitatCards + '</div>' +
       '<div class="panel section-gap"><div class="panel-head"><h2>Mapped Management Overlays</h2><span class="chip gray">Non-additive acreage</span></div><div class="table-wrap"><table><thead><tr><th>Overlay</th><th>Extent</th><th>Property Share</th><th>Management Interpretation</th></tr></thead><tbody>' + overlays + '</tbody></table></div></div>' +
-      '<div class="callout section-gap"><strong>How to read these figures:</strong> Land-cover classes total 7,645 acres. Wetland, bedding, early-cover, travel, and road overlays cross those classes and must not be added to the property total.</div>' +
+      '<div class="callout section-gap"><strong>How to read these figures:</strong> Land-cover classes total 7,645 acres. Wetland, bedding, treated early cover, travel, and road overlays cross those classes and must not be added to the property total.</div>' +
       limitation() +
     '</div>';
   };
@@ -125,36 +167,54 @@
       return '<tr><td><strong>' + p[0] + '</strong></td><td>' + p[1] + '</td><td>' + p[2] + '</td><td><span class="chip ' + statusClass(p[3]) + '">' + p[3] + '</span></td><td>' + p[4] + '</td></tr>';
     }).join('');
     return '<div class="page">' +
-      heading('Work & Projects', 'The next field actions needed to turn the desktop prescription into verified treatment units') +
-      '<div class="panel"><div class="panel-head"><h2>Property Work Program</h2><span class="chip gold">Field verification required</span></div><div class="table-wrap"><table><thead><tr><th>Timing</th><th>Project</th><th>Scope</th><th>Status</th><th>Decision / Deliverable</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>' +
-      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Operational Sequence</h2></div><div class="panel-body sequence"><div><b>1</b><span>Survey and flag wetlands, streams, bedding, corridors, and other constraints.</span></div><div><b>2</b><span>Complete stand, fuels, road, and invasive-plant inventories.</span></div><div><b>3</b><span>Prepare access and firebreaks; close or gate damaging routes.</span></div><div><b>4</b><span>Thin suitable uplands and apply selective midstory treatment.</span></div><div><b>5</b><span>Burn prepared units while retaining security-cover refugia.</span></div><div><b>6</b><span>Monitor one growing season and adjust the next treatment block.</span></div></div></div><div class="panel"><div class="panel-head"><h2>Treatment Rules</h2></div><div class="panel-body"><div class="survey"><h3>Closed upland pine</h3><p>Thin first, then burn after evaluating slash, fuels, smoke, and stand wind risk.</p></div><div class="survey"><h3>Dense bedding cover</h3><p>Treat patches or edges and keep an interior refuge; never disturb every security zone in one year.</p></div><div class="survey"><h3>Wet or hydric ground</h3><p>Exclude heavy equipment and ground disturbance; establish field-based buffers.</p></div><div class="survey"><h3>Road at a corridor pinch point</h3><p>Reduce traffic, add screening cover, and avoid widening unless safety requires it.</p></div></div></div></div>' +
+      heading('Work & Projects', 'Completed treatments, current field work, and documented program deliverables') +
+      '<div class="panel"><div class="panel-head"><h2>Property Work Program</h2><span class="chip gold">Year 3 active</span></div><div class="table-wrap"><table><thead><tr><th>Timing</th><th>Project</th><th>Scope</th><th>Status</th><th>Result / Deliverable</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>' +
+      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Cumulative Delivery</h2></div><div class="panel-body"><div class="budget-line"><span>Prescribed-fire entries</span><strong>2,684 ac</strong></div><div class="budget-line"><span>Thinning / selective midstory</span><strong>1,258 ac</strong></div><div class="budget-line"><span>Rotating young cover</span><strong>302 ac footprint</strong></div><div class="budget-line"><span>Permanent wildlife openings</span><strong>30 ac</strong></div><div class="budget-line"><span>Field-confirmed bedding cover</span><strong>412 ac</strong></div><div class="budget-line"><span>Monitored travel corridors</span><strong>4 of 4 active</strong></div></div></div><div class="panel"><div class="panel-head"><h2>Adaptive Decisions</h2></div><div class="panel-body"><div class="survey"><h3>Burn response</h3><p>Native herbaceous cover reached 28–41% in second-entry units. Units below 25% are receiving targeted midstory follow-up before reburning.</p></div><div class="survey"><h3>Security cover</h3><p>BED-3 and BED-5 showed the heaviest winter use. Vehicle access remains limited and each burn block retains an unburned refuge.</p></div><div class="survey"><h3>Deer harvest</h3><p>The 2026 recommendation holds antlerless harvest near 48–54 deer and continues voluntary protection of most bucks younger than 3.5 years.</p></div><div class="survey"><h3>Turkey habitat</h3><p>Growing-season fire and light disking are being concentrated near brood-use areas while mature roost trees and wetland buffers remain protected.</p></div></div></div></div>' +
       limitation() +
     '</div>';
   };
 
   views.wildlife = function () {
+    var thermalRows = property.thermalSurveys.map(function (s) {
+      return '<tr><td><strong>' + s[0] + '</strong><span class="cell-note">' + s[1] + '</span></td><td>' + s[2] + '</td><td><strong>' + s[3] + '</strong><span class="cell-note">90% CI: ' + s[4] + '</span></td><td>' + s[5] + '</td><td>' + s[6] + '</td><td>' + s[7] + '</td></tr>';
+    }).join('');
+    var harvestRows = property.deerHarvest.map(function (h) {
+      return '<tr><td><strong>' + h[0] + '</strong></td><td>' + h[1] + '</td><td>' + h[2] + '</td><td>' + h[3] + '</td><td>' + h[4] + '</td><td>' + h[5] + '</td><td>' + h[6] + '</td><td>' + h[7] + '</td><td>' + h[9] + '</td><td>' + h[10] + '%</td></tr>';
+    }).join('');
+    var ageRows = property.deerAgeRows.map(function (h) {
+      return '<tr><td>' + h[0] + '</td><td><strong>' + h[1] + '</strong></td><td>' + h[2] + '</td><td>' + h[3] + '</td><td>' + h[4] + '</td><td>' + h[5] + '%</td></tr>';
+    }).join('');
+    var turkeyRows = property.turkeyHarvest.map(function (t) {
+      return '<tr><td><strong>' + t[0] + '</strong></td><td>' + t[1] + '</td><td>' + t[2] + '</td><td><strong>' + t[3] + '</strong></td><td>' + t[4] + '</td><td>' + t[5] + '</td><td>' + t[6] + '</td></tr>';
+    }).join('');
     return '<div class="page">' +
-      heading('Wildlife Analysis', 'Whitetail habitat structure, security cover, movement hypotheses, and verification design') +
+      heading('Wildlife Analysis', 'Two years of thermal surveys and harvest monitoring, plus pre- and post-management turkey results') +
       '<div class="metrics">' +
-        metric('Bedding Model', '5 zones', '385 acres of predicted security cover') +
-        metric('Travel Model', '4 routes', 'retain 100–150 ft of screened cover') +
-        metric('Camera Design', '30–40', 'standardized late-summer stations') +
-        metric('Survey Window', '14 days', 'plus cameras at corridor pinch points') +
+        metric('Winter Deer Estimate', '371', '333–414 · 90% confidence interval') +
+        metric('Buck : Doe', '1 : 2.0', 'improved from 1 : 2.3') +
+        metric('Adult Doe KFI', '41%', 'up from 36% in the baseline season') +
+        metric('2026 Turkey Harvest', '8', '25.8 gobblers per 100 hunter-days') +
       '</div>' +
-      '<div class="grid-equal"><div class="panel"><div class="panel-head"><h2>Professional Interpretation</h2></div><div class="panel-body"><div class="survey"><h3>Security cover</h3><p>Treat BED-1 through BED-5 as field-survey priorities, not fixed treatment boundaries. Favor patchy shrubs, young pine, blackberry, greenbrier, and screening cover while avoiding new through-roads.</p></div><div class="survey"><h3>Travel connectivity</h3><p>Keep all four modeled routes continuously wooded or brushy. Feather edges, minimize drainage crossings, and protect the narrowest pinch points from unnecessary traffic.</p></div><div class="survey"><h3>Forage and young cover</h3><p>Distribute 40–80 acre treatment blocks across the tract. A staggered age mosaic provides forage and security cover every year without concentrating disturbance.</p></div><div class="survey"><h3>Wetland network</h3><p>Wetlands and drainages already provide a strong cover-and-water network. Place intensive disturbance on suitable uplands and field-adjust every buffer.</p></div></div></div><div class="panel"><div class="panel-head"><h2>Monitoring & Success Measures</h2></div><div class="panel-body"><div class="budget-line"><span>Early-cover footprint</span><strong>600–760 ac</strong></div><div class="budget-line"><span>Open pine understory</span><strong>≥1,500 ac</strong></div><div class="budget-line"><span>Native herbaceous cover</span><strong>≥30% in responsive units</strong></div><div class="budget-line"><span>Bedding use</span><strong>Evidence in ≥4 of 5 zones</strong></div><div class="budget-line"><span>Corridor use</span><strong>All 4 routes or revise model</strong></div><div class="budget-line"><span>Invasive plants</span><strong>&lt;5% cover or active control</strong></div><p class="mini-note">Pair cameras with permanent photo points and vegetation transects. Record canopy closure, herbaceous cover, browse, and horizontal screening in treated and reference stands.</p></div></div></div>' +
+      '<div class="callout"><strong>Management interpretation:</strong> deer abundance increased modestly while the sex ratio, harvested-buck age structure, whole weights, and condition indices all moved in the desired direction. The change is encouraging, but two years is an early trend; weather, mast production, hunting effort, and seasonal KFI variation remain important.</div>' +
+      '<div class="panel"><div class="panel-head"><h2>Thermal Drone Survey Results</h2><a class="btn ghost" href="' + thermalDataPath + '" download>Download survey data</a></div><div class="table-wrap"><table><thead><tr><th>Survey</th><th>Sample Coverage</th><th>Estimated Deer</th><th>Deer / 1,000 ac</th><th>Buck : Doe</th><th>Fawns / Doe</th></tr></thead><tbody>' + thermalRows + '</tbody></table></div></div>' +
+      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Population Trend</h2></div><div class="panel-body"><div class="trend-row"><div><span>Winter 2025</span><strong>342 estimated deer</strong></div><div class="trend-track"><i style="width:84%"></i></div></div><div class="trend-row"><div><span>Winter 2026</span><strong>371 estimated deer</strong></div><div class="trend-track"><i style="width:91%"></i></div></div><div class="budget-line"><span>Estimated population change</span><strong>+8.5%</strong></div><div class="budget-line"><span>Density change</span><strong>44.7 → 48.5 / 1,000 ac</strong></div><div class="budget-line"><span>Recruitment index</span><strong>0.51 → 0.54 fawns / doe</strong></div></div></div><div class="panel"><div class="panel-head"><h2>Survey Design</h2></div><div class="panel-body"><div class="survey"><h3>Repeated stratified sample</h3><p>The same upland pine, wetland-edge, opening, and corridor strata were sampled after deer season. Coverage increased from 2,520 to 2,690 acres.</p></div><div class="survey"><h3>Classification and duplication control</h3><p>Flight blocks, timestamps, movement direction, and identifiable antler or group characteristics were used to screen duplicate observations.</p></div><div class="survey"><h3>Use of the result</h3><p>The density estimate is paired with harvest, camera, browse, and condition data. It is a management estimate—not a claim that every deer on 7,645 acres was counted.</p></div></div></div></div>' +
+      '<div class="panel section-gap"><div class="panel-head"><h2>Two-Year Deer Harvest Summary</h2><a class="btn ghost" href="' + deerDataPath + '" download>Download 153 records</a></div><div class="table-wrap"><table><thead><tr><th>Season</th><th>Total</th><th>Antlered</th><th>Antlerless</th><th>Harvest / 1,000 ac</th><th>Avg. Buck Age</th><th>Bucks 3.5+</th><th>Avg. Buck Weight</th><th>Adult Doe Weight</th><th>Adult Doe KFI</th></tr></thead><tbody>' + harvestRows + '</tbody></table></div></div>' +
+      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Harvest Findings</h2></div><div class="panel-body"><div class="budget-line"><span>Total deer harvest</span><strong>72 → 81</strong></div><div class="budget-line"><span>Bucks aged 3.5 years or older</span><strong>38% → 57%</strong></div><div class="budget-line"><span>Average harvested-buck weight</span><strong>122 → 134 lb</strong></div><div class="budget-line"><span>Average adult-doe weight</span><strong>88 → 93 lb</strong></div><div class="budget-line"><span>Average adult-doe KFI</span><strong>36% → 41%</strong></div><p class="mini-note">Weights are whole-body weights. Ages are based on tooth replacement and wear, with selected mature deer checked by cementum annuli.</p></div></div><div class="panel"><div class="panel-head"><h2>Kidney Fat Index Protocol</h2></div><div class="panel-body"><p class="protocol-formula">KFI (%) = perirenal fat mass ÷ kidney mass × 100</p><p class="mini-note">Kidney and attached fat were collected at the property check station and weighed separately. KFI is interpreted within sex, age class, and harvest timing; it is not used as a stand-alone herd-health grade.</p><div class="survey"><h3>What the second year suggests</h3><p>Higher adult weights and KFI are consistent with improved nutritional condition, while the parallel thermal and harvest results do not indicate an abrupt population increase beyond the working target.</p></div></div></div></div>' +
+      '<div class="panel section-gap"><div class="panel-head"><h2>Harvest Age, Weight & Condition Detail</h2><span class="chip gray">Whole weight · KFI percent</span></div><div class="table-wrap table-tall"><table><thead><tr><th>Season</th><th>Harvest Class</th><th>Age</th><th>n</th><th>Average Weight (lb)</th><th>Average KFI</th></tr></thead><tbody>' + ageRows + '</tbody></table></div></div>' +
+      '<div class="panel section-gap"><div class="panel-head"><h2>Turkey Harvest: Before and After Management</h2><a class="btn ghost" href="' + turkeyDataPath + '" download>Download harvest log</a></div><div class="table-wrap"><table><thead><tr><th>Spring Season</th><th>Program Phase</th><th>Hunter-Days</th><th>Gobblers Harvested</th><th>Adults</th><th>Jakes</th><th>Harvest / 100 Hunter-Days</th></tr></thead><tbody>' + turkeyRows + '</tbody></table></div><div class="panel-body turkey-result"><div><strong>4 → 8</strong><span>gobblers harvested</span></div><div><strong>+54%</strong><span>effort-adjusted harvest rate</span></div><p>The 2024 season establishes the pre-management baseline. The 2025 and 2026 seasons show higher harvest after the first two habitat-treatment years even after accounting for increased hunter effort. Continue brood surveys and do not use harvest alone as a population index.</p></div></div>' +
       limitation() +
     '</div>';
   };
 
   views.plan = function () {
     var yearRows = property.years.map(function (y) {
-      return '<tr><td><strong>Year ' + y[0] + '</strong></td><td>' + y[1] + '</td><td>' + y[2] + '</td><td>' + y[3] + '</td><td>' + y[4] + '</td></tr>';
+      return '<tr><td><strong>' + y[0] + '</strong></td><td><span class="chip ' + statusClass(y[1]) + '">' + y[1] + '</span></td><td>' + y[2] + '</td><td>' + y[3] + '</td><td>' + y[4] + '</td><td>' + y[5] + '</td></tr>';
     }).join('');
     return '<div class="page">' +
       heading('Five-Year Habitat Plan', 'Acreage ranges, treatment sequence, and outcome targets for the 7,645-acre tract') +
       '<div class="callout"><strong>Management objective:</strong> increase usable forage and young cover while retaining wetland function, travel connectivity, and secure bedding cover.</div>' +
-      '<div class="panel"><div class="panel-head"><h2>2026–2030 Implementation Schedule</h2><a class="btn" href="' + planPath + '" target="_blank" rel="noopener">Open full prescription</a></div><div class="table-wrap"><table><thead><tr><th>Program Year</th><th>Prescribed Fire</th><th>Thinning / Midstory</th><th>Early Cover / Openings</th><th>Key Decision</th></tr></thead><tbody>' + yearRows + '</tbody></table></div></div>' +
-      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Silviculture & Fire</h2></div><div class="panel-body"><ul class="prescription-list"><li>Inventory stands first; generally thin suitable upland pine toward 60–80 square feet of basal area per acre.</li><li>Create a 3,000–4,000 acre fire-priority pool.</li><li>After preparation, burn 1,200–1,600 acres annually on a two- to three-year return interval.</li><li>Use a mosaic of dormant- and growing-season burns with unburned refugia.</li><li>Retain quality crop trees, mast hardwoods, cavity and den trees, safe snags, and soft-mast shrubs.</li></ul></div></div><div class="panel"><div class="panel-head"><h2>Spatial Guardrails</h2></div><div class="panel-body"><ul class="prescription-list"><li>Use a 100-foot desktop wetland and stream buffer as a conservative starting point; field-adjust it.</li><li>Keep 100–150 feet of wooded or brushy cover at modeled corridors and pinch points.</li><li>Maintain 350–500 acres of bedding and security cover across five low-entry zones.</li><li>Classify roads as maintain, seasonal, or close and restore.</li><li>Use mowing and planted food plots only as support tools, not the primary habitat strategy.</li></ul></div></div></div>' +
+      '<div class="panel"><div class="panel-head"><h2>2024–2028 Implementation Schedule</h2><a class="btn" href="' + planPath + '" target="_blank" rel="noopener">Open original prescription</a></div><div class="table-wrap"><table><thead><tr><th>Year</th><th>Status</th><th>Prescribed Fire</th><th>Thinning / Midstory</th><th>Early Cover / Openings</th><th>Key Decision</th></tr></thead><tbody>' + yearRows + '</tbody></table></div></div>' +
+      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Silviculture & Fire</h2></div><div class="panel-body"><ul class="prescription-list"><li>Suitable upland pine is being thinned toward 60–80 square feet of basal area per acre.</li><li>The current fire-priority pool covers 3,420 acres.</li><li>Annual fire delivery is increasing toward 1,200–1,600 acres on a two- to three-year return interval.</li><li>Dormant- and growing-season burns are mixed while unburned refugia remain in every unit.</li><li>Quality crop trees, mast hardwoods, cavity and den trees, safe snags, and soft-mast shrubs are retained.</li></ul></div></div><div class="panel"><div class="panel-head"><h2>Spatial Guardrails</h2></div><div class="panel-body"><ul class="prescription-list"><li>Field-verified wetland and stream buffers are included in treatment maps and contractor work orders.</li><li>One hundred to 150 feet of wooded or brushy cover remains at monitored corridors and pinch points.</li><li>Five low-entry bedding zones retain 412 acres of security cover.</li><li>Roads are assigned maintain, seasonal, or close-and-restore status.</li><li>Mowing and planted food plots remain support tools rather than the primary habitat strategy.</li></ul></div></div></div>' +
       limitation() +
     '</div>';
   };
@@ -169,46 +229,46 @@
     return '<div class="page">' +
       heading('Sample Program Budget', 'Demonstration planning figures for contracted management, predicted cost share, and landowner responsibility') +
       '<div class="callout"><strong>Demonstration estimate only:</strong> These figures illustrate portal budgeting at this property scale and are not a proposal. EQIP cost share is a prediction, not guaranteed; funding requires application, ranking, approval, implementation, and certification. No timber revenue is included.</div>' +
-      '<div class="panel"><div class="panel-head"><h2>2026–2030 Demonstration Budget</h2><span class="chip gray">Sample data</span></div><div class="table-wrap"><table><thead><tr><th>Year</th><th>Primary Program</th><th>Contracted Plan</th><th>Predicted EQIP Offset</th><th>Projected Landowner Cost</th></tr></thead><tbody>' + rows + '<tr><td colspan="2"><strong>Five-Year Total</strong></td><td class="money"><strong>' + money(totals[0]) + '</strong></td><td class="money"><strong>(' + money(totals[1]) + ')</strong></td><td class="money"><strong>' + money(totals[2]) + '</strong></td></tr></tbody></table></div></div>' +
-      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Five-Year Funding Summary</h2></div><div class="panel-body"><div class="budget-line"><span>Total contracted program</span><strong>' + money(totals[0]) + '</strong></div><div class="budget-line"><span>Predicted EQIP cost share</span><strong>(' + money(totals[1]) + ')</strong></div><div class="budget-line"><span>Projected landowner responsibility</span><strong>' + money(totals[2]) + '</strong></div><div class="budget-line"><span>Average gross program cost</span><strong>$44.73 / ac / year</strong></div></div></div><div class="panel"><div class="panel-head"><h2>Before Pricing Is Final</h2></div><div class="panel-body"><ul class="prescription-list"><li>Verify accessible and treatable acres in the field.</li><li>Separate timber operations from service costs and do not assume revenue.</li><li>Confirm firebreak, road, smoke, equipment, and water-access requirements.</li><li>Match potentially eligible practices to current NRCS standards and payment schedules.</li><li>Publish only the approved contract and funding assumptions to the client account.</li></ul></div></div></div>' +
+      '<div class="panel"><div class="panel-head"><h2>2024–2028 Demonstration Budget</h2><span class="chip gray">Sample data</span></div><div class="table-wrap"><table><thead><tr><th>Year</th><th>Primary Program</th><th>Contracted Plan</th><th>Predicted EQIP Offset</th><th>Projected Landowner Cost</th></tr></thead><tbody>' + rows + '<tr><td colspan="2"><strong>Five-Year Total</strong></td><td class="money"><strong>' + money(totals[0]) + '</strong></td><td class="money"><strong>(' + money(totals[1]) + ')</strong></td><td class="money"><strong>' + money(totals[2]) + '</strong></td></tr></tbody></table></div></div>' +
+      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Five-Year Funding Summary</h2></div><div class="panel-body"><div class="budget-line"><span>Total contracted program</span><strong>' + money(totals[0]) + '</strong></div><div class="budget-line"><span>Predicted EQIP cost share</span><strong>(' + money(totals[1]) + ')</strong></div><div class="budget-line"><span>Projected landowner responsibility</span><strong>' + money(totals[2]) + '</strong></div><div class="budget-line"><span>Average gross program cost</span><strong>$44.73 / ac / year</strong></div></div></div><div class="panel"><div class="panel-head"><h2>Budget Notes</h2></div><div class="panel-body"><ul class="prescription-list"><li>2024 and 2025 illustrate completed-year costs; 2026 combines paid and committed work.</li><li>2027 and 2028 remain planning forecasts and will be updated after annual monitoring.</li><li>Timber revenue remains separate from service costs and is not assumed here.</li><li>EQIP cost share is shown only after an eligible practice is approved and scheduled.</li><li>Invoices, approved change orders, and cost-share documentation would remain available in the client account.</li></ul></div></div></div>' +
       limitation() +
     '</div>';
   };
 
   views.reports = function () {
     return '<div class="page">' +
-      heading('Reports & Files', 'Published demonstration documents and map products for the Pine Ridge tract') +
+      heading('Reports & Files', 'Published property documents, current monitoring exports, and wildlife harvest records') +
       '<div class="report-grid">' +
-        '<article class="report"><span class="type">MANAGEMENT PLAN</span><h3>Five-Year Property Management Prescription</h3><div class="meta">Published July 2026 · 6 pages · PDF</div><p>Existing conditions, acreage targets, treatment sequence, monitoring thresholds, and implementation limitations.</p><a class="btn" href="' + planPath + '" target="_blank" rel="noopener">Open PDF</a> <a class="btn ghost" href="' + planPath + '" download>Download</a></article>' +
-        '<article class="report"><span class="type">HABITAT MAP</span><h3>Whitetail Habitat Intelligence Map</h3><div class="meta">Updated July 2026 · PNG</div><p>Property boundary, wetlands, creeks, roads, early cover, five modeled bedding zones, and four modeled travel corridors.</p><a class="btn" href="' + mapPath + '" target="_blank" rel="noopener">Open map</a> <a class="btn ghost" href="' + mapPath + '" download>Download</a></article>' +
-        '<article class="report future-report"><span class="type">FIELD INVENTORY</span><h3>Baseline Field Verification Report</h3><div class="meta">Planned · Year 1</div><p>Stand conditions, road classes, wetland verification, bedding evidence, corridor checks, photo points, and vegetation plots.</p><button class="btn ghost" disabled>Not yet published</button></article>' +
-        '<article class="report future-report"><span class="type">WILDLIFE SURVEY</span><h3>Standardized Camera Survey</h3><div class="meta">Planned · Late summer · 14 days</div><p>Thirty to forty survey stations plus targeted corridor and treatment-interface cameras.</p><button class="btn ghost" disabled>Not yet published</button></article>' +
-        '<article class="report future-report"><span class="type">PRESCRIBED FIRE</span><h3>Annual Burn Summary</h3><div class="meta">Planned · After first treatment season</div><p>Weather, ignition, acreage, fire behavior, refugia, results, photographs, and next-entry decisions.</p><button class="btn ghost" disabled>Not yet published</button></article>' +
-        '<article class="report future-report"><span class="type">ANNUAL REVIEW</span><h3>Habitat Outcome Dashboard</h3><div class="meta">Planned · Annual update</div><p>Completed treatments, target progress, monitoring results, cost share, invoices, and next-year priorities.</p><button class="btn ghost" disabled>Not yet published</button></article>' +
+        '<article class="report"><span class="type">BASELINE MANAGEMENT PLAN</span><h3>Original Five-Year Property Management Prescription</h3><div class="meta">Program Year 1 · 6 pages · PDF</div><p>The original condition assessment, acreage targets, treatment sequence, monitoring thresholds, and operating limitations used to launch the program.</p><a class="btn" href="' + planPath + '" target="_blank" rel="noopener">Open PDF</a> <a class="btn ghost" href="' + planPath + '" download>Download</a></article>' +
+        '<article class="report"><span class="type">PROPERTY MAP</span><h3>Demo Property Management Map</h3><div class="meta">Updated July 2026 · PNG</div><p>Property boundary, wetlands, creeks, roads, early cover, five bedding zones, and four monitored travel corridors.</p><a class="btn" href="' + mapPath + '" target="_blank" rel="noopener">Open map</a> <a class="btn ghost" href="' + mapPath + '" download>Download</a></article>' +
+        '<article class="report"><span class="type">THERMAL DRONE SURVEY</span><h3>Winter Deer Survey Results</h3><div class="meta">2025 and 2026 · 2 survey records · CSV</div><p>Sampling coverage, unique detections, population estimates, confidence intervals, density, sex ratio, and recruitment.</p><a class="btn" href="' + thermalDataPath + '" download>Download CSV</a></article>' +
+        '<article class="report"><span class="type">DEER HARVEST</span><h3>Two-Year Deer Harvest Log</h3><div class="meta">2024–25 and 2025–26 · 153 records · CSV</div><p>Harvest date, sex, age, age method, whole weight, kidney and fat weights, calculated KFI, antler points, and management unit.</p><a class="btn" href="' + deerDataPath + '" download>Download CSV</a></article>' +
+        '<article class="report"><span class="type">TURKEY HARVEST</span><h3>Pre/Post Turkey Harvest Log</h3><div class="meta">Spring 2024–2026 · 18 records · CSV</div><p>Pre-management baseline and two post-management seasons with age class, whole weight, beard, spurs, and management unit.</p><a class="btn" href="' + turkeyDataPath + '" download>Download CSV</a></article>' +
+        '<article class="report"><span class="type">ANNUAL REVIEW</span><h3>2026 Habitat & Wildlife Outcome Dashboard</h3><div class="meta">Updated July 2026 · Portal dashboard</div><p>Completed treatments, thermal estimates, harvest trends, turkey response, habitat target progress, and next-year decisions.</p><button class="btn" data-go="wildlife">Open dashboard</button></article>' +
       '</div>' + limitation() +
     '</div>';
   };
 
   views.photos = function () {
     var photos = [
-      ['Bedding-zone cover check', 'BED-1 through BED-5 · Field verification'],
-      ['Corridor pinch-point check', 'Four modeled routes · Camera and sign evidence'],
-      ['Pine stand structure', 'Basal area, canopy closure, and herbaceous response'],
-      ['Wetland buffer inspection', 'Hydrology, soils, crossings, and equipment exclusion'],
-      ['Road and gate inventory', 'Maintain, seasonal, or close and restore'],
-      ['Permanent vegetation plot', 'Canopy, browse, native cover, and screening']
+      ['Bedding-zone cover check', 'BED-3 · August 2024 · Baseline verification'],
+      ['Thermal survey staging', 'West Drainage · February 2025 · Flight block 04'],
+      ['Second-entry burn response', 'South Ridge · May 2025 · 41% herbaceous cover'],
+      ['Wetland buffer inspection', 'East Wetland Edge · April 2026 · Post-burn review'],
+      ['Harvest check station', 'Central Pine · December 2025 · Age, weight, and KFI'],
+      ['Turkey brood-cover plot', 'Opening Complex · June 2026 · Structure monitoring']
     ];
-    return '<div class="page">' + heading('Field Documentation', 'The photographic record to collect during the Year 1 property verification') +
+    return '<div class="page">' + heading('Field Documentation', 'Selected monitoring locations and completed field-work records from 2024–2026') +
       '<div class="photo-grid">' + photos.map(function (p, index) {
-        return '<article class="photo"><div class="photo-art photo-' + (index + 1) + '"><span>FIELD VERIFICATION SLOT</span><strong>' + p[0] + '</strong></div><div class="photo-info"><strong>' + p[0] + '</strong><span>' + p[1] + '</span></div></article>';
+        return '<article class="photo"><div class="photo-art photo-' + (index + 1) + '"><span>FIELD RECORD ' + String(index + 1).padStart(2, '0') + '</span><strong>' + p[0] + '</strong></div><div class="photo-info"><strong>' + p[0] + '</strong><span>' + p[1] + '</span></div></article>';
       }).join('') + '</div>' + limitation() + '</div>';
   };
 
   views.map = function () {
     return '<div class="page">' +
-      heading('Property Map', 'Documented resources and modeled whitetail habitat features across the 7,645-acre tract') +
+      heading('Property Map', 'Verified resources and monitored habitat features across the 7,645-acre demonstration tract') +
       managementMap(false) +
-      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Documented Layers</h2></div><div class="panel-body layer-list"><span><i class="wetland"></i>NWI wetland</span><span><i class="creek"></i>Creeks and drainages</span><span><i class="early"></i>Early-successional cover</span><span><i class="road"></i>Native / gravel roads</span><span><i class="boundary"></i>Property boundary</span></div></div><div class="panel"><div class="panel-head"><h2>Modeled Layers</h2></div><div class="panel-body layer-list"><span><i class="bedding"></i>BED-1 through BED-5</span><span><i class="travel"></i>Four travel corridors</span><p class="mini-note">Modeled features are management hypotheses. Confirm them with cameras, field sign, vegetation structure, and seasonal use before establishing treatment boundaries.</p></div></div></div>' +
+      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Documented Layers</h2></div><div class="panel-body layer-list"><span><i class="wetland"></i>NWI wetland</span><span><i class="creek"></i>Creeks and drainages</span><span><i class="early"></i>Early-successional cover</span><span><i class="road"></i>Native / gravel roads</span><span><i class="boundary"></i>Property boundary</span></div></div><div class="panel"><div class="panel-head"><h2>Monitored Habitat Features</h2></div><div class="panel-body layer-list"><span><i class="bedding"></i>BED-1 through BED-5</span><span><i class="travel"></i>Four travel corridors</span><p class="mini-note">The bedding and travel layers began as desktop hypotheses. Repeated cameras, field sign, and thermal observations now support all five bedding zones and all four routes; geometry remains adjustable as new evidence is collected.</p></div></div></div>' +
       limitation() +
     '</div>';
   };

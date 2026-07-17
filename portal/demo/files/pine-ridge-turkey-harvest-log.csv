@@ -1,0 +1,19 @@
+record_id,spring_season,harvest_date,management_phase,age_class,whole_weight_lb,beard_inches,left_spur_inches,right_spur_inches,management_unit,record_status
+PRD-T001,2024,2024-03-29,Pre-management baseline,Adult gobbler,18.1,9.1,0.88,0.90,West Drainage,Complete
+PRD-T002,2024,2024-04-02,Pre-management baseline,Adult gobbler,18.7,9.5,0.96,0.94,Central Pine,Complete
+PRD-T003,2024,2024-04-06,Pre-management baseline,Adult gobbler,19.3,10.0,1.04,1.06,South Ridge,Complete
+PRD-T004,2024,2024-04-10,Pre-management baseline,Jake,15.4,5.1,0.38,0.36,East Wetland Edge,Complete
+PRD-T005,2025,2025-03-26,Post-management Year 1,Adult gobbler,18.7,10.0,0.96,0.98,North Pine,Complete
+PRD-T006,2025,2025-03-30,Post-management Year 1,Adult gobbler,19.3,10.4,1.04,1.02,West Drainage,Complete
+PRD-T007,2025,2025-04-03,Post-management Year 1,Adult gobbler,19.9,10.9,1.12,1.14,Central Pine,Complete
+PRD-T008,2025,2025-04-07,Post-management Year 1,Adult gobbler,20.5,9.1,1.20,1.18,South Ridge,Complete
+PRD-T009,2025,2025-04-11,Post-management Year 1,Adult gobbler,18.1,9.5,0.88,0.90,East Wetland Edge,Complete
+PRD-T010,2025,2025-04-15,Post-management Year 1,Jake,15.7,5.3,0.41,0.39,Opening Complex,Complete
+PRD-T011,2026,2026-03-25,Post-management Year 2,Adult gobbler,19.3,10.9,1.04,1.06,West Drainage,Complete
+PRD-T012,2026,2026-03-29,Post-management Year 2,Adult gobbler,19.9,9.1,1.12,1.10,Central Pine,Complete
+PRD-T013,2026,2026-04-02,Post-management Year 2,Adult gobbler,20.5,9.5,1.20,1.22,South Ridge,Complete
+PRD-T014,2026,2026-04-06,Post-management Year 2,Adult gobbler,18.1,10.0,0.88,0.86,East Wetland Edge,Complete
+PRD-T015,2026,2026-04-10,Post-management Year 2,Adult gobbler,18.7,10.4,0.96,0.98,Opening Complex,Complete
+PRD-T016,2026,2026-04-14,Post-management Year 2,Adult gobbler,19.3,10.9,1.04,1.02,North Pine,Complete
+PRD-T017,2026,2026-04-18,Post-management Year 2,Adult gobbler,19.9,9.1,1.12,1.14,West Drainage,Complete
+PRD-T018,2026,2026-04-22,Post-management Year 2,Jake,16.0,5.5,0.44,0.42,Central Pine,Complete
