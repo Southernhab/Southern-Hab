@@ -6,12 +6,14 @@
     location: 'South Alabama',
     acres: 7645,
     habitats: [
-      { name: 'Pine / evergreen forest', acres: 6532, percent: 85.4, condition: 'Active management', color: '#5e7954', meaning: 'Dominant upland matrix; 1,258 acres have received thinning or selective midstory work and 1,274 acres now meet the open-pine understory standard.' },
-      { name: 'Woody wetland', acres: 558, percent: 7.3, condition: 'Protected', color: '#3e7882', meaning: 'Hydrologic and security cover; field-verified equipment exclusions and buffers are carried into each work order.' },
-      { name: 'Open / developed', acres: 324, percent: 4.2, condition: 'Managed access', color: '#b79a61', meaning: 'Rights-of-way and open ground; ten permanent openings and the primary access network are monitored here.' },
+      { name: 'Pine / evergreen forest', acres: 6502, percent: 85.0, condition: 'Active management', color: '#5e7954', meaning: 'Dominant upland matrix after establishment of 30 acres of permanent wildlife openings; 1,258 acres have received thinning or selective midstory work.' },
+      { name: 'Woody wetland', acres: 512, percent: 6.7, condition: 'Protected', color: '#3e7882', meaning: 'Remaining natural hydrologic and security cover outside the four managed waterfowl impoundments; equipment exclusions and buffers remain in effect.' },
+      { name: 'Open / developed', acres: 324, percent: 4.2, condition: 'Managed access', color: '#b79a61', meaning: 'Rights-of-way, facilities, and the primary access network are inspected and maintained separately from managed wildlife openings.' },
       { name: 'Open water', acres: 144, percent: 1.9, condition: 'Protect', color: '#3f88a4', meaning: 'Reservoir and pond surface; retain shoreline protection and stable crossings.' },
       { name: 'Shrub / grass / barren', acres: 52, percent: 0.7, condition: 'Retain and rotate', color: '#c6ae57', meaning: 'Original mapped young cover; treatment within adjacent pine now brings the rotating early-cover footprint to 302 acres.' },
-      { name: 'Mixed forest', acres: 35, percent: 0.5, condition: 'Retain diversity', color: '#726f4a', meaning: 'Potential mast and diversity component; retain quality hardwoods and soft mast.' }
+      { name: 'Mixed forest', acres: 35, percent: 0.5, condition: 'Retain diversity', color: '#726f4a', meaning: 'Potential mast and diversity component; retain quality hardwoods and soft mast.' },
+      { name: 'Wildlife openings', acres: 30, percent: 0.4, condition: 'Managed', color: '#a99345', meaning: 'Permanent openings distributed across the tract and maintained with planting, mowing, disking, or prescribed fire according to site objectives.' },
+      { name: 'Waterfowl impoundments', acres: 46, percent: 0.6, condition: 'Managed wetland', color: '#4f9a91', meaning: 'Four managed shallow-water units with seasonal drawdown, moist-soil vegetation, and protected levee and water-control access.' }
     ],
     overlays: [
       ['NWI non-riverine wetland', '472 acres', '6.2%', 'Documented planning constraint; overlaps the land-cover classes.'],
@@ -28,7 +30,8 @@
       ['2025', 'Thinning, early cover, and openings', '762 acres', 'Complete', '612 acres thinned, 132 acres of young cover established, and 18 acres of permanent openings completed'],
       ['2026', 'Winter thermal drone survey', '2,690 sampled acres', 'Complete', 'Second standardized survey completed across 13 flight blocks'],
       ['2026', 'Prescribed fire', '924 acres', 'Complete', 'Seven units completed; unburned pockets retained in each treatment block'],
-      ['2026', 'Thinning, early cover, and openings', '333 acres to date', 'Active', '260 acres thinned, 61 acres of young cover treated, and 12 acres of openings completed through July']
+      ['2026', 'Thinning, early cover, and openings', '333 acres to date', 'Active', '260 acres thinned, 61 acres of young cover treated, and 12 acres of openings completed through July'],
+      ['2026', 'Waterfowl impoundment program', '46 acres / 4 units', 'Complete', 'Levees, water-control structures, seasonal drawdown zones, and monitoring points established']
     ],
     years: [
       [2024, 'Complete', '612 ac', '386 ac', '78 ac', 'Established the field baseline, monitoring stations, and first treatment blocks.'],
@@ -107,8 +110,8 @@
   function managementMap(compact) {
     return '<figure class="actual-map ' + (compact ? 'compact' : '') + '">' +
       '<div class="map-toolbar"><div><strong>Demo Property Management Map</strong><span>Verified resources, habitat features, and management priorities</span></div><div class="map-actions"><a class="btn ghost" href="' + mapPath + '" target="_blank" rel="noopener">Open full map</a><a class="btn" href="' + mapPath + '" download>Download PNG</a></div></div>' +
-      '<div class="map-frame"><img src="' + mapPath + '" alt="Pine Ridge demo property map showing wetlands, early cover, five monitored bedding zones, four travel corridors, roads, creeks, and the property boundary"></div>' +
-      '<figcaption>Layers shown: property boundary, NWI wetlands, creeks, early-successional cover, field-supported bedding zones BED-1 through BED-5, four monitored travel corridors, and native or gravel roads.</figcaption>' +
+      '<div class="map-frame"><img src="' + mapPath + '" alt="Pine Ridge demo property map showing wildlife openings, four waterfowl impoundments, wetlands, bedding zones, travel corridors, roads, creeks, and the property boundary"></div>' +
+      '<figcaption>Layers shown: property boundary, NWI wetlands, creeks, wildlife openings, four waterfowl impoundments, early-successional cover, field-supported bedding zones BED-1 through BED-5, four monitored travel corridors, and native or gravel roads.</figcaption>' +
     '</figure>';
   }
 
@@ -240,7 +243,7 @@
       heading('Reports & Files', 'Published property documents, current monitoring exports, and wildlife harvest records') +
       '<div class="report-grid">' +
         '<article class="report"><span class="type">BASELINE MANAGEMENT PLAN</span><h3>Original Five-Year Property Management Prescription</h3><div class="meta">Program Year 1 · 6 pages · PDF</div><p>The original condition assessment, acreage targets, treatment sequence, monitoring thresholds, and operating limitations used to launch the program.</p><a class="btn" href="' + planPath + '" target="_blank" rel="noopener">Open PDF</a> <a class="btn ghost" href="' + planPath + '" download>Download</a></article>' +
-        '<article class="report"><span class="type">PROPERTY MAP</span><h3>Demo Property Management Map</h3><div class="meta">Updated July 2026 · PNG</div><p>Property boundary, wetlands, creeks, roads, early cover, five bedding zones, and four monitored travel corridors.</p><a class="btn" href="' + mapPath + '" target="_blank" rel="noopener">Open map</a> <a class="btn ghost" href="' + mapPath + '" download>Download</a></article>' +
+        '<article class="report"><span class="type">PROPERTY MAP</span><h3>Demo Property Management Map</h3><div class="meta">Updated July 2026 · JPEG</div><p>Property boundary, wildlife openings, four waterfowl impoundments, wetlands, creeks, roads, early cover, five bedding zones, and four monitored travel corridors.</p><a class="btn" href="' + mapPath + '" target="_blank" rel="noopener">Open map</a> <a class="btn ghost" href="' + mapPath + '" download>Download</a></article>' +
         '<article class="report"><span class="type">THERMAL DRONE SURVEY</span><h3>Winter Deer Survey Results</h3><div class="meta">2025 and 2026 · 2 survey records · CSV</div><p>Sampling coverage, unique detections, population estimates, confidence intervals, density, sex ratio, and recruitment.</p><a class="btn" href="' + thermalDataPath + '" download>Download CSV</a></article>' +
         '<article class="report"><span class="type">DEER HARVEST</span><h3>Two-Year Deer Harvest Log</h3><div class="meta">2024–25 and 2025–26 · 153 records · CSV</div><p>Harvest date, sex, age, age method, whole weight, kidney and fat weights, calculated KFI, antler points, and management unit.</p><a class="btn" href="' + deerDataPath + '" download>Download CSV</a></article>' +
         '<article class="report"><span class="type">TURKEY HARVEST</span><h3>Pre/Post Turkey Harvest Log</h3><div class="meta">Spring 2024–2026 · 18 records · CSV</div><p>Pre-management baseline and two post-management seasons with age class, whole weight, beard, spurs, and management unit.</p><a class="btn" href="' + turkeyDataPath + '" download>Download CSV</a></article>' +
