@@ -221,65 +221,110 @@
   }
 }
 
-/* Use the complete horizontal SHC logo as one header image. */
+/* Clean text-only company masthead. */
+.site-nav {
+  height: 88px !important;
+  border-top: 3px solid var(--forest);
+  box-shadow: 0 2px 12px rgba(19, 39, 31, 0.06);
+}
+
 .site-nav .logo {
   width: auto !important;
-  min-width: 310px !important;
-  height: 88px !important;
+  min-width: 278px !important;
+  height: 84px !important;
   gap: 0 !important;
 }
 
 .site-nav .logo-emblem {
-  width: 310px !important;
-  height: 78px !important;
-  flex: 0 0 310px !important;
-  margin: 0 !important;
-  overflow: visible !important;
-}
-
-.site-nav .logo-emblem img {
-  width: 310px !important;
-  height: auto !important;
-  max-width: none !important;
-  object-fit: initial !important;
-  transform: none !important;
-}
-
-.site-nav .logo-text {
   display: none !important;
 }
 
+.site-nav .logo-text {
+  display: grid !important;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  justify-content: start;
+  column-gap: 9px;
+  line-height: 1 !important;
+}
+
+.site-nav .logo-text strong {
+  color: var(--forest) !important;
+  font: 700 23px var(--font-heading) !important;
+  letter-spacing: -0.025em !important;
+  white-space: nowrap;
+}
+
+.site-nav .logo-text small {
+  color: var(--moss) !important;
+  font: 700 8px var(--font-body) !important;
+  letter-spacing: 0.23em !important;
+  margin: 0 !important;
+  white-space: nowrap;
+}
+
+.site-nav .logo-text em {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin: 8px 0 0 !important;
+  padding-top: 7px;
+  border-top: 1px solid rgba(181, 138, 72, 0.55);
+  color: var(--gold) !important;
+  font: 700 9px var(--font-body) !important;
+  font-style: normal !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 @media (max-width: 1100px) {
+  .site-nav {
+    height: 78px !important;
+  }
+
   .site-nav .logo {
-    min-width: 248px !important;
+    min-width: 232px !important;
     height: 74px !important;
   }
 
-  .site-nav .logo-emblem {
-    width: 248px !important;
-    height: 66px !important;
-    flex-basis: 248px !important;
+  .site-nav .logo-text strong {
+    font-size: 19px !important;
   }
 
-  .site-nav .logo-emblem img {
-    width: 248px !important;
+  .site-nav .logo-text em {
+    margin-top: 6px !important;
+    padding-top: 6px;
+    font-size: 7px !important;
   }
 }
 
 @media (max-width: 600px) {
+  .site-nav {
+    height: 70px !important;
+  }
+
   .site-nav .logo {
-    min-width: 205px !important;
-    height: 68px !important;
+    min-width: 178px !important;
+    height: 66px !important;
   }
 
-  .site-nav .logo-emblem {
-    width: 205px !important;
-    height: 60px !important;
-    flex-basis: 205px !important;
+  .site-nav .logo-text {
+    display: block !important;
   }
 
-  .site-nav .logo-emblem img {
-    width: 205px !important;
+  .site-nav .logo-text strong {
+    display: block;
+    font-size: 17px !important;
+  }
+
+  .site-nav .logo-text small {
+    display: block;
+    margin-top: 5px !important;
+    font-size: 7px !important;
+  }
+
+  .site-nav .logo-text em {
+    display: none !important;
   }
 }
 
