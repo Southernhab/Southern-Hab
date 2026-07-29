@@ -230,7 +230,7 @@
 
 .site-nav .logo {
   width: auto !important;
-  min-width: 278px !important;
+  min-width: 260px !important;
   height: 84px !important;
   gap: 0 !important;
 }
@@ -240,11 +240,12 @@
 }
 
 .site-nav .logo-text {
-  display: grid !important;
-  grid-template-columns: auto auto;
-  align-items: baseline;
-  justify-content: start;
-  column-gap: 9px;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
   line-height: 1 !important;
 }
 
@@ -259,15 +260,14 @@
   color: var(--moss) !important;
   font: 700 8px var(--font-body) !important;
   letter-spacing: 0.23em !important;
-  margin: 0 !important;
+  margin: 5px 0 0 !important;
   white-space: nowrap;
 }
 
 .site-nav .logo-text em {
-  grid-column: 1 / -1;
   width: 100%;
-  margin: 8px 0 0 !important;
-  padding-top: 7px;
+  margin: 6px 0 0 !important;
+  padding-top: 6px;
   border-top: 1px solid rgba(181, 138, 72, 0.55);
   color: var(--gold) !important;
   font: 700 9px var(--font-body) !important;
@@ -292,8 +292,8 @@
   }
 
   .site-nav .logo-text em {
-    margin-top: 6px !important;
-    padding-top: 6px;
+    margin-top: 5px !important;
+    padding-top: 5px;
     font-size: 7px !important;
   }
 }
@@ -309,7 +309,7 @@
   }
 
   .site-nav .logo-text {
-    display: block !important;
+    display: flex !important;
   }
 
   .site-nav .logo-text strong {
@@ -319,7 +319,7 @@
 
   .site-nav .logo-text small {
     display: block;
-    margin-top: 5px !important;
+    margin-top: 4px !important;
     font-size: 7px !important;
   }
 
