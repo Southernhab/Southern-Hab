@@ -1,0 +1,4 @@
+year,program_phase,hens_observed,hens_with_poults,poults_observed,poults_per_hen,percent_hens_with_poults,average_brood_size,gobblers_harvested,hunter_days
+2024,Pre-management baseline,14,6,18,1.29,42.9,3.00,1,10
+2025,Post-management Year 1,15,7,24,1.60,46.7,3.43,2,12
+2026,Post-management Year 2,16,9,32,2.00,56.3,3.56,3,15
