@@ -495,7 +495,39 @@
           3.1
         ]
       ]
-    }
+    },
+    "turkeyRecruitment": [
+      [
+        2024,
+        "Pre-management baseline",
+        14,
+        6,
+        18,
+        1.29,
+        42.9,
+        3
+      ],
+      [
+        2025,
+        "Post-management · Year 1",
+        15,
+        7,
+        24,
+        1.6,
+        46.7,
+        3.43
+      ],
+      [
+        2026,
+        "Post-management · Year 2",
+        16,
+        9,
+        32,
+        2,
+        56.3,
+        3.56
+      ]
+    ]
   };
 
   var views = {};
@@ -503,7 +535,7 @@
   var planPath = '/portal/demo/files/pine-ridge-property-management-prescription.pdf';
   var deerDataPath = '/portal/demo/files/pine-ridge-deer-harvest-log.csv';
   var thermalDataPath = '/portal/demo/files/pine-ridge-thermal-drone-surveys.csv';
-  var turkeyDataPath = '/portal/demo/files/pine-ridge-turkey-harvest-log.csv';
+  var turkeyRecruitmentPath = '/portal/demo/files/pine-ridge-turkey-recruitment.csv';
 
   function money(n) {
     return '$' + n.toLocaleString('en-US');
@@ -619,32 +651,37 @@
     var ageRows = property.deerAgeRows.map(function (h) {
       return '<tr><td>' + h[0] + '</td><td><strong>' + h[1] + '</strong></td><td>' + h[2] + '</td><td>' + h[3] + '</td><td>' + h[4] + '</td><td>' + h[5] + '%</td></tr>';
     }).join('');
-    var turkeyRows = property.turkeyHarvest.map(function (t) {
-      return '<tr><td><strong>' + t[0] + '</strong></td><td>' + t[1] + '</td><td>' + t[2] + '</td><td><strong>' + t[3] + '</strong></td><td>' + t[4] + '</td><td>' + t[5] + '</td><td>' + t[6] + '</td></tr>';
+    var recruitmentRows = property.turkeyRecruitment.map(function (t) {
+      return '<tr><td><strong>' + t[0] + '</strong><span class="cell-note">' + t[1] + '</span></td><td>' + t[2] + '</td><td>' + t[3] + '</td><td>' + t[4] + '</td><td><strong>' + t[5].toFixed(2) + '</strong></td><td>' + t[6].toFixed(1) + '%</td><td>' + t[7].toFixed(2) + '</td></tr>';
+    }).join('');
+    var turkeyHarvestRows = property.turkeyHarvest.map(function (t) {
+      return '<tr><td><strong>' + t[0] + '</strong></td><td>' + t[2] + '</td><td>' + t[3] + '</td><td>' + t[6] + '</td></tr>';
     }).join('');
     return '<div class="page">' +
-      heading('Wildlife Condition', 'A plain-language reading of the herd, hunt quality, and the management decision for this season') +
+      heading('Wildlife Condition', 'Deer population balance, herd condition, turkey recruitment, and this season\'s management decisions') +
       '<div class="metrics">' +
-        metric('Deer Abundance', 'Slightly high', '31.0 deer / mi² · working range 20–30') +
+        metric('Deer Density', '31.0 / mi²', 'upper edge of the 20–30 property target') +
+        metric('Herd Structure', 'Doe-heavy', '1 buck : 2.0 does · selective harvest needed') +
         metric('Deer Condition', 'Improving', 'adult-doe weight 88 → 94 lb') +
-        metric('Buck Structure', 'Improving', 'average age 2.7 → 3.4 years') +
-        metric('Turkey Result', 'Encouraging', 'effort-adjusted harvest rate up 100%') +
+        metric('Turkey Recruitment', '2.0 poults / hen', 'up from 1.29 · currently stable') +
       '</div>' +
-      '<div class="callout"><strong>Bottom line for the owner:</strong> Habitat and buck-age results are moving in the right direction, but deer abundance remains a little above the working range and the herd is still doe-heavy. The 2026–27 recommendation is 10–12 adult does, continued protection of most bucks younger than 3.5 years, and another winter survey before changing direction.</div>' +
-      '<div class="panel"><div class="panel-head"><h2>How We Judge the Herd</h2><span class="chip">Multiple lines of evidence</span></div><div class="table-wrap"><table><thead><tr><th>Measure</th><th>Pine Ridge</th><th>Alabama / Coastal Plain Context</th><th>Management Interpretation</th></tr></thead><tbody>' +
-        '<tr><td><strong>Deer abundance</strong></td><td>60 estimated · 31.0 / mi²</td><td>20–30 / mi² working range for this pine-dominated demonstration</td><td>Slightly above target; increase doe harvest carefully.</td></tr>' +
-        '<tr><td><strong>Adult-doe weight</strong></td><td>94 lb · up from 88</td><td>Within the lower portion of Alabama\'s broad healthy-adult range</td><td>Direction is positive, but habitat and browse pressure still matter.</td></tr>' +
-        '<tr><td><strong>Fawns per doe</strong></td><td>0.54</td><td>Near the 0.50 long-term Coastal Plain reference</td><td>Recruitment is adequate to sustain the herd.</td></tr>' +
-        '<tr><td><strong>Buck-to-doe ratio</strong></td><td>1 : 2.0 · improved from 1 : 2.3</td><td>Balanced herds compress breeding and reduce late fawning</td><td>Still doe-heavy; continue selective antlerless harvest.</td></tr>' +
-        '<tr><td><strong>Older-buck share</strong></td><td>57% age 3.5+ · up from 38%</td><td>Age is the first requirement for mature body and antler expression</td><td>Voluntary young-buck protection is working.</td></tr>' +
+      '<div class="callout"><strong>Management reading:</strong> The winter estimate of 60 deer on 1,240 acres equals about 31 deer per square mile. That is not an extreme density for Alabama, but it is at the upper edge of this property\'s quality-management target and the 1:2.0 buck-to-doe ratio remains doe-heavy. Maintain the 10–12 adult-doe target, review after six does, and confirm the response with weights, browse use, and the next winter survey.</div>' +
+      '<div class="panel"><div class="panel-head"><h2>Deer Herd Assessment</h2><span class="chip">Multiple lines of evidence</span></div><div class="table-wrap"><table><thead><tr><th>Measure</th><th>Pine Ridge</th><th>Management Context</th><th>Interpretation</th></tr></thead><tbody>' +
+        '<tr><td><strong>Deer density</strong></td><td>60 estimated · 31.0 / mi²</td><td>Property target 20–30 / mi²; broad Alabama conditions can support more</td><td>At the upper edge, not extreme; structure and forage response guide harvest.</td></tr>' +
+        '<tr><td><strong>Adult-doe weight</strong></td><td>94 lb · up from 88</td><td>Improvement should continue if forage pressure declines</td><td>Direction is positive, but density and browse use still require monitoring.</td></tr>' +
+        '<tr><td><strong>Fawns per doe</strong></td><td>0.50</td><td>Recruitment index from the winter survey</td><td>Adequate, but not strong enough to ignore adult-doe condition.</td></tr>' +
+        '<tr><td><strong>Buck-to-doe ratio</strong></td><td>1 : 2.0 · improved from 1 : 2.2</td><td>A tighter ratio supports a more concentrated breeding period</td><td>Still doe-heavy; continue selective antlerless harvest.</td></tr>' +
+        '<tr><td><strong>Older-buck share</strong></td><td>57% age 3.5+ · up from 33%</td><td>Age is the first requirement for mature body and antler expression</td><td>Voluntary young-buck protection is producing the intended structure.</td></tr>' +
       '</tbody></table></div></div>' +
-      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>This Season</h2></div><div class="panel-body"><div class="budget-line"><span>Adult-doe target</span><strong>10–12</strong></div><div class="budget-line"><span>Total deer target</span><strong>17–20</strong></div><div class="budget-line"><span>Buck guideline</span><strong>Protect most &lt;3.5</strong></div><div class="budget-line"><span>Midseason review</span><strong>After 6 adult does</strong></div><p class="mini-note">The target is a property recommendation, not a statewide prescription. It is adjusted with browse pressure, hunter effort, weights, age structure, and the next winter estimate.</p></div></div><div class="panel"><div class="panel-head"><h2>Turkey Reading</h2></div><div class="panel-body"><div class="budget-line"><span>Gobblers harvested</span><strong>1 → 3</strong></div><div class="budget-line"><span>Harvest / 100 hunter-days</span><strong>16.7 → 25.8</strong></div><div class="budget-line"><span>Management conclusion</span><strong>Encouraging trend</strong></div><p class="mini-note">The effort-adjusted result improved, but harvest alone cannot prove the population doubled. Brood counts, cameras, gobbling activity, and habitat response remain part of the annual review.</p></div></div></div>' +
-      '<details class="panel section-gap"><summary class="panel-head" style="cursor:pointer"><h2 style="display:inline">Show technical survey and harvest data</h2><span class="chip gray">Optional detail</span></summary>' +
+      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>This Deer Season</h2></div><div class="panel-body"><div class="budget-line"><span>Adult-doe target</span><strong>10–12</strong></div><div class="budget-line"><span>Total deer target</span><strong>17–20</strong></div><div class="budget-line"><span>Buck guideline</span><strong>Protect most &lt;3.5</strong></div><div class="budget-line"><span>Midseason review</span><strong>After 6 adult does</strong></div><p class="mini-note">Adjust the final target with browse pressure, hunter effort, weights, age structure, and the next winter estimate.</p></div></div><div class="panel"><div class="panel-head"><h2>Turkey Recruitment</h2></div><div class="panel-body"><div class="budget-line"><span>Poults per hen</span><strong>1.29 → 2.00</strong></div><div class="budget-line"><span>Hens with poults</span><strong>42.9% → 56.3%</strong></div><div class="budget-line"><span>Average brood size</span><strong>3.00 → 3.56</strong></div><div class="budget-line"><span>Current interpretation</span><strong>Stable, improving</strong></div><p class="mini-note">Two poults per hen supports a stable-population reading. The management objective is to move above that level consistently through nesting cover, brood habitat, and repeated summer observations.</p></div></div></div>' +
+      '<div class="panel section-gap"><div class="panel-head"><h2>Turkey Monitoring Priority</h2><span class="chip gold">June–August</span></div><div class="panel-body"><ul class="prescription-list"><li>Record every hen observed, including hens without poults.</li><li>Record total poults, hens with broods, observation date, location, and habitat type.</li><li>Use poults per hen as the primary annual recruitment index and average brood size as a supporting measure.</li><li>Retain spring harvest as a secondary, effort-adjusted measure rather than evidence of population growth.</li></ul></div></div>' +
+      '<details class="panel section-gap"><summary class="panel-head" style="cursor:pointer"><h2 style="display:inline">Show technical wildlife data</h2><span class="chip gray">Optional detail</span></summary>' +
         '<div class="panel-head"><h2>Thermal Drone Surveys</h2><a class="btn ghost" href="' + thermalDataPath + '" download>Download survey data</a></div><div class="table-wrap"><table><thead><tr><th>Survey</th><th>Sample Coverage</th><th>Estimated Deer</th><th>Deer / 1,000 ac</th><th>Buck : Doe</th><th>Fawns / Doe</th></tr></thead><tbody>' + thermalRows + '</tbody></table></div>' +
-        '<div class="panel-head"><h2>Two-Year Harvest Summary</h2><a class="btn ghost" href="' + deerDataPath + '" download>Download 35 records</a></div><div class="table-wrap"><table><thead><tr><th>Season</th><th>Total</th><th>Antlered</th><th>Antlerless</th><th>Harvest / 1,000 ac</th><th>Avg. Buck Age</th><th>Bucks 3.5+</th><th>Avg. Buck Weight</th><th>Adult Doe Weight</th><th>Adult Doe KFI</th></tr></thead><tbody>' + harvestRows + '</tbody></table></div>' +
+        '<div class="panel-head"><h2>Two-Year Deer Harvest Summary</h2><a class="btn ghost" href="' + deerDataPath + '" download>Download 35 records</a></div><div class="table-wrap"><table><thead><tr><th>Season</th><th>Total</th><th>Antlered</th><th>Antlerless</th><th>Harvest / 1,000 ac</th><th>Avg. Buck Age</th><th>Bucks 3.5+</th><th>Avg. Buck Weight</th><th>Adult Doe Weight</th><th>Adult Doe KFI</th></tr></thead><tbody>' + harvestRows + '</tbody></table></div>' +
         '<div class="panel-body"><p class="protocol-formula">KFI (%) = perirenal fat mass ÷ kidney mass × 100</p><p class="mini-note">KFI is retained as a supporting, season-sensitive condition measure. It is not used as a stand-alone pass/fail grade.</p></div>' +
         '<div class="panel-head"><h2>Age, Weight & Condition Detail</h2></div><div class="table-wrap table-tall"><table><thead><tr><th>Season</th><th>Harvest Class</th><th>Age</th><th>n</th><th>Average Weight (lb)</th><th>Average KFI</th></tr></thead><tbody>' + ageRows + '</tbody></table></div>' +
-        '<div class="panel-head"><h2>Turkey Harvest Log</h2><a class="btn ghost" href="' + turkeyDataPath + '" download>Download harvest log</a></div><div class="table-wrap"><table><thead><tr><th>Spring Season</th><th>Program Phase</th><th>Hunter-Days</th><th>Gobblers</th><th>Adults</th><th>Jakes</th><th>Harvest / 100 Hunter-Days</th></tr></thead><tbody>' + turkeyRows + '</tbody></table></div>' +
+        '<div class="panel-head"><h2>Turkey Recruitment Monitoring</h2><a class="btn ghost" href="' + turkeyRecruitmentPath + '" download>Download recruitment data</a></div><div class="table-wrap"><table><thead><tr><th>Year</th><th>Hens</th><th>Hens with Poults</th><th>Poults</th><th>Poults / Hen</th><th>Hens Successful</th><th>Brood Size</th></tr></thead><tbody>' + recruitmentRows + '</tbody></table></div>' +
+        '<div class="panel-head"><h2>Spring Harvest Context</h2><span class="chip gray">Secondary measure</span></div><div class="table-wrap"><table><thead><tr><th>Season</th><th>Hunter-Days</th><th>Gobblers</th><th>Harvest / 100 Hunter-Days</th></tr></thead><tbody>' + turkeyHarvestRows + '</tbody></table></div><div class="panel-body"><p class="mini-note">Three gobblers in 15 hunter-days is plausible for a well-managed 1,240-acre property, but the number harvested alone does not estimate flock size or prove population growth.</p></div>' +
       '</details>' +
       limitation() +
     '</div>';
@@ -688,8 +725,8 @@
         '<article class="report"><span class="type">PROPERTY MAP</span><h3>Demo Property Management Map</h3><div class="meta">Updated July 2026 · JPEG</div><p>Sanitized composite showing how property boundaries, water, roads, openings, wetlands, treatment areas, bedding cover, and travel routes are organized.</p><a class="btn" href="' + mapPath + '" target="_blank" rel="noopener">Open map</a> <a class="btn ghost" href="' + mapPath + '" download>Download</a></article>' +
         '<article class="report"><span class="type">THERMAL DRONE SURVEY</span><h3>Winter Deer Survey Results</h3><div class="meta">2025 and 2026 · 2 survey records · CSV</div><p>Sampling coverage, unique detections, population estimates, confidence intervals, density, sex ratio, and recruitment.</p><a class="btn" href="' + thermalDataPath + '" download>Download CSV</a></article>' +
         '<article class="report"><span class="type">DEER HARVEST</span><h3>Two-Year Deer Harvest Log</h3><div class="meta">2024–25 and 2025–26 · 35 records · CSV</div><p>Harvest date, sex, age, age method, whole weight, kidney and fat weights, calculated KFI, antler points, and management unit.</p><a class="btn" href="' + deerDataPath + '" download>Download CSV</a></article>' +
-        '<article class="report"><span class="type">TURKEY HARVEST</span><h3>Pre/Post Turkey Harvest Log</h3><div class="meta">Spring 2024–2026 · 18 records · CSV</div><p>Pre-management baseline and two post-management seasons with age class, whole weight, beard, spurs, and management unit.</p><a class="btn" href="' + turkeyDataPath + '" download>Download CSV</a></article>' +
-        '<article class="report"><span class="type">ANNUAL REVIEW</span><h3>2026 Habitat & Wildlife Outcome Dashboard</h3><div class="meta">Updated July 2026 · Portal dashboard</div><p>Completed treatments, thermal estimates, harvest trends, turkey response, habitat target progress, and next-year decisions.</p><button class="btn" data-go="wildlife">Open dashboard</button></article>' +
+        '<article class="report"><span class="type">TURKEY RECRUITMENT</span><h3>Three-Year Turkey Recruitment Log</h3><div class="meta">Summer 2024–2026 · Annual summary · CSV</div><p>Hens observed, hens with poults, total poults, poults per hen, successful-hen rate, brood size, and secondary spring-harvest effort.</p><a class="btn" href="' + turkeyRecruitmentPath + '" download>Download CSV</a></article>' +
+        '<article class="report"><span class="type">ANNUAL REVIEW</span><h3>2026 Habitat & Wildlife Outcome Dashboard</h3><div class="meta">Updated July 2026 · Portal dashboard</div><p>Completed treatments, thermal estimates, deer harvest trends, turkey recruitment, habitat target progress, and next-year decisions.</p><button class="btn" data-go="wildlife">Open dashboard</button></article>' +
       '</div>' + limitation() +
     '</div>';
   };
