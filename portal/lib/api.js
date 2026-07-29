@@ -1,4 +1,4 @@
-// SHC Portal — Data API helpers (Firestore)
+// SHC Portal - Data API helpers (Firestore)
 // Depends on: portal/lib/firebase-client.js (window.shcDb, window.shcStorage, window.shcFunctions)
 //             portal/lib/auth.js (window.shcAuth)
 //
@@ -19,7 +19,7 @@
 
   // ── Formatting ─────────────────────────────────────────────────────────────
   function formatCurrency(valueCentsOrDollars) {
-    if (valueCentsOrDollars === null || valueCentsOrDollars === undefined) return '—';
+    if (valueCentsOrDollars === null || valueCentsOrDollars === undefined) return ' - ';
     // Values > 10000 are assumed to be cents; values <= 10000 are dollars (legacy tolerance)
     var dollars = valueCentsOrDollars > 10000 ? valueCentsOrDollars / 100 : Number(valueCentsOrDollars);
     return new Intl.NumberFormat('en-US', {
@@ -28,11 +28,11 @@
   }
 
   function formatDate(val) {
-    if (!val) return '—';
+    if (!val) return ' - ';
     var d;
     if (val && typeof val.toDate === 'function') { d = val.toDate(); }
     else { d = new Date(typeof val === 'string' && val.length === 10 ? val + 'T00:00:00' : val); }
-    if (isNaN(d.getTime())) return '—';
+    if (isNaN(d.getTime())) return ' - ';
     return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   }
 

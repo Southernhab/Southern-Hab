@@ -128,7 +128,7 @@ async function sendEmailNotification(subject, text) {
 // ════════════════════════════════════════════════════════════════════════════════
 
 /**
- * submitInquiry — public HTTPS endpoint for the contact page forms.
+ * submitInquiry - public HTTPS endpoint for the contact page forms.
  * Handles both private-land and industrial/municipal inquiries.
  */
 exports.submitInquiry = functions.https.onRequest(async function (req, res) {
@@ -198,7 +198,7 @@ exports.submitInquiry = functions.https.onRequest(async function (req, res) {
   await db.collection('inquiries').add(record);
 
   sendEmailNotification(
-    'New SHC Inquiry — ' + (inquiryType === 'industrial_municipal' ? 'Industrial/Municipal' : 'Private Land'),
+    'New SHC Inquiry - ' + (inquiryType === 'industrial_municipal' ? 'Industrial/Municipal' : 'Private Land'),
     'Name: ' + name + '\nEmail: ' + email + '\nPhone: ' + phone + '\nType: ' + inquiryType + '\nLocation: ' + location + '\nMessage: ' + message
   );
 
@@ -206,7 +206,7 @@ exports.submitInquiry = functions.https.onRequest(async function (req, res) {
 });
 
 /**
- * requestAccess — public HTTPS endpoint for the portal access request form.
+ * requestAccess - public HTTPS endpoint for the portal access request form.
  */
 exports.requestAccess = functions.https.onRequest(async function (req, res) {
   setCorsHeaders(req, res);
@@ -270,7 +270,7 @@ exports.requestAccess = functions.https.onRequest(async function (req, res) {
 // ════════════════════════════════════════════════════════════════════════════════
 
 /**
- * inviteClientUser — staff_admin+ creates a portal invitation.
+ * inviteClientUser - staff_admin+ creates a portal invitation.
  * Creates or re-invites a Firebase Auth user, assigns custom claims,
  * creates clientUsers and users records, and sends a password-reset email.
  */
@@ -327,7 +327,7 @@ exports.inviteClientUser = functions.https.onCall(async function (data, context)
   var existingClientIds = Array.isArray(existingClaims.clientIds) ? existingClaims.clientIds : [];
   var clientIds = Array.from(new Set([...existingClientIds, clientId]));
 
-  // Set custom claims — role determined by access level
+  // Set custom claims - role determined by access level
   var role = accessLevel === 'client_owner' ? 'client_owner' : 'client_viewer';
   await auth.setCustomUserClaims(uid, { role: role, clientIds: clientIds });
 
@@ -381,7 +381,7 @@ exports.inviteClientUser = functions.https.onCall(async function (data, context)
 });
 
 /**
- * assignRole — super_admin only. Sets a Firebase custom claims role on any user.
+ * assignRole - super_admin only. Sets a Firebase custom claims role on any user.
  */
 exports.assignRole = functions.https.onCall(async function (data, context) {
   if (!context.auth) throw new functions.https.HttpsError('unauthenticated', 'Authentication required.');
@@ -416,7 +416,7 @@ exports.assignRole = functions.https.onCall(async function (data, context) {
 });
 
 /**
- * disableUser — admin only. Disables a Firebase Auth account and marks it inactive.
+ * disableUser - admin only. Disables a Firebase Auth account and marks it inactive.
  */
 exports.disableUser = functions.https.onCall(async function (data, context) {
   if (!context.auth) throw new functions.https.HttpsError('unauthenticated', 'Authentication required.');
@@ -444,7 +444,7 @@ exports.disableUser = functions.https.onCall(async function (data, context) {
 });
 
 /**
- * enableUser — admin only. Re-enables a previously disabled account.
+ * enableUser - admin only. Re-enables a previously disabled account.
  */
 exports.enableUser = functions.https.onCall(async function (data, context) {
   if (!context.auth) throw new functions.https.HttpsError('unauthenticated', 'Authentication required.');
@@ -469,7 +469,7 @@ exports.enableUser = functions.https.onCall(async function (data, context) {
 });
 
 /**
- * getSignedFileUrl — authenticated. Returns a short-lived signed URL for a
+ * getSignedFileUrl - authenticated. Returns a short-lived signed URL for a
  * Storage file the caller is authorized to access.
  */
 exports.getSignedFileUrl = functions.https.onCall(async function (data, context) {
@@ -512,7 +512,7 @@ exports.getSignedFileUrl = functions.https.onCall(async function (data, context)
 });
 
 /**
- * publishRecord — staff only. Flips clientVisible to true and sets publishedAt.
+ * publishRecord - staff only. Flips clientVisible to true and sets publishedAt.
  * Supported collections: documents, projects, budgets, arcgisMaps, wildlifeSurveys,
  *   harvestRecords, workHistory, monitoringRecords, photographs
  */
@@ -550,7 +550,7 @@ exports.publishRecord = functions.https.onCall(async function (data, context) {
 });
 
 /**
- * unpublishRecord — staff only. Sets clientVisible to false.
+ * unpublishRecord - staff only. Sets clientVisible to false.
  */
 exports.unpublishRecord = functions.https.onCall(async function (data, context) {
   if (!context.auth) throw new functions.https.HttpsError('unauthenticated', 'Authentication required.');

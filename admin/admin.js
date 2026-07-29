@@ -1,4 +1,4 @@
-// SHC Administration — Staff SPA
+// SHC Administration - Staff SPA
 // Depends on: firebase-client.js, auth.js, api.js (loaded in admin/index.html)
 
 (function () {
@@ -112,7 +112,7 @@
       setContent(
         '<div class="portal-page">' +
           '<div class="page-heading"><h1>Administration Dashboard</h1>' +
-          '<p class="page-sub">SHC Staff Area &mdash; Internal use only. Client-visible content is controlled through publish/approval steps.</p></div>' +
+          '<p class="page-sub">SHC Staff Area - Internal use only. Client-visible content is controlled through publish/approval steps.</p></div>' +
           '<div class="alert alert-warning" style="margin-bottom:20px"><strong>Internal/client boundary:</strong> Internal notes, draft material, and unpublished records are never returned to client portal routes. Only explicitly published content is client-visible. Verify publish status before assuming a client can see a record.</div>' +
           '<div class="metric-row" style="margin-bottom:24px">' +
             mc('Active Clients', clientCount, 'with portal records') +
@@ -166,8 +166,8 @@
     try {
       var result = await api.staff.getAllClients();
       var rows = result.map(function (c) {
-        return '<tr><td>' + esc(c.display_name) + '</td><td>' + esc(c.primary_contact_name || '—') + '</td>' +
-          '<td>' + esc(c.email || '—') + '</td><td>' + esc(c.city || '') + (c.state ? ', ' + esc(c.state) : '') + '</td>' +
+        return '<tr><td>' + esc(c.display_name) + '</td><td>' + esc(c.primary_contact_name || ' - ') + '</td>' +
+          '<td>' + esc(c.email || ' - ') + '</td><td>' + esc(c.city || '') + (c.state ? ', ' + esc(c.state) : '') + '</td>' +
           '<td>' + chip(c.status, statusColor(c.status)) + '</td>' +
           '<td><button class="btn btn-ghost btn-sm" data-client-edit="' + c.id + '">Edit</button></td></tr>';
       }).join('');
@@ -252,9 +252,9 @@
       var rows = result.map(function (p) {
         return '<tr>' +
           '<td><strong>' + esc(p.name) + '</strong></td>' +
-          '<td>' + esc((p.clients && p.clients.display_name) || '—') + '</td>' +
-          '<td>' + (p.acreage ? Math.round(p.acreage) + ' ac' : '—') + '</td>' +
-          '<td>' + esc(p.county || '—') + (p.state ? ', ' + esc(p.state) : '') + '</td>' +
+          '<td>' + esc((p.clients && p.clients.display_name) || ' - ') + '</td>' +
+          '<td>' + (p.acreage ? Math.round(p.acreage) + ' ac' : ' - ') + '</td>' +
+          '<td>' + esc(p.county || ' - ') + (p.state ? ', ' + esc(p.state) : '') + '</td>' +
           '<td>' + chip(p.status || 'active', statusColor(p.status || 'active')) + '</td>' +
           '<td>' + formatDate(p.next_review_date) + '</td>' +
           '<td style="white-space:nowrap">' +
@@ -344,7 +344,7 @@
         adminField('Primary Objectives', 'primary_objectives', (property && (property.primaryObjectives || property.primary_objectives)) || '') +
         '<div style="grid-column:1/-1"><label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Client-Visible Management Summary</label>' +
           '<textarea name="management_summary_client" rows="3" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' + esc((property && (property.clientManagementSummary || property.management_summary_client)) || '') + '</textarea></div>' +
-        '<div style="grid-column:1/-1"><label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Internal Notes (staff only — never visible to clients)</label>' +
+        '<div style="grid-column:1/-1"><label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Internal Notes (staff only - never visible to clients)</label>' +
           '<textarea name="ownership_notes_internal" rows="2" style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' + esc((property && property.ownership_notes_internal) || '') + '</textarea></div>' +
         '<div style="grid-column:1/-1">' +
           '<label style="display:block;font-size:12px;font-weight:600;color:var(--moss);margin-bottom:4px">Status</label>' +
@@ -412,7 +412,7 @@ async function renderPropertyWorkspace(propertyId) {
       return '<tr>' +
         '<td><strong>' + esc(p.name || 'Untitled Project') + '</strong><br><span style="font-size:12px;color:var(--moss)">' + esc((p.description || '').slice(0, 90)) + ((p.description || '').length > 90 ? '…' : '') + '</span></td>' +
         '<td>' + chip(p.status || 'draft', statusColor(p.status || 'draft')) + '</td>' +
-        '<td>' + esc(p.classification || '—') + '</td>' +
+        '<td>' + esc(p.classification || ' - ') + '</td>' +
         '<td>' + formatCurrency(projectEstimatedCents(p)) + '</td>' +
         '<td>' + chip(p.clientReviewStatus || p.client_review_status || 'not_requested', (p.clientReviewStatus || p.client_review_status) === 'awaiting_review' ? 'gold' : 'gray') + '</td>' +
         '<td>' + ((p.clientVisible || p.client_visible) ? chip('Published','green') : chip('Internal','gray')) + '</td>' +
@@ -683,7 +683,7 @@ async function renderPropertyWorkspace(propertyId) {
         return '<tr>' +
           '<td><strong>' + esc(p.name || 'Untitled Project') + '</strong></td>' +
           '<td>' + chip(p.status || 'draft', statusColor(p.status || 'draft')) + '</td>' +
-          '<td>' + esc(p.classification || '—') + '</td>' +
+          '<td>' + esc(p.classification || ' - ') + '</td>' +
           '<td>' + formatCurrency(projectEstimatedCents(p)) + '</td>' +
           '<td>' + chip(p.client_review_status || p.clientReviewStatus || 'not_requested', (p.client_review_status || p.clientReviewStatus) === 'awaiting_review' ? 'gold' : 'gray') + '</td>' +
           '<td>' + ((p.client_visible || p.clientVisible) ? chip('Published','green') : chip('Internal','gray')) + '</td>' +
@@ -725,7 +725,7 @@ async function renderPropertyWorkspace(propertyId) {
         return '<tr>' +
           '<td><strong>' + esc(p.name || 'Untitled Project') + '</strong></td>' +
           '<td>' + chip(p.status || 'draft', statusColor(p.status || 'draft')) + '</td>' +
-          '<td>' + esc(p.classification || '—') + '</td>' +
+          '<td>' + esc(p.classification || ' - ') + '</td>' +
           '<td>' + formatCurrency(projectEstimatedCents(p)) + '</td>' +
           '<td>' + chip(p.client_review_status || p.clientReviewStatus || 'not_requested', (p.client_review_status || p.clientReviewStatus) === 'awaiting_review' ? 'gold' : 'gray') + '</td>' +
           '<td>' + ((p.client_visible || p.clientVisible) ? chip('Published','green') : chip('Internal','gray')) + '</td>' +
@@ -819,7 +819,7 @@ async function renderPropertyWorkspace(propertyId) {
           '<select name="property_id" required style="width:100%;border:1px solid var(--border);padding:7px 10px;font-size:13px;font-family:inherit;border-radius:3px">' +
             '<option value="">Select property</option>' +
             properties.map(function (p) {
-              var label = p.name + ((p.clients && p.clients.display_name) ? ' — ' + p.clients.display_name : '');
+              var label = p.name + ((p.clients && p.clients.display_name) ? ' - ' + p.clients.display_name : '');
               return '<option value="' + esc(p.id) + '"' + (activePropertyId === p.id ? ' selected' : '') + '>' + esc(label) + '</option>';
             }).join('') +
           '</select></div>' +
@@ -1069,8 +1069,8 @@ async function renderPropertyWorkspace(propertyId) {
           { name:'acres', label:'Burn Acres', type:'number', step:'0.01' },
           { name:'burnObjective', label:'Primary Burn Objective', type:'select', options:['Fuel reduction','Longleaf / wiregrass restoration','Wildlife habitat improvement','Midstory reduction','Site preparation','Hardwood control','Training / demonstration burn'] },
           { name:'burnSeason', label:'Preferred Burn Season', type:'select', options:['Dormant season','Growing season','Either season','Weather-window dependent'] },
-          { name:'fuelType', label:'Dominant Fuel Type', type:'select', options:['Pine straw / grass','Longleaf pine savanna fuel','Mixed pine-hardwood litter','Old field / grass','Cutover / slash','Unknown — field verification needed'] },
-          { name:'firebreakStatus', label:'Firebreak Condition', type:'select', options:['Existing and ready','Existing but needs maintenance','Needs new firebreaks','Roads serve as breaks','Unknown — inspect first'] },
+          { name:'fuelType', label:'Dominant Fuel Type', type:'select', options:['Pine straw / grass','Longleaf pine savanna fuel','Mixed pine-hardwood litter','Old field / grass','Cutover / slash','Unknown - field verification needed'] },
+          { name:'firebreakStatus', label:'Firebreak Condition', type:'select', options:['Existing and ready','Existing but needs maintenance','Needs new firebreaks','Roads serve as breaks','Unknown - inspect first'] },
           { name:'smokeConcerns', label:'Smoke-Sensitive Areas', type:'textarea' },
           { name:'crewEquipment', label:'Crew / Equipment Notes', type:'textarea' },
           { name:'permitStatus', label:'Permit / Notification Status', type:'select', options:['Not started','Burn permit needed','Landowner to obtain','SHC to coordinate','Complete'] },
@@ -1103,7 +1103,7 @@ async function renderPropertyWorkspace(propertyId) {
         fields: [
           { name:'surveyObjective', label:'Survey Objective', type:'select', options:['Deer herd survey','Buck age structure','Doe/fawn recruitment','Turkey activity','Predator activity','Feral hog activity','General wildlife inventory'] },
           { name:'cameraCount', label:'Number of Cameras', type:'number', step:'1' },
-          { name:'surveyDays', label:'Survey Duration — Days', type:'number', step:'1' },
+          { name:'surveyDays', label:'Survey Duration - Days', type:'number', step:'1' },
           { name:'baitAttractant', label:'Bait / Attractant', type:'select', options:['Corn','Mineral site','No bait','Existing feeder','Scrape / scent post','Other'] },
           { name:'cameraSpacing', label:'Camera Spacing / Coverage Notes', type:'textarea' },
           { name:'deliverable', label:'Deliverable', type:'select', options:['Photo summary','Survey report','Harvest recommendations','Population index summary','Map + photos'] }
@@ -1152,7 +1152,7 @@ async function renderPropertyWorkspace(propertyId) {
           { name:'applicationMethod', label:'Application Method', type:'select', options:['Broadcast spray','Foliar spot spray','Basal bark','Cut stump','Hack-and-squirt','Backpack application','UTV sprayer','Truck skid sprayer','Aquatic treatment','Other'] },
           { name:'herbicideProduct', label:'Herbicide Product / Active Ingredient', type:'select', options:['Garlon XRT / triclopyr','Glyphosate','Imazapyr','Oust Extra / sulfometuron + metsulfuron','Milestone / aminopyralid','2,4-D','Aquatic-approved glyphosate','TBD after label review','Other'] },
           { name:'herbicideRate', label:'Application Rate / Mix', type:'text' },
-          { name:'carrierVolumeGpa', label:'Carrier Volume — GPA', type:'text' },
+          { name:'carrierVolumeGpa', label:'Carrier Volume - GPA', type:'text' },
           { name:'adjuvant', label:'Surfactant / Adjuvant', type:'text' },
           { name:'timingWindow', label:'Treatment Timing Window', type:'select', options:['Spring','Summer','Fall','Dormant season','Growing season','After green-up','After mowing/regrowth','Weather-dependent'] },
           { name:'weatherLimitations', label:'Weather / Drift Limitations', type:'textarea' },
@@ -1169,7 +1169,7 @@ async function renderPropertyWorkspace(propertyId) {
         clientNotes: 'SHC will prioritize invasive species based on spread risk, habitat impact, treatment feasibility, and landowner objectives.',
         fields: [
           { name:'targetSpecies', label:'Target Species', type:'text' },
-          { name:'infestationLevel', label:'Infestation Level', type:'select', options:['Scattered','Patchy','Moderate','Heavy','Severe / landscape-level','Unknown — survey needed'] },
+          { name:'infestationLevel', label:'Infestation Level', type:'select', options:['Scattered','Patchy','Moderate','Heavy','Severe / landscape-level','Unknown - survey needed'] },
           { name:'controlMethod', label:'Control Method', type:'select', options:['Herbicide','Mechanical removal','Cut stump','Basal bark','Foliar spray','Integrated control','Monitoring only'] },
           { name:'treatmentAcres', label:'Treatment Acres', type:'number', step:'0.01' },
           { name:'priority', label:'Priority', type:'select', options:['High','Medium','Low','Monitor'] },
@@ -1354,7 +1354,7 @@ async function renderPropertyWorkspace(propertyId) {
     }
 
     return '<div style="background:#f8f6ef;border:1px solid var(--border);padding:12px 14px;border-radius:4px">' +
-      '<h3 style="margin:0 0 6px;font-size:15px;color:var(--forest)">Service Details — ' + esc(template.label) + '</h3>' +
+      '<h3 style="margin:0 0 6px;font-size:15px;color:var(--forest)">Service Details - ' + esc(template.label) + '</h3>' +
       '<p style="font-size:12.5px;color:var(--moss);margin:0 0 12px">These fields save with the project as structured service specifications.</p>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">' +
         template.fields.map(function (f) { return renderServiceField(f, details ? details[f.name] : ''); }).join('') +
@@ -1463,7 +1463,7 @@ async function renderPropertyWorkspace(propertyId) {
       var result = await api.staff.getInquiries();
       var rows = result.map(function (inq) {
         return '<tr><td>' + esc(inq.name) + '</td><td>' + esc(inq.email) + '</td>' +
-          '<td>' + chip(inq.inquiry_type || '—', 'blue') + '</td>' +
+          '<td>' + chip(inq.inquiry_type || ' - ', 'blue') + '</td>' +
           '<td>' + chip(inq.status, statusColor(inq.status)) + '</td>' +
           '<td>' + formatDate(inq.created_at) + '</td>' +
           '<td><select data-inq-id="' + inq.id + '" data-inq-status="' + inq.status + '" style="font-size:12px;border:1px solid var(--border);border-radius:3px;padding:3px 6px">' +
@@ -1498,7 +1498,7 @@ async function renderPropertyWorkspace(propertyId) {
       var result = await api.staff.getAccessRequests();
       var rows = result.map(function (r) {
         return '<tr><td>' + esc(r.name) + '</td><td>' + esc(r.email) + '</td>' +
-          '<td>' + esc(r.client_name || '—') + '</td><td>' + esc(r.property_name || '—') + '</td>' +
+          '<td>' + esc(r.client_name || ' - ') + '</td><td>' + esc(r.property_name || ' - ') + '</td>' +
           '<td>' + chip(r.status, statusColor(r.status)) + '</td>' +
           '<td>' + formatDate(r.created_at) + '</td>' +
           '<td>' +
@@ -1560,7 +1560,7 @@ async function renderPropertyWorkspace(propertyId) {
           '<td>' + esc((p.firstName || '') + ' ' + (p.lastName || '')) + '</td>' +
           '<td>' + esc(p.email || '') + '</td>' +
           '<td>' + chip(p.role || '', (p.role || '').startsWith('client') ? 'blue' : 'gold') + '</td>' +
-          '<td>' + (links || '<span style="color:var(--moss)">—</span>') + '</td>' +
+          '<td>' + (links || '<span style="color:var(--moss)"> - </span>') + '</td>' +
           '<td>' + chip(p.active ? 'active' : 'inactive', p.active ? 'green' : 'gray') + '</td>' +
           '<td>' + formatDate(p.lastLoginAt) + '</td>' +
         '</tr>';
@@ -1631,7 +1631,7 @@ async function renderPropertyWorkspace(propertyId) {
       }).join('');
 
       setContent(
-        '<div class="portal-page"><div class="page-heading"><h1>Audit Log</h1><p class="page-sub">Showing last 200 records &mdash; super_admin only</p></div>' +
+        '<div class="portal-page"><div class="page-heading"><h1>Audit Log</h1><p class="page-sub">Showing last 200 records - super_admin only</p></div>' +
         '<div class="panel"><table class="data-table"><thead><tr><th>Timestamp</th><th>Action</th><th>Table</th><th>Record ID</th><th>User</th></tr></thead>' +
         '<tbody>' + (rows || '<tr><td colspan="5" style="text-align:center;color:var(--moss)">No audit records.</td></tr>') + '</tbody></table></div></div>'
       );

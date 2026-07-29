@@ -77,13 +77,13 @@
       [
         "Monitored travel corridors",
         "3 routes",
-        "—",
+        " - ",
         "All three routes have repeat camera or field-sign use; screening cover is retained."
       ],
       [
         "Native / gravel forest roads",
         "12 segments",
-        "—",
+        " - ",
         "Seven maintain, three seasonal, and two closed or scheduled for restoration."
       ]
     ],
@@ -236,21 +236,21 @@
         "Winter 2025",
         "Feb. 20–22, 2025",
         "405 ac / 5 blocks",
-        56,
-        "50–63",
-        "45.2",
-        "1:2.2",
-        "0.48"
+        84,
+        "76–93",
+        "67.7",
+        "1:2.4",
+        "0.50"
       ],
       [
         "Winter 2026",
         "Feb. 18–21, 2026",
         "430 ac / 6 blocks",
-        60,
-        "54–67",
-        "48.4",
-        "1:2.0",
-        "0.50"
+        96,
+        "86–108",
+        "77.4",
+        "1:2.5",
+        "0.52"
       ]
     ],
     "deerHarvest": [
@@ -582,7 +582,7 @@
       '<div class="grid-2"><div class="panel"><div class="panel-head"><h2>Measured Change</h2><button class="btn ghost" data-go="wildlife">Wildlife details</button></div><div class="panel-body">' +
         '<div class="task"><i class="dot"></i><div><strong>Pine savanna</strong><span>208 acres now carry open-canopy, fire-maintained understory conditions.</span></div></div>' +
         '<div class="task"><i class="dot"></i><div><strong>Annual fire delivery</strong><span>248 acres treated in 2026, meeting the 20% property target.</span></div></div>' +
-        '<div class="task"><i class="dot"></i><div><strong>Estimated deer density</strong><span>31 deer per square mile from the standardized winter survey.</span></div></div>' +
+        '<div class="task"><i class="dot"></i><div><strong>Estimated deer density</strong><span>About 50 deer per square mile, a very high result for this property.</span></div></div>' +
         '<div class="task"><i class="dot"></i><div><strong>Buck age structure</strong><span>The share of observed bucks in older age classes continues to rise.</span></div></div>' +
       '</div></div><div class="panel"><div class="panel-head"><h2>Next Through Year-End</h2><button class="btn ghost" data-go="work">Open schedule</button></div><div class="panel-body">' +
         '<div class="task"><i class="dot gold"></i><div><strong>August–September</strong><span>Update stand inventory by forest type, age class, and merchantable product class.</span></div></div>' +
@@ -598,7 +598,7 @@
 
   views.property = function () {
     var habitatCards = property.habitats.map(function (h) {
-      return '<article class="unit" style="border-top:4px solid ' + h.color + '"><h3>' + h.name + '</h3><span class="chip">' + h.condition + '</span><p>' + h.meaning + '</p><div class="kv"><div><small>ACREAGE</small><strong>' + h.acres.toLocaleString('en-US') + ' acres</strong></div><div><small>PROPERTY SHARE</small><strong>' + h.percent.toFixed(1) + '%</strong></div></div><div class="habitat-bar"><i style="width:' + h.percent + '%;background:' + h.color + '"></i></div></article>';
+      return '<article class="unit" style="border-top:4px solid ' + h.color + '"><h3>' + h.name + '</h3><span class="chip">' + h.condition + '</span><div class="kv"><div><small>ACREAGE</small><strong>' + h.acres.toLocaleString('en-US') + ' acres</strong></div><div><small>PROPERTY SHARE</small><strong>' + h.percent.toFixed(1) + '%</strong></div></div><div class="habitat-bar"><i style="width:' + h.percent + '%;background:' + h.color + '"></i></div></article>';
     }).join('');
     var timberRows = property.timber.products.map(function (p) {
       return '<tr><td><strong>' + p[0] + '</strong></td><td>' + p[1].toLocaleString('en-US') + ' tons</td><td><strong>' + p[2].toFixed(1) + '%</strong></td></tr>';
@@ -635,7 +635,7 @@
         '<tr><td><strong>Nov.–Feb.</strong></td><td>Deer harvest and check-station data</td><td>Tracks herd balance, body condition, recruitment, and age structure.</td><td>Confirm harvest target</td></tr>' +
         '<tr><td><strong>Dec.–Feb.</strong></td><td>2027 fire and thinning layout</td><td>Sequences 248 acres of fire with stand-level timber and habitat objectives.</td><td>Approve 2027 plan</td></tr>' +
       '</tbody></table></div></div>' +
-      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Management Decisions</h2></div><div class="panel-body"><div class="survey"><h3>Deer harvest</h3><p>Target 10–12 adult does and approximately 17–20 total deer in 2026–27, then adjust after the midseason check and winter survey.</p></div><div class="survey"><h3>Timber and wildlife balance</h3><p>Thin wildlife-priority pine toward roughly 40–60 ft² of basal area where stand age, windfirmness, and product objectives allow; retain higher stocking in timber-priority blocks.</p></div><div class="survey"><h3>Turkey habitat</h3><p>Continue patchwork fire, brood-cover monitoring, and roost-tree protection. Treat improved harvest as encouraging, not proof of a population increase.</p></div></div></div><div class="panel"><div class="panel-head"><h2>Delivered Since 2024</h2></div><div class="panel-body"><div class="budget-line"><span>Prescribed fire</span><strong>718 ac</strong></div><div class="budget-line"><span>Thinning / selective midstory</span><strong>212 ac</strong></div><div class="budget-line"><span>Pine-savanna acreage</span><strong>208 ac</strong></div><div class="budget-line"><span>Wildlife openings</span><strong>38 ac</strong></div><div class="budget-line"><span>Waterfowl impoundments</span><strong>20 ac / 2 units</strong></div></div></div></div>' +
+      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Management Decisions</h2></div><div class="panel-body"><div class="survey"><h3>Deer harvest</h3><p>Target 16–18 adult does and approximately 24–28 total deer in 2026–27, then adjust after the midseason check and winter survey.</p></div><div class="survey"><h3>Timber and wildlife balance</h3><p>Thin wildlife-priority pine toward roughly 40–60 ft² of basal area where stand age, windfirmness, and product objectives allow; retain higher stocking in timber-priority blocks.</p></div><div class="survey"><h3>Turkey habitat</h3><p>Continue patchwork fire, brood-cover monitoring, and roost-tree protection. Treat improved harvest as encouraging, not proof of a population increase.</p></div></div></div><div class="panel"><div class="panel-head"><h2>Delivered Since 2024</h2></div><div class="panel-body"><div class="budget-line"><span>Prescribed fire</span><strong>718 ac</strong></div><div class="budget-line"><span>Thinning / selective midstory</span><strong>212 ac</strong></div><div class="budget-line"><span>Pine-savanna acreage</span><strong>208 ac</strong></div><div class="budget-line"><span>Wildlife openings</span><strong>38 ac</strong></div><div class="budget-line"><span>Waterfowl impoundments</span><strong>20 ac / 2 units</strong></div></div></div></div>' +
       '<details class="panel section-gap"><summary class="panel-head" style="cursor:pointer"><h2 style="display:inline">Show complete project history</h2></summary><div class="table-wrap"><table><thead><tr><th>Timing</th><th>Project</th><th>Scope</th><th>Status</th><th>Result / Deliverable</th></tr></thead><tbody>' + rows + '</tbody></table></div></details>' +
       limitation() +
     '</div>';
@@ -660,20 +660,20 @@
     return '<div class="page">' +
       heading('Wildlife Condition', 'Deer population balance, herd condition, turkey recruitment, and this season\'s management decisions') +
       '<div class="metrics">' +
-        metric('Deer Density', '31.0 / mi²', 'upper edge of the 20–30 property target') +
-        metric('Herd Structure', 'Doe-heavy', '1 buck : 2.0 does · selective harvest needed') +
+        metric('Deer Density', '49.5 / mi²', 'very high for the 20–30 property target') +
+        metric('Herd Structure', 'Doe-heavy', '1 buck : 2.5 does · selective harvest needed') +
         metric('Deer Condition', 'Improving', 'adult-doe weight 88 → 94 lb') +
         metric('Turkey Recruitment', '2.0 poults / hen', 'up from 1.29 · currently stable') +
       '</div>' +
-      '<div class="callout"><strong>Management reading:</strong> The winter estimate of 60 deer on 1,240 acres equals about 31 deer per square mile. That is not an extreme density for Alabama, but it is at the upper edge of this property\'s quality-management target and the 1:2.0 buck-to-doe ratio remains doe-heavy. Maintain the 10–12 adult-doe target, review after six does, and confirm the response with weights, browse use, and the next winter survey.</div>' +
+      '<div class="callout"><strong>Management reading:</strong> The winter estimate of 96 deer on 1,240 acres equals about 50 deer per square mile. That is very high for this property\'s 20–30 deer quality-management target, and the 1:2.5 buck-to-doe ratio remains doe-heavy. Begin with a 16–18 adult-doe target, review after eight does, and confirm the response with weights, browse use, and the next winter survey.</div>' +
       '<div class="panel"><div class="panel-head"><h2>Deer Herd Assessment</h2><span class="chip">Multiple lines of evidence</span></div><div class="table-wrap"><table><thead><tr><th>Measure</th><th>Pine Ridge</th><th>Management Context</th><th>Interpretation</th></tr></thead><tbody>' +
-        '<tr><td><strong>Deer density</strong></td><td>60 estimated · 31.0 / mi²</td><td>Property target 20–30 / mi²; broad Alabama conditions can support more</td><td>At the upper edge, not extreme; structure and forage response guide harvest.</td></tr>' +
+        '<tr><td><strong>Deer density</strong></td><td>96 estimated · 49.5 / mi²</td><td>Property target 20–30 / mi²</td><td>Very high for the current property target; reduce density and track the forage response.</td></tr>' +
         '<tr><td><strong>Adult-doe weight</strong></td><td>94 lb · up from 88</td><td>Improvement should continue if forage pressure declines</td><td>Direction is positive, but density and browse use still require monitoring.</td></tr>' +
-        '<tr><td><strong>Fawns per doe</strong></td><td>0.50</td><td>Recruitment index from the winter survey</td><td>Adequate, but not strong enough to ignore adult-doe condition.</td></tr>' +
-        '<tr><td><strong>Buck-to-doe ratio</strong></td><td>1 : 2.0 · improved from 1 : 2.2</td><td>A tighter ratio supports a more concentrated breeding period</td><td>Still doe-heavy; continue selective antlerless harvest.</td></tr>' +
+        '<tr><td><strong>Fawns per doe</strong></td><td>0.52</td><td>Recruitment index from the winter survey</td><td>Adequate, but not strong enough to offset the high adult population.</td></tr>' +
+        '<tr><td><strong>Buck-to-doe ratio</strong></td><td>1 : 2.5</td><td>A tighter ratio supports a more concentrated breeding period</td><td>Doe-heavy; continue selective antlerless harvest.</td></tr>' +
         '<tr><td><strong>Older-buck share</strong></td><td>57% age 3.5+ · up from 33%</td><td>Age is the first requirement for mature body and antler expression</td><td>Voluntary young-buck protection is producing the intended structure.</td></tr>' +
       '</tbody></table></div></div>' +
-      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>This Deer Season</h2></div><div class="panel-body"><div class="budget-line"><span>Adult-doe target</span><strong>10–12</strong></div><div class="budget-line"><span>Total deer target</span><strong>17–20</strong></div><div class="budget-line"><span>Buck guideline</span><strong>Protect most &lt;3.5</strong></div><div class="budget-line"><span>Midseason review</span><strong>After 6 adult does</strong></div><p class="mini-note">Adjust the final target with browse pressure, hunter effort, weights, age structure, and the next winter estimate.</p></div></div><div class="panel"><div class="panel-head"><h2>Turkey Recruitment</h2></div><div class="panel-body"><div class="budget-line"><span>Poults per hen</span><strong>1.29 → 2.00</strong></div><div class="budget-line"><span>Hens with poults</span><strong>42.9% → 56.3%</strong></div><div class="budget-line"><span>Average brood size</span><strong>3.00 → 3.56</strong></div><div class="budget-line"><span>Current interpretation</span><strong>Stable, improving</strong></div><p class="mini-note">Two poults per hen supports a stable-population reading. The management objective is to move above that level consistently through nesting cover, brood habitat, and repeated summer observations.</p></div></div></div>' +
+      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>This Deer Season</h2></div><div class="panel-body"><div class="budget-line"><span>Adult-doe target</span><strong>16–18</strong></div><div class="budget-line"><span>Total deer target</span><strong>24–28</strong></div><div class="budget-line"><span>Buck guideline</span><strong>Protect most &lt;3.5</strong></div><div class="budget-line"><span>Midseason review</span><strong>After 8 adult does</strong></div><p class="mini-note">Adjust the final target with browse pressure, hunter effort, weights, age structure, and the next winter estimate.</p></div></div><div class="panel"><div class="panel-head"><h2>Turkey Recruitment</h2></div><div class="panel-body"><div class="budget-line"><span>Poults per hen</span><strong>1.29 → 2.00</strong></div><div class="budget-line"><span>Hens with poults</span><strong>42.9% → 56.3%</strong></div><div class="budget-line"><span>Average brood size</span><strong>3.00 → 3.56</strong></div><div class="budget-line"><span>Current interpretation</span><strong>Stable, improving</strong></div><p class="mini-note">Two poults per hen supports a stable-population reading. The management objective is to move above that level consistently through nesting cover, brood habitat, and repeated summer observations.</p></div></div></div>' +
       '<div class="panel section-gap"><div class="panel-head"><h2>Turkey Monitoring Priority</h2><span class="chip gold">June–August</span></div><div class="panel-body"><ul class="prescription-list"><li>Record every hen observed, including hens without poults.</li><li>Record total poults, hens with broods, observation date, location, and habitat type.</li><li>Use poults per hen as the primary annual recruitment index and average brood size as a supporting measure.</li><li>Retain spring harvest as a secondary, effort-adjusted measure rather than evidence of population growth.</li></ul></div></div>' +
       '<details class="panel section-gap"><summary class="panel-head" style="cursor:pointer"><h2 style="display:inline">Show technical wildlife data</h2><span class="chip gray">Optional detail</span></summary>' +
         '<div class="panel-head"><h2>Thermal Drone Surveys</h2><a class="btn ghost" href="' + thermalDataPath + '" download>Download survey data</a></div><div class="table-wrap"><table><thead><tr><th>Survey</th><th>Sample Coverage</th><th>Estimated Deer</th><th>Deer / 1,000 ac</th><th>Buck : Doe</th><th>Fawns / Doe</th></tr></thead><tbody>' + thermalRows + '</tbody></table></div>' +
@@ -693,7 +693,7 @@
     }).join('');
     return '<div class="page">' +
       heading('Long-Range Forest & Habitat Plan', 'The annual treatment cycle for timber, prescribed fire, habitat, and wildlife monitoring') +
-      '<div class="callout"><strong>Management direction:</strong> treat about 248 acres with prescribed fire each year—20% of the property—so the full tract can be addressed on an approximately five-year cycle while timber stands, wetlands, refuges, and access constraints guide each burn unit.</div>' +
+      '<div class="callout"><strong>Management direction:</strong> treat about 248 acres with prescribed fire each year - 20% of the property - so the full tract can be addressed on an approximately five-year cycle while timber stands, wetlands, refuges, and access constraints guide each burn unit.</div>' +
       '<div class="panel"><div class="panel-head"><h2>2024–2028 Implementation Schedule</h2><span class="chip">Reviewed annually</span></div><div class="table-wrap"><table><thead><tr><th>Year</th><th>Status</th><th>Prescribed Fire</th><th>Thinning / Midstory</th><th>Pine Savanna / Openings</th><th>Key Decision</th></tr></thead><tbody>' + yearRows + '</tbody></table></div></div>' +
       '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Silviculture & Fire</h2></div><div class="panel-body"><ul class="prescription-list"><li>Use an annual 248-acre fire target, adjusting individual units for weather, fuel condition, smoke management, and stand objectives.</li><li>Thin wildlife-priority pine toward 40–60 square feet of basal area per acre where stand age, windfirmness, and product objectives allow.</li><li>Mix dormant- and growing-season burns while retaining unburned cover within the treatment pattern.</li><li>Track sawtimber, chip-n-saw, and pulpwood composition during each stand inventory update.</li><li>Retain quality crop trees, mast hardwoods, cavity trees, safe snags, and soft-mast shrubs.</li></ul></div></div><div class="panel"><div class="panel-head"><h2>Spatial Guardrails</h2></div><div class="panel-body"><ul class="prescription-list"><li>Include field-verified wetland and stream buffers in treatment maps and contractor work orders.</li><li>Retain wooded or brushy screening cover at monitored corridors and pinch points.</li><li>Protect low-entry bedding zones during timber, fire, and access work.</li><li>Assign roads maintain, seasonal, or close-and-restore status.</li><li>Use wildlife openings as support habitat within the broader forest-management system.</li></ul></div></div></div>' +
       limitation() +

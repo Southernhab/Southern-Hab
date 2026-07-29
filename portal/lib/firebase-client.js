@@ -1,10 +1,10 @@
-// SHC Portal — Firebase client initialization
+// SHC Portal - Firebase client initialization
 // Reads window.__SHC_FIREBASE_CONFIG__ (set by portal/firebase-config.js).
 // Exposes:
-//   window.shcFirebaseAuth  — firebase.auth() instance
-//   window.shcDb            — firebase.firestore() instance
-//   window.shcStorage       — firebase.storage() instance
-//   window.shcFunctions     — firebase.functions() instance
+//   window.shcFirebaseAuth - firebase.auth() instance
+//   window.shcDb - firebase.firestore() instance
+//   window.shcStorage - firebase.storage() instance
+//   window.shcFunctions - firebase.functions() instance
 //
 // Depends on (loaded before this file):
 //   firebase-app-compat.js

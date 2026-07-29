@@ -1,6 +1,6 @@
 # Netlify deployment configuration for Southern Habitat Consulting
 #
-# REWRITES (200) for SPA routes — serves the shell HTML for any sub-path.
+# REWRITES (200) for SPA routes - serves the shell HTML for any sub-path.
 # Public static pages are served directly because real files exist for them;
 # Netlify only hits these rules when no matching file is found.
 #
@@ -19,6 +19,57 @@
 
 [build.environment]
   NODE_VERSION = "20"
+
+# Keep development files, archives and retired site copies off the public site.
+[[redirects]]
+  from = "/attached_assets/*"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/netlify-site/*"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/supabase-archive/*"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/scripts/*"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/functions/*"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/southern-hab-*.zip"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/conversation.md"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/approved-copy.txt"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/SETUP.md"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/replit.md"
+  to = "/404.html"
+  status = 404
 
 # ── Portal authenticated app (SPA) ────────────────────────────────────────────
 [[redirects]]

@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Client Login — SHC Landowner Portal</title>
+<title>Client Login - SHC Landowner Portal</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
 <link rel="stylesheet" href="/style.css">
 <style>
@@ -154,7 +154,7 @@ footer a{color:rgba(255,255,255,.5)!important}
       var tokenResult = await cred.user.getIdTokenResult(true);
       var role = (tokenResult.claims && tokenResult.claims.role) || '';
 
-      // Disabling is handled by Firebase Auth — disabled accounts throw auth/user-disabled.
+      // Disabling is handled by Firebase Auth - disabled accounts throw auth/user-disabled.
       // Also check the active flag from Firestore if needed (auth.js handles this for the SPA).
 
       var params   = new URLSearchParams(window.location.search);

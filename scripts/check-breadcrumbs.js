@@ -3,7 +3,7 @@
  * check-breadcrumbs.js
  *
  * Reads every service-page index.html and verifies that the breadcrumb
- * last segment matches both the page <title> (before the " — " separator)
+ * last segment matches both the page <title> (before the " - " separator)
  * and the page <h1>.
  *
  * Exits 0 when everything matches, non-zero when mismatches are found.
@@ -30,8 +30,7 @@ function extractTitle(html) {
   const m = html.match(/<title>([^<]+)<\/title>/i);
   if (!m) return null;
   const full = m[1].trim();
-  const sepIdx = full.indexOf(" \u2014 ");
-  return sepIdx !== -1 ? full.slice(0, sepIdx).trim() : full;
+  return full.split(/\s+-\s+|\s+\u2014\s+/)[0].trim();
 }
 
 function extractBreadcrumbLast(html) {

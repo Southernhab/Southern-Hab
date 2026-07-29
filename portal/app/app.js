@@ -1,4 +1,4 @@
-// SHC Landowner Portal — Authenticated SPA
+// SHC Landowner Portal - Authenticated SPA
 // Depends on: firebase-client.js, auth.js, api.js (loaded in portal/app/index.html)
 
 (function () {
@@ -268,7 +268,7 @@
           '<p class="page-sub">' + esc(ov.property_name) + ' &middot; ' + (ov.county || '') + ', ' + (ov.state || '') + ' &middot; Last updated by SHC</p></div>' +
 
           '<div class="metric-row">' +
-            metricCard('Total Acreage', ov.acreage ? Math.round(ov.acreage) : '—', 'acres under management') +
+            metricCard('Total Acreage', ov.acreage ? Math.round(ov.acreage) : ' - ', 'acres under management') +
             metricCard('Management Progress', (ov.management_progress_pct || 0) + '%', 'toward desired condition') +
             metricCard('Work Completed (' + new Date().getFullYear() + ')', ov.work_completed_this_year || 0, 'treatments completed this year') +
             metricCard('Active Projects', ov.active_projects || 0, (ov.projects_awaiting_review || 0) + ' awaiting your review') +
@@ -332,7 +332,7 @@
             propRow('Condition', s.current_condition) +
             propRow('Desired Condition', s.desired_condition) +
             propRow('Management Stage', s.management_stage) +
-            propRow('Progress', s.progress_percent != null ? s.progress_percent + '%' : '—') +
+            propRow('Progress', s.progress_percent != null ? s.progress_percent + '%' : ' - ') +
             propRow('Primary Objectives', s.primary_objectives) +
             propRow('Target Species', s.target_species) +
             propRow('Limiting Factors', s.limiting_factors) +
@@ -358,7 +358,7 @@
   function propRow(label, value) {
     return '<div style="padding:10px 16px;border-bottom:1px solid var(--border)">' +
       '<div style="font-size:11px;font-weight:600;color:var(--moss);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">' + label + '</div>' +
-      '<div style="font-size:13px;color:var(--charcoal)">' + esc(value || '—') + '</div></div>';
+      '<div style="font-size:13px;color:var(--charcoal)">' + esc(value || ' - ') + '</div></div>';
   }
 
   // ── WORK & PROJECTS ───────────────────────────────────────────────────────
@@ -504,7 +504,7 @@
 
       var harvestHtml = harvests.length ? '<table class="data-table" style="margin-top:0"><thead><tr><th>Species</th><th>Date</th><th>Sex</th><th>Age</th><th>Weight</th></tr></thead><tbody>' +
         harvests.map(function (h) {
-          return '<tr><td>' + esc(h.species || '—') + '</td><td>' + api.formatDate(h.harvest_date) + '</td><td>' + esc(h.sex || '—') + '</td><td>' + esc(h.age_class || '—') + '</td><td>' + (h.weight ? h.weight + ' lbs' : '—') + '</td></tr>';
+          return '<tr><td>' + esc(h.species || ' - ') + '</td><td>' + api.formatDate(h.harvest_date) + '</td><td>' + esc(h.sex || ' - ') + '</td><td>' + esc(h.age_class || ' - ') + '</td><td>' + (h.weight ? h.weight + ' lbs' : ' - ') + '</td></tr>';
         }).join('') + '</tbody></table>' : '<div class="content-empty">No harvest records found.</div>';
 
       var tabBarHtml = '<button class="tab-btn active" data-tab="surveys">Wildlife Surveys (' + surveys.length + ')</button>' +
@@ -562,9 +562,9 @@
           '<th style="text-align:right">Estimated</th><th style="text-align:right">Paid</th>' +
         '</tr></thead><tbody>' +
         items.map(function (item) {
-          return '<tr><td>' + esc(item.practice || '—') + '</td>' +
+          return '<tr><td>' + esc(item.practice || ' - ') + '</td>' +
             '<td>' + classChip(item.classification) + '</td>' +
-            '<td>' + esc(item.planned_season || '—') + ' ' + (item.planned_year || '') + '</td>' +
+            '<td>' + esc(item.planned_season || ' - ') + ' ' + (item.planned_year || '') + '</td>' +
             '<td style="text-align:right">' + api.formatCurrency(item.estimated_cost) + '</td>' +
             '<td style="text-align:right">' + api.formatCurrency(item.paid_cost) + '</td>' +
           '</tr>';

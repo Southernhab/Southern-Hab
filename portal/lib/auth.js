@@ -1,4 +1,4 @@
-// SHC Portal — Authentication helpers (Firebase Auth)
+// SHC Portal - Authentication helpers (Firebase Auth)
 // Depends on: portal/lib/firebase-client.js (window.shcFirebaseAuth, window.shcDb)
 //
 // Preserves the same window.shcAuth interface so portal/app/app.js and
@@ -71,7 +71,7 @@
       return fbAuth.currentUser;
     },
 
-    // ── getSession (compatibility alias — returns { user, claims, profile }) ──
+    // ── getSession (compatibility alias - returns { user, claims, profile }) ──
     getSession: async function () {
       return getAuth();
     },
