@@ -25,51 +25,61 @@
   from = "/attached_assets/*"
   to = "/404.html"
   status = 404
+  force = true
 
 [[redirects]]
   from = "/netlify-site/*"
   to = "/404.html"
   status = 404
+  force = true
 
 [[redirects]]
   from = "/supabase-archive/*"
   to = "/404.html"
   status = 404
+  force = true
 
 [[redirects]]
   from = "/scripts/*"
   to = "/404.html"
   status = 404
+  force = true
 
 [[redirects]]
   from = "/functions/*"
   to = "/404.html"
   status = 404
+  force = true
 
 [[redirects]]
   from = "/southern-hab-*.zip"
   to = "/404.html"
   status = 404
+  force = true
 
 [[redirects]]
   from = "/conversation.md"
   to = "/404.html"
   status = 404
+  force = true
 
 [[redirects]]
   from = "/approved-copy.txt"
   to = "/404.html"
   status = 404
+  force = true
 
 [[redirects]]
   from = "/SETUP.md"
   to = "/404.html"
   status = 404
+  force = true
 
 [[redirects]]
   from = "/replit.md"
   to = "/404.html"
   status = 404
+  force = true
 
 # ── Portal authenticated app (SPA) ────────────────────────────────────────────
 [[redirects]]
