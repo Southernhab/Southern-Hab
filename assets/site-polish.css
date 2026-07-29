@@ -220,3 +220,154 @@
     padding: 24px 18px;
   }
 }
+
+/* Clean text-only company masthead. */
+.site-nav {
+  height: 88px !important;
+  border-top: 3px solid var(--forest);
+  box-shadow: 0 2px 12px rgba(19, 39, 31, 0.06);
+}
+
+.site-nav .logo {
+  width: auto !important;
+  min-width: 260px !important;
+  height: 84px !important;
+  gap: 0 !important;
+}
+
+.site-nav .logo-emblem {
+  display: none !important;
+}
+
+.site-nav .logo-text {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+  line-height: 1 !important;
+}
+
+.site-nav .logo-text strong {
+  color: var(--forest) !important;
+  font: 700 23px var(--font-heading) !important;
+  letter-spacing: -0.025em !important;
+  white-space: nowrap;
+}
+
+.site-nav .logo-text small {
+  color: var(--moss) !important;
+  font: 700 8px var(--font-body) !important;
+  letter-spacing: 0.23em !important;
+  margin: 5px 0 0 !important;
+  white-space: nowrap;
+}
+
+.site-nav .logo-text em {
+  width: 100%;
+  margin: 6px 0 0 !important;
+  padding-top: 6px;
+  border-top: 1px solid rgba(181, 138, 72, 0.55);
+  color: var(--gold) !important;
+  font: 700 9px var(--font-body) !important;
+  font-style: normal !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 1100px) {
+  .site-nav {
+    height: 78px !important;
+  }
+
+  .site-nav .logo {
+    min-width: 232px !important;
+    height: 74px !important;
+  }
+
+  .site-nav .logo-text strong {
+    font-size: 19px !important;
+  }
+
+  .site-nav .logo-text em {
+    margin-top: 5px !important;
+    padding-top: 5px;
+    font-size: 7px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .site-nav {
+    height: 70px !important;
+  }
+
+  .site-nav .logo {
+    min-width: 178px !important;
+    height: 66px !important;
+  }
+
+  .site-nav .logo-text {
+    display: flex !important;
+  }
+
+  .site-nav .logo-text strong {
+    display: block;
+    font-size: 17px !important;
+  }
+
+  .site-nav .logo-text small {
+    display: block;
+    margin-top: 4px !important;
+    font-size: 7px !important;
+  }
+
+  .site-nav .logo-text em {
+    display: none !important;
+  }
+}
+
+.portal-showcase {
+  display: grid;
+  gap: clamp(42px, 6vw, 72px);
+}
+
+.portal-lead {
+  max-width: 980px;
+}
+
+.portal-lead h2 {
+  max-width: none;
+  margin: 0.18em 0 0.35em;
+  font-size: clamp(2.6rem, 5vw, 4.8rem);
+}
+
+.portal-lead p {
+  max-width: 850px;
+  margin: 0 0 28px;
+  color: var(--muted);
+  font-size: clamp(18px, 2vw, 22px);
+}
+
+.portal-details {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(30px, 6vw, 80px);
+  align-items: start;
+}
+
+.portal-details h3 {
+  margin: 0.35em 0 0.7em;
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+}
+
+.portal-details .property-program-card h3 {
+  margin-bottom: 0.75em;
+}
+
+@media (max-width: 900px) {
+  .portal-details {
+    grid-template-columns: 1fr;
+  }
+}
