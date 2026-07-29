@@ -7,68 +7,52 @@
     "acres": 1240,
     "habitats": [
       {
-        "name": "Pine / evergreen forest",
-        "acres": 1037,
-        "percent": 83.6,
-        "condition": "Active management",
-        "color": "#5e7954",
-        "meaning": "The main timber and habitat base; 212 acres have received thinning or selective midstory work and 208 acres currently meet the open-pine understory standard."
+        "name": "Longleaf Pine Stand",
+        "acres": 780,
+        "percent": 62.9,
+        "condition": "Managed timber",
+        "color": "#526b45",
+        "meaning": "Primary longleaf timber base managed for stocking, product development, access, and a functional herbaceous understory."
       },
       {
-        "name": "Woody wetland",
-        "acres": 86,
-        "percent": 6.9,
+        "name": "Pine Savanna",
+        "acres": 208,
+        "percent": 16.8,
+        "condition": "Fire maintained",
+        "color": "#8b9a52",
+        "meaning": "Open-canopy pine with sunlight at ground level, native grasses and forbs, and recurring prescribed fire."
+      },
+      {
+        "name": "Wetlands",
+        "acres": 100,
+        "percent": 8.1,
         "condition": "Protected",
-        "color": "#3e7882",
-        "meaning": "Natural drainage and security cover outside two managed shallow-water impoundments; buffers and equipment exclusions remain in effect."
+        "color": "#477c83",
+        "meaning": "Forested and emergent wetland acreage managed with equipment exclusions, stable crossings, and protective buffers."
       },
       {
-        "name": "Open / developed",
-        "acres": 46,
-        "percent": 3.7,
-        "condition": "Managed access",
-        "color": "#b79a61",
-        "meaning": "Rights-of-way, facilities, and the primary access network are inspected and maintained separately from wildlife openings."
+        "name": "Hardwood Timber",
+        "acres": 94,
+        "percent": 7.6,
+        "condition": "Retained and managed",
+        "color": "#6f7045",
+        "meaning": "Bottomland and upland hardwood timber retained for mast, structural diversity, water protection, and future forest products."
       },
       {
-        "name": "Open water",
-        "acres": 22,
-        "percent": 1.8,
-        "condition": "Protect",
-        "color": "#3f88a4",
-        "meaning": "Pond and permanent-water surface; retain stable banks, vegetated edges, and safe crossings."
+        "name": "Wildlife Openings",
+        "acres": 38,
+        "percent": 3.1,
+        "condition": "Actively managed",
+        "color": "#b49b45",
+        "meaning": "Permanent openings maintained for seasonal forage, hunting access, monitoring, and habitat diversity."
       },
       {
-        "name": "Shrub / grass / barren",
-        "acres": 12,
-        "percent": 1,
-        "condition": "Retain and rotate",
-        "color": "#c6ae57",
-        "meaning": "Original mapped young cover; treatment in adjacent pine brings the rotating early-cover footprint to 49 acres."
-      },
-      {
-        "name": "Mixed forest",
-        "acres": 18,
-        "percent": 1.5,
-        "condition": "Retain diversity",
-        "color": "#726f4a",
-        "meaning": "Mast and structural diversity; retain quality hardwoods, den trees, and soft mast."
-      },
-      {
-        "name": "Wildlife openings",
-        "acres": 9,
-        "percent": 0.7,
-        "condition": "Managed",
-        "color": "#a99345",
-        "meaning": "Permanent openings distributed across the property and maintained according to hunting and nutritional objectives."
-      },
-      {
-        "name": "Waterfowl impoundments",
-        "acres": 10,
-        "percent": 0.8,
-        "condition": "Managed wetland",
-        "color": "#4f9a91",
-        "meaning": "Two managed shallow-water units with seasonal drawdown, moist-soil vegetation, and protected levee access."
+        "name": "Waterfowl Impoundments",
+        "acres": 20,
+        "percent": 1.6,
+        "condition": "Seasonally managed",
+        "color": "#4d928a",
+        "meaning": "Two shallow-water units managed with drawdowns, moist-soil vegetation, water-control structures, and protected levee access."
       }
     ],
     "overlays": [
@@ -109,14 +93,14 @@
         "Baseline field inventory and monitoring network",
         "Entire tract",
         "Complete",
-        "Verified stands, roads, wetlands, three bedding zones, three corridors, 14 photo points, and five thermal survey blocks"
+        "Verified stand types, roads, wetlands, bedding cover, travel corridors, photo points, and survey blocks"
       ],
       [
         "2024",
         "Prescribed fire and understory recovery",
-        "104 acres",
+        "220 acres",
         "Complete",
-        "First entry completed with security-cover refuges retained"
+        "Initial burn entry completed with protected buffers and unburned cover retained"
       ],
       [
         "2024",
@@ -127,14 +111,14 @@
       ],
       [
         "2025",
-        "Expanded prescribed-fire rotation",
-        "186 acres",
+        "Annual prescribed-fire program",
+        "250 acres",
         "Complete",
-        "Burned four units; photo points documented first-year response"
+        "Approximately 20% of the property treated across multiple burn units"
       ],
       [
         "2025",
-        "Thinning, early cover, and openings",
+        "Thinning, pine-savanna restoration, and openings",
         "130 acres",
         "Complete",
         "104 acres thinned, 22 acres of young cover treated, and four acres of permanent openings completed"
@@ -148,22 +132,22 @@
       ],
       [
         "2026",
-        "Prescribed fire",
-        "150 acres",
+        "Annual prescribed-fire program",
+        "248 acres",
         "Complete",
-        "Three units completed; unburned pockets retained in each treatment block"
+        "The 20% annual target was completed with refuges retained within the treatment pattern"
       ],
       [
         "2026",
-        "Thinning, early cover, and openings",
+        "Timber, savanna, and opening work",
         "57 acres to date",
         "Active",
-        "42 acres thinned, 10 acres of young cover treated, and five acres of openings completed through July"
+        "42 acres thinned, 10 acres of pine-savanna understory treated, and five acres of openings completed through July"
       ],
       [
         "2026",
         "Waterfowl impoundment program",
-        "10 acres / 2 units",
+        "20 acres / 2 units",
         "Complete",
         "Levees, water-control structures, drawdown zones, and monitoring points established"
       ]
@@ -172,42 +156,42 @@
       [
         2024,
         "Complete",
-        "104 ac",
+        "220 ac",
         "66 ac",
         "13 ac",
-        "Established the field baseline, monitoring stations, and first treatment blocks."
+        "Established the field baseline, monitoring network, and initial burn units."
       ],
       [
         2025,
         "Complete",
-        "186 ac",
+        "250 ac",
         "104 ac",
         "22 ac + 4 ac openings",
-        "Expanded the burn rotation and confirmed repeat use of three travel corridors."
+        "Reached the annual fire target and expanded pine-savanna restoration."
       ],
       [
         2026,
         "Active",
-        "150 ac complete",
+        "248 ac complete",
         "42 ac to date",
         "10 ac + 5 ac openings",
-        "Winter survey and fire are complete; vegetation and timber updates remain active."
+        "Annual fire target and winter survey are complete; vegetation and timber updates remain active."
       ],
       [
         2027,
         "Planned",
-        "195–260 ac",
+        "248 ac",
         "80–115 ac",
         "15–25 ac",
-        "Re-enter priority fire units and review the next timber-sale blocks."
+        "Lay out the next burn units and review thinning priorities by stand and product class."
       ],
       [
         2028,
         "Planned",
-        "195–260 ac",
+        "248 ac",
         "Maintenance / gap fill",
-        "Reach 95–125 ac",
-        "Complete the outcome review and write the next five-year cycle."
+        "Maintain 95–125 ac",
+        "Complete the outcome review and write the next five-year management cycle."
       ]
     ],
     "budgets": [
@@ -481,44 +465,34 @@
       ]
     ],
     "timber": {
-      "timberedAcres": 1055,
+      "forestedAcres": 1082,
       "inventoryDate": "March 2026",
-      "pricingDate": "Q2 2026",
       "totalTons": 96000,
-      "value": 1652000,
-      "lowValue": 1400000,
-      "highValue": 1900000,
-      "annualGrowthTons": 5000,
       "products": [
         [
           "Pine sawtimber",
           40000,
-          23,
-          920000
+          41.7
         ],
         [
           "Pine chip-n-saw",
           19000,
-          18,
-          56000
+          19.8
         ],
         [
           "Pine pulpwood",
           29000,
-          5.5,
-          159500
+          30.2
         ],
         [
           "Hardwood sawtimber",
           5000,
-          38,
-          190000
+          5.2
         ],
         [
           "Hardwood pulpwood",
           3000,
-          13.5,
-          40500
+          3.1
         ]
       ]
     }
@@ -544,7 +518,7 @@
   }
 
   function limitation() {
-    return '<div class="limitation"><strong>Demonstration data.</strong> Wildlife records, timber inventory, work history, costs, and outcomes are representative sample data built for this private-property portal. Timber value is an illustrative stumpage estimate—not land value or a guaranteed sale price. Survey estimates are not a complete census, and property boundaries are not a legal survey.</div>';
+    return '<div class="limitation"><strong>Demonstration data.</strong> Wildlife records, timber inventory, work history, costs, and outcomes are representative sample data built for this private-property portal. Merchantable volume is an illustrative inventory rather than a certified timber appraisal. Survey estimates are not a complete census, and property boundaries are not a legal survey.</div>';
   }
 
   function managementMap(compact) {
@@ -565,27 +539,27 @@
 
   views.overview = function () {
     return '<div class="page">' +
-      heading('Owner Dashboard', 'What has been done, what it is changing, what comes next, and where the property is headed') +
-      '<div class="callout"><strong>Overall status: On track.</strong> The 2026 burn program and winter wildlife survey are complete. Timber and habitat work are progressing, deer body and age trends are improving, and the next owner decisions are fall planting, the 2026–27 harvest target, and the 2027 timber-sale review.</div>' +
+      heading('Owner Dashboard', 'Current forest condition, wildlife response, completed work, and the next management cycle') +
+      '<div class="callout"><strong>Overall status: On track.</strong> The 2026 winter wildlife survey and 248-acre prescribed-fire program are complete. Timber and pine-savanna work remain active, with fall opening maintenance, harvest decisions, and the 2027 treatment layout next.</div>' +
       '<div class="metrics">' +
-        metric('2026 Program', 'On track', 'three major projects complete · two active') +
+        metric('Annual Burn Program', '248 acres', '20% of the 1,240-acre property') +
         metric('Wildlife Trend', 'Improving', 'doe weight 88 → 94 lb · older-buck share rising') +
-        metric('Standing Timber', '$1.65M', 'illustrative stumpage · $1.40M–$1.90M range') +
+        metric('Timber Inventory', '96,000 tons', '47% sawtimber · 20% chip-n-saw · 33% pulpwood') +
         metric('2026 Owner Cost', '$38,800', 'after $20,400 predicted cost share') +
       '</div>' +
-      '<div class="grid-2"><div class="panel"><div class="panel-head"><h2>What Has Changed</h2><button class="btn ghost" data-go="wildlife">Wildlife details</button></div><div class="panel-body">' +
-        '<div class="task"><i class="dot"></i><div><strong>More usable wildlife cover</strong><span>Rotating young cover increased from 12 to 49 acres.</span></div><span class="chip">+37 ac</span></div>' +
-        '<div class="task"><i class="dot"></i><div><strong>More open, productive pine habitat</strong><span>208 acres now carry the open understory needed for forage and brood cover.</span></div><span class="chip">Improved</span></div>' +
-        '<div class="task"><i class="dot amber"></i><div><strong>Deer numbers need restraint</strong><span>The 2026 estimate equals 31.0 deer per square mile, just above the 20–30 working range.</span></div><span class="chip gold">Watch</span></div>' +
-        '<div class="task"><i class="dot"></i><div><strong>Hunt quality is improving</strong><span>Average buck age rose from 2.7 to 3.4 years; 57% of harvested bucks were 3.5+.</span></div><span class="chip">Positive</span></div>' +
-      '</div></div><div class="panel"><div class="panel-head"><h2>Next Through Year End</h2><button class="btn ghost" data-go="work">Full schedule</button></div><div class="panel-body">' +
-        '<div class="task"><i class="dot amber"></i><div><strong>August–September</strong><span>Finish vegetation response checks and update the timber inventory with current Alabama prices.</span></div><span class="chip gold">Active</span></div>' +
-        '<div class="task"><i class="dot amber"></i><div><strong>September–October</strong><span>Maintain and plant 9 acres of permanent openings; inspect firebreaks and access roads.</span></div><span class="chip gold">Next</span></div>' +
-        '<div class="task"><i class="dot amber"></i><div><strong>November–February</strong><span>Target 10–12 adult does and protect most bucks younger than 3.5 years.</span></div><span class="chip gold">Planned</span></div>' +
-        '<div class="task"><i class="dot amber"></i><div><strong>January–February</strong><span>Prepare 2027 burn units and repeat the standardized winter thermal survey.</span></div><span class="chip gold">Planned</span></div>' +
+      '<div class="grid-2"><div class="panel"><div class="panel-head"><h2>Measured Change</h2><button class="btn ghost" data-go="wildlife">Wildlife details</button></div><div class="panel-body">' +
+        '<div class="task"><i class="dot"></i><div><strong>Pine savanna</strong><span>208 acres now carry open-canopy, fire-maintained understory conditions.</span></div></div>' +
+        '<div class="task"><i class="dot"></i><div><strong>Annual fire delivery</strong><span>248 acres treated in 2026, meeting the 20% property target.</span></div></div>' +
+        '<div class="task"><i class="dot"></i><div><strong>Estimated deer density</strong><span>31 deer per square mile from the standardized winter survey.</span></div></div>' +
+        '<div class="task"><i class="dot"></i><div><strong>Buck age structure</strong><span>The share of observed bucks in older age classes continues to rise.</span></div></div>' +
+      '</div></div><div class="panel"><div class="panel-head"><h2>Next Through Year-End</h2><button class="btn ghost" data-go="work">Open schedule</button></div><div class="panel-body">' +
+        '<div class="task"><i class="dot gold"></i><div><strong>August–September</strong><span>Update stand inventory by forest type, age class, and merchantable product class.</span></div></div>' +
+        '<div class="task"><i class="dot gold"></i><div><strong>September–October</strong><span>Maintain wildlife openings, roads, and firebreaks; complete fall planting.</span></div></div>' +
+        '<div class="task"><i class="dot gold"></i><div><strong>November–February</strong><span>Track deer harvest, weights, age, lactation, and observation data.</span></div></div>' +
+        '<div class="task"><i class="dot gold"></i><div><strong>Winter planning</strong><span>Lay out the next 248-acre burn rotation and priority thinning blocks.</span></div></div>' +
       '</div></div></div>' +
-      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Owner Decisions</h2></div><div class="panel-body"><div class="budget-line"><span>Approve fall opening maintenance and seed</span><strong>By Aug. 15</strong></div><div class="budget-line"><span>Confirm 2026–27 harvest target with hunt club</span><strong>By Oct. 1</strong></div><div class="budget-line"><span>Authorize 2027 timber-sale review</span><strong>By Dec. 15</strong></div></div></div><div class="panel"><div class="panel-head"><h2>Where This Is Headed</h2><button class="btn ghost" data-go="plan">Long-range plan</button></div><div class="panel-body"><div class="objective"><div><span>Open pine with productive groundcover</span><strong>208 / 245–325 ac</strong></div><div class="progress target"><i style="width:73%"></i></div></div><div class="objective"><div><span>Rotating young cover</span><strong>49 / 95–125 ac</strong></div><div class="progress target"><i style="width:43%"></i></div></div><div class="objective"><div><span>Standing timber protected and tracked</span><strong>Annual inventory update</strong></div><div class="progress target"><i style="width:68%"></i></div></div></div></div></div>' +
-      '<div class="panel section-gap"><div class="panel-head"><h2>Property Management Map</h2><button class="btn ghost" data-go="map">Open map</button></div>' + managementMap(true) + '</div>' +
+      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Pending Decisions</h2></div><div class="panel-body"><ul class="prescription-list"><li>Approve fall opening and access maintenance scope.</li><li>Confirm the 2026–27 doe-harvest target after the midseason review.</li><li>Approve the 2027 burn units and stand-level thinning review.</li></ul></div></div><div class="panel"><div class="panel-head"><h2>Five-Year Direction</h2></div><div class="panel-body"><div class="budget-line"><span>Pine savanna</span><strong>208 ac now</strong></div><div class="budget-line"><span>Annual prescribed fire</span><strong>248 ac target</strong></div><div class="budget-line"><span>Property-wide fire rotation</span><strong>About 5 years</strong></div><div class="budget-line"><span>Timber inventory</span><strong>Annual review</strong></div></div></div></div>' +
+      managementMap(true) +
       limitation() +
     '</div>';
   };
@@ -595,25 +569,23 @@
       return '<article class="unit" style="border-top:4px solid ' + h.color + '"><h3>' + h.name + '</h3><span class="chip">' + h.condition + '</span><p>' + h.meaning + '</p><div class="kv"><div><small>ACREAGE</small><strong>' + h.acres.toLocaleString('en-US') + ' acres</strong></div><div><small>PROPERTY SHARE</small><strong>' + h.percent.toFixed(1) + '%</strong></div></div><div class="habitat-bar"><i style="width:' + h.percent + '%;background:' + h.color + '"></i></div></article>';
     }).join('');
     var timberRows = property.timber.products.map(function (p) {
-      return '<tr><td><strong>' + p[0] + '</strong></td><td>' + p[1].toLocaleString('en-US') + ' tons</td><td class="money">' + money(p[2]) + ' / ton</td><td class="money"><strong>' + money(p[3]) + '</strong></td></tr>';
+      return '<tr><td><strong>' + p[0] + '</strong></td><td>' + p[1].toLocaleString('en-US') + ' tons</td><td><strong>' + p[2].toFixed(1) + '%</strong></td></tr>';
     }).join('');
     var overlays = property.overlays.map(function (row) {
       return '<tr><td><strong>' + row[0] + '</strong></td><td>' + row[1] + '</td><td>' + row[2] + '</td><td>' + row[3] + '</td></tr>';
     }).join('');
     return '<div class="page">' +
-      heading('Timber & Habitat', 'Current asset value, timber decisions, habitat condition, and the balance between income and wildlife') +
+      heading('Forest & Habitat Composition', 'Stand types, merchantable timber classes, habitat acreage, and current forestry work') +
       '<div class="metrics">' +
-        metric('Estimated Stumpage', '$1.65M', 'midpoint of a $1.40M–$1.90M planning range') +
-        metric('Timbered Acres', '1,055', 'pine and mixed-forest acres in the demo inventory') +
-        metric('Standing Volume', '96,000 tons', 'illustrative March 2026 inventory') +
-        metric('Next Timber Decision', '2027 review', 'update cruise, solicit bids, then decide') +
+        metric('Standing Inventory', '96,000 tons', 'merchantable volume · March 2026') +
+        metric('Sawtimber', '45,000 tons', '46.9% of inventory') +
+        metric('Chip-n-Saw', '19,000 tons', '19.8% of inventory') +
+        metric('Pulpwood', '32,000 tons', '33.3% of inventory') +
       '</div>' +
-      '<div class="callout"><strong>What this number means:</strong> $10.3 million is an illustrative value for standing timber before a sale, using the sample inventory volumes below and rounded Q2 2026 Alabama statewide stumpage benchmarks. It is not total land value, does not include hunting or conservation value, and is not counted as revenue in the management budget.</div>' +
-      '<div class="grid-equal"><div class="panel"><div class="panel-head"><h2>Timber Position</h2><span class="chip">Current estimate</span></div><div class="panel-body"><div class="budget-line"><span>Estimated standing value</span><strong>$1,652,000</strong></div><div class="budget-line"><span>Planning range</span><strong>$1.40M–$1.90M</strong></div><div class="budget-line"><span>Projected biological growth</span><strong>5,000 tons / year</strong></div><div class="budget-line"><span>Inventory valuation date</span><strong>March 2026</strong></div><p class="mini-note">A consulting forester should update merchantable volume, product class, access, and local mill competition before any sale.</p></div></div><div class="panel"><div class="panel-head"><h2>Owner Meaning</h2></div><div class="panel-body"><div class="survey"><h3>Protect value now</h3><p>Continue access maintenance, pine-beetle checks, prescribed fire, and stand-level records.</p></div><div class="survey"><h3>Do not rush weak pulpwood</h3><p>Alabama pine pulpwood is near a ten-year low; harvest timing should be driven by stand need and local bids, not the statewide average alone.</p></div><div class="survey"><h3>Review sale blocks in 2027</h3><p>Update the cruise and compare timber income, growth, and habitat response before scheduling the next thinning.</p></div></div></div></div>' +
-      '<div class="panel section-gap"><div class="panel-head"><h2>How the Timber Estimate Is Built</h2><a class="btn ghost" href="https://timbermart-south.com/resources/state-stumpage-prices/alabama-stumpage-price/" target="_blank" rel="noopener">Alabama price source</a></div><div class="table-wrap"><table><thead><tr><th>Product</th><th>Sample Inventory</th><th>Rounded Q2 2026 Alabama Benchmark</th><th>Illustrative Value</th></tr></thead><tbody>' + timberRows + '<tr><td><strong>Total</strong></td><td><strong>96,000 tons</strong></td><td>Weighted by product</td><td class="money"><strong>$1,652,000</strong></td></tr></tbody></table></div></div>' +
-      '<div class="panel section-gap"><div class="panel-head"><h2>Habitat Condition</h2><span class="chip gray">Field and map summary</span></div><div class="panel-body"><p class="mini-note">The cards below remain available for owners who want the acreage detail. The dashboard above carries the decision-level summary.</p></div></div>' +
-      '<div class="unit-grid section-gap">' + habitatCards + '</div>' +
-      '<details class="panel section-gap"><summary class="panel-head" style="cursor:pointer"><h2 style="display:inline">Show mapped management overlays</h2></summary><div class="table-wrap"><table><thead><tr><th>Overlay</th><th>Extent</th><th>Property Share</th><th>Management Interpretation</th></tr></thead><tbody>' + overlays + '</tbody></table></div></details>' +
+      '<div class="grid-equal"><div class="panel"><div class="panel-head"><h2>Forest Composition</h2></div><div class="panel-body"><div class="budget-line"><span>Longleaf pine stand</span><strong>780 ac</strong></div><div class="budget-line"><span>Pine savanna</span><strong>208 ac</strong></div><div class="budget-line"><span>Hardwood timber</span><strong>94 ac</strong></div><div class="budget-line"><span>Total forest acreage</span><strong>1,082 ac</strong></div></div></div><div class="panel"><div class="panel-head"><h2>2026 Forestry Status</h2></div><div class="panel-body"><div class="budget-line"><span>Prescribed fire complete</span><strong>248 ac</strong></div><div class="budget-line"><span>Thinning complete to date</span><strong>42 ac</strong></div><div class="budget-line"><span>Pine-savanna understory work</span><strong>10 ac</strong></div><div class="budget-line"><span>Next stand inventory update</span><strong>September</strong></div></div></div></div>' +
+      '<div class="panel section-gap"><div class="panel-head"><h2>Merchantable Timber Composition</h2><span class="chip">Volume, not valuation</span></div><div class="table-wrap"><table><thead><tr><th>Product Class</th><th>Inventory</th><th>Share of Total</th></tr></thead><tbody>' + timberRows + '<tr><td><strong>Total</strong></td><td><strong>' + property.timber.totalTons.toLocaleString('en-US') + ' tons</strong></td><td><strong>100.0%</strong></td></tr></tbody></table></div></div>' +
+      '<div class="section-gap"><div class="section-title"><div><h2>Stand & Habitat Types</h2><p>The full 1,240 acres assigned to forestry and wildlife management classes.</p></div></div><div class="unit-grid">' + habitatCards + '</div></div>' +
+      '<details class="panel section-gap"><summary class="panel-head" style="cursor:pointer"><h2 style="display:inline">Show mapped management overlays</h2><span class="chip gray">Optional detail</span></summary><div class="table-wrap"><table><thead><tr><th>Overlay</th><th>Extent</th><th>Property Share</th><th>Management Use</th></tr></thead><tbody>' + overlays + '</tbody></table></div></details>' +
       limitation() +
     '</div>';
   };
@@ -623,15 +595,15 @@
       return '<tr><td><strong>' + p[0] + '</strong></td><td>' + p[1] + '</td><td>' + p[2] + '</td><td><span class="chip ' + statusClass(p[3]) + '">' + p[3] + '</span></td><td>' + p[4] + '</td></tr>';
     }).join('');
     return '<div class="page">' +
-      heading('Work & Schedule', 'What Southern Habitat has completed, what is active now, and what is scheduled next') +
-      '<div class="metrics">' + metric('2026 Status', 'On track', 'major winter and spring work complete') + metric('Prescribed Fire', '150 ac', 'three units completed in 2026') + metric('Timber & Cover Work', '57 ac', '42 thinned · 10 young cover · 5 openings') + metric('Next Milestone', 'Fall planting', 'September–October 2026') + '</div>' +
-      '<div class="panel"><div class="panel-head"><h2>Rest of 2026</h2><span class="chip gold">Owner schedule</span></div><div class="table-wrap"><table><thead><tr><th>Timing</th><th>Work</th><th>Why It Matters</th><th>Owner Action</th></tr></thead><tbody>' +
-        '<tr><td><strong>Aug.–Sept.</strong></td><td>Vegetation response and timber inventory update</td><td>Confirms whether habitat work is producing usable groundcover and refreshes timber value.</td><td>Review updated summary</td></tr>' +
-        '<tr><td><strong>Sept.–Oct.</strong></td><td>Opening maintenance, fall planting, roads, and firebreaks</td><td>Supports hunting access, cool-season forage, and safe 2027 burn delivery.</td><td>Approve scope by Aug. 15</td></tr>' +
-        '<tr><td><strong>Nov.–Feb.</strong></td><td>Deer harvest and check-station data</td><td>Moves the doe-heavy herd toward balance while protecting improving buck age structure.</td><td>Adopt 10–12 adult-doe target</td></tr>' +
-        '<tr><td><strong>Dec.–Feb.</strong></td><td>2027 burn and thinning layout</td><td>Keeps work sequenced around timber value, cover needs, and access constraints.</td><td>Approve 2027 work plan</td></tr>' +
+      heading('Work & Schedule', 'Completed work, active forestry and habitat operations, and the next owner decisions') +
+      '<div class="metrics">' + metric('2026 Status', 'On track', 'winter and spring priorities complete') + metric('Prescribed Fire', '248 ac', '20% annual property target complete') + metric('Timber & Habitat Work', '57 ac', '42 thinned · 10 savanna · 5 openings') + metric('Next Milestone', 'Fall maintenance', 'September–October 2026') + '</div>' +
+      '<div class="panel"><div class="panel-head"><h2>Rest of 2026</h2><span class="chip gold">Owner schedule</span></div><div class="table-wrap"><table><thead><tr><th>Timing</th><th>Work</th><th>Management Purpose</th><th>Owner Action</th></tr></thead><tbody>' +
+        '<tr><td><strong>Aug.–Sept.</strong></td><td>Vegetation response and stand inventory update</td><td>Documents groundcover response and merchantable volume by product class.</td><td>Review updated summary</td></tr>' +
+        '<tr><td><strong>Sept.–Oct.</strong></td><td>Wildlife openings, roads, and firebreaks</td><td>Supports seasonal forage, property access, and safe delivery of the next burn rotation.</td><td>Approve scope</td></tr>' +
+        '<tr><td><strong>Nov.–Feb.</strong></td><td>Deer harvest and check-station data</td><td>Tracks herd balance, body condition, recruitment, and age structure.</td><td>Confirm harvest target</td></tr>' +
+        '<tr><td><strong>Dec.–Feb.</strong></td><td>2027 fire and thinning layout</td><td>Sequences 248 acres of fire with stand-level timber and habitat objectives.</td><td>Approve 2027 plan</td></tr>' +
       '</tbody></table></div></div>' +
-      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Management Decisions</h2></div><div class="panel-body"><div class="survey"><h3>Deer harvest</h3><p>Target 10–12 adult does and approximately 17–20 total deer in 2026–27, then adjust after the midseason check and winter survey. This moves closer to Alabama guidance that roughly one-third of a stable herd may be removed annually while site data control the final number.</p></div><div class="survey"><h3>Timber and wildlife balance</h3><p>Thin wildlife-priority pine toward roughly 40–60 ft² of basal area where stand age, windfirmness, and product objectives allow; retain higher stocking in timber-priority blocks.</p></div><div class="survey"><h3>Turkey habitat</h3><p>Continue patchwork fire, brood-cover monitoring, and roost-tree protection. Treat the improved harvest rate as encouraging—not proof the turkey population doubled.</p></div></div></div><div class="panel"><div class="panel-head"><h2>Delivered Since 2024</h2></div><div class="panel-body"><div class="budget-line"><span>Prescribed-fire entries</span><strong>440 ac</strong></div><div class="budget-line"><span>Thinning / selective midstory</span><strong>212 ac</strong></div><div class="budget-line"><span>Rotating young cover</span><strong>49 ac</strong></div><div class="budget-line"><span>Permanent openings</span><strong>30 ac</strong></div><div class="budget-line"><span>Waterfowl impoundments</span><strong>10 ac / 2 units</strong></div></div></div></div>' +
+      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Management Decisions</h2></div><div class="panel-body"><div class="survey"><h3>Deer harvest</h3><p>Target 10–12 adult does and approximately 17–20 total deer in 2026–27, then adjust after the midseason check and winter survey.</p></div><div class="survey"><h3>Timber and wildlife balance</h3><p>Thin wildlife-priority pine toward roughly 40–60 ft² of basal area where stand age, windfirmness, and product objectives allow; retain higher stocking in timber-priority blocks.</p></div><div class="survey"><h3>Turkey habitat</h3><p>Continue patchwork fire, brood-cover monitoring, and roost-tree protection. Treat improved harvest as encouraging, not proof of a population increase.</p></div></div></div><div class="panel"><div class="panel-head"><h2>Delivered Since 2024</h2></div><div class="panel-body"><div class="budget-line"><span>Prescribed fire</span><strong>718 ac</strong></div><div class="budget-line"><span>Thinning / selective midstory</span><strong>212 ac</strong></div><div class="budget-line"><span>Pine-savanna acreage</span><strong>208 ac</strong></div><div class="budget-line"><span>Wildlife openings</span><strong>38 ac</strong></div><div class="budget-line"><span>Waterfowl impoundments</span><strong>20 ac / 2 units</strong></div></div></div></div>' +
       '<details class="panel section-gap"><summary class="panel-head" style="cursor:pointer"><h2 style="display:inline">Show complete project history</h2></summary><div class="table-wrap"><table><thead><tr><th>Timing</th><th>Project</th><th>Scope</th><th>Status</th><th>Result / Deliverable</th></tr></thead><tbody>' + rows + '</tbody></table></div></details>' +
       limitation() +
     '</div>';
@@ -659,7 +631,7 @@
         metric('Turkey Result', 'Encouraging', 'effort-adjusted harvest rate up 100%') +
       '</div>' +
       '<div class="callout"><strong>Bottom line for the owner:</strong> Habitat and buck-age results are moving in the right direction, but deer abundance remains a little above the working range and the herd is still doe-heavy. The 2026–27 recommendation is 10–12 adult does, continued protection of most bucks younger than 3.5 years, and another winter survey before changing direction.</div>' +
-      '<div class="panel"><div class="panel-head"><h2>How We Judge the Herd</h2><span class="chip">Multiple lines of evidence</span></div><div class="table-wrap"><table><thead><tr><th>Measure</th><th>Pine Ridge</th><th>Alabama / Coastal Plain Context</th><th>Owner Meaning</th></tr></thead><tbody>' +
+      '<div class="panel"><div class="panel-head"><h2>How We Judge the Herd</h2><span class="chip">Multiple lines of evidence</span></div><div class="table-wrap"><table><thead><tr><th>Measure</th><th>Pine Ridge</th><th>Alabama / Coastal Plain Context</th><th>Management Interpretation</th></tr></thead><tbody>' +
         '<tr><td><strong>Deer abundance</strong></td><td>60 estimated · 31.0 / mi²</td><td>20–30 / mi² working range for this pine-dominated demonstration</td><td>Slightly above target; increase doe harvest carefully.</td></tr>' +
         '<tr><td><strong>Adult-doe weight</strong></td><td>94 lb · up from 88</td><td>Within the lower portion of Alabama\'s broad healthy-adult range</td><td>Direction is positive, but habitat and browse pressure still matter.</td></tr>' +
         '<tr><td><strong>Fawns per doe</strong></td><td>0.54</td><td>Near the 0.50 long-term Coastal Plain reference</td><td>Recruitment is adequate to sustain the herd.</td></tr>' +
@@ -667,7 +639,6 @@
         '<tr><td><strong>Older-buck share</strong></td><td>57% age 3.5+ · up from 38%</td><td>Age is the first requirement for mature body and antler expression</td><td>Voluntary young-buck protection is working.</td></tr>' +
       '</tbody></table></div></div>' +
       '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>This Season</h2></div><div class="panel-body"><div class="budget-line"><span>Adult-doe target</span><strong>10–12</strong></div><div class="budget-line"><span>Total deer target</span><strong>17–20</strong></div><div class="budget-line"><span>Buck guideline</span><strong>Protect most &lt;3.5</strong></div><div class="budget-line"><span>Midseason review</span><strong>After 6 adult does</strong></div><p class="mini-note">The target is a property recommendation, not a statewide prescription. It is adjusted with browse pressure, hunter effort, weights, age structure, and the next winter estimate.</p></div></div><div class="panel"><div class="panel-head"><h2>Turkey Reading</h2></div><div class="panel-body"><div class="budget-line"><span>Gobblers harvested</span><strong>1 → 3</strong></div><div class="budget-line"><span>Harvest / 100 hunter-days</span><strong>16.7 → 25.8</strong></div><div class="budget-line"><span>Management conclusion</span><strong>Encouraging trend</strong></div><p class="mini-note">The effort-adjusted result improved, but harvest alone cannot prove the population doubled. Brood counts, cameras, gobbling activity, and habitat response remain part of the annual review.</p></div></div></div>' +
-      '<div class="panel section-gap"><div class="panel-head"><h2>Research & Benchmark Sources</h2></div><div class="panel-body"><ul class="prescription-list"><li><a href="https://www.outdooralabama.com/wildlife-management-programs/deer-management-assistance-program" target="_blank" rel="noopener">Alabama Deer Management Assistance Program</a>: site-specific decisions using harvest, health, survey, and habitat data.</li><li><a href="https://www.outdooralabama.com/node/1490" target="_blank" rel="noopener">Outdoor Alabama doe-management guidance</a>: balanced sex ratios and harvest composition.</li><li><a href="https://www.outdooralabama.com/ungulates/white-tailed-deer" target="_blank" rel="noopener">Outdoor Alabama white-tailed deer profile</a>: Alabama body-weight context.</li><li><a href="https://www.jonesctr.org/wp-content/uploads/2022/02/deer_pub.pdf" target="_blank" rel="noopener">Coastal Plain Whitetails</a>: long-term density, adult weight, lactation, and recruitment reference.</li></ul></div></div>' +
       '<details class="panel section-gap"><summary class="panel-head" style="cursor:pointer"><h2 style="display:inline">Show technical survey and harvest data</h2><span class="chip gray">Optional detail</span></summary>' +
         '<div class="panel-head"><h2>Thermal Drone Surveys</h2><a class="btn ghost" href="' + thermalDataPath + '" download>Download survey data</a></div><div class="table-wrap"><table><thead><tr><th>Survey</th><th>Sample Coverage</th><th>Estimated Deer</th><th>Deer / 1,000 ac</th><th>Buck : Doe</th><th>Fawns / Doe</th></tr></thead><tbody>' + thermalRows + '</tbody></table></div>' +
         '<div class="panel-head"><h2>Two-Year Harvest Summary</h2><a class="btn ghost" href="' + deerDataPath + '" download>Download 35 records</a></div><div class="table-wrap"><table><thead><tr><th>Season</th><th>Total</th><th>Antlered</th><th>Antlerless</th><th>Harvest / 1,000 ac</th><th>Avg. Buck Age</th><th>Bucks 3.5+</th><th>Avg. Buck Weight</th><th>Adult Doe Weight</th><th>Adult Doe KFI</th></tr></thead><tbody>' + harvestRows + '</tbody></table></div>' +
@@ -684,10 +655,10 @@
       return '<tr><td><strong>' + y[0] + '</strong></td><td><span class="chip ' + statusClass(y[1]) + '">' + y[1] + '</span></td><td>' + y[2] + '</td><td>' + y[3] + '</td><td>' + y[4] + '</td><td>' + y[5] + '</td></tr>';
     }).join('');
     return '<div class="page">' +
-      heading('Long-Range Property Plan', 'What is planned for the rest of 2026, the next two years, and the following management cycle') +
-      '<div class="callout"><strong>Long-term objective:</strong> protect timber value while building a more open, fire-maintained property with better native forage, young cover, wetland protection, and reliable access. The plan is reviewed annually rather than locked in for five years.</div>' +
-      '<div class="panel"><div class="panel-head"><h2>2024–2028 Implementation Schedule</h2><span class="chip">Annual review active</span></div><div class="table-wrap"><table><thead><tr><th>Year</th><th>Status</th><th>Prescribed Fire</th><th>Thinning / Midstory</th><th>Early Cover / Openings</th><th>Key Decision</th></tr></thead><tbody>' + yearRows + '</tbody></table></div></div>' +
-      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Silviculture & Fire</h2></div><div class="panel-body"><ul class="prescription-list"><li>Wildlife-priority pine is generally thinned toward 40–60 square feet of basal area per acre where stand and timber objectives allow.</li><li>The current fire-priority pool covers 555 acres.</li><li>Annual fire delivery is increasing toward 195–260 acres on a two- to three-year return interval.</li><li>Dormant- and growing-season burns are mixed while unburned refugia remain in every unit.</li><li>Quality crop trees, mast hardwoods, cavity and den trees, safe snags, and soft-mast shrubs are retained.</li></ul></div></div><div class="panel"><div class="panel-head"><h2>Spatial Guardrails</h2></div><div class="panel-body"><ul class="prescription-list"><li>Field-verified wetland and stream buffers are included in treatment maps and contractor work orders.</li><li>One hundred to 150 feet of wooded or brushy cover remains at monitored corridors and pinch points.</li><li>Three low-entry bedding zones retain 67 acres of security cover.</li><li>Roads are assigned maintain, seasonal, or close-and-restore status.</li><li>Mowing and planted food plots remain support tools rather than the primary habitat strategy.</li></ul></div></div></div>' +
+      heading('Long-Range Forest & Habitat Plan', 'The annual treatment cycle for timber, prescribed fire, habitat, and wildlife monitoring') +
+      '<div class="callout"><strong>Management direction:</strong> treat about 248 acres with prescribed fire each year—20% of the property—so the full tract can be addressed on an approximately five-year cycle while timber stands, wetlands, refuges, and access constraints guide each burn unit.</div>' +
+      '<div class="panel"><div class="panel-head"><h2>2024–2028 Implementation Schedule</h2><span class="chip">Reviewed annually</span></div><div class="table-wrap"><table><thead><tr><th>Year</th><th>Status</th><th>Prescribed Fire</th><th>Thinning / Midstory</th><th>Pine Savanna / Openings</th><th>Key Decision</th></tr></thead><tbody>' + yearRows + '</tbody></table></div></div>' +
+      '<div class="grid-equal section-gap"><div class="panel"><div class="panel-head"><h2>Silviculture & Fire</h2></div><div class="panel-body"><ul class="prescription-list"><li>Use an annual 248-acre fire target, adjusting individual units for weather, fuel condition, smoke management, and stand objectives.</li><li>Thin wildlife-priority pine toward 40–60 square feet of basal area per acre where stand age, windfirmness, and product objectives allow.</li><li>Mix dormant- and growing-season burns while retaining unburned cover within the treatment pattern.</li><li>Track sawtimber, chip-n-saw, and pulpwood composition during each stand inventory update.</li><li>Retain quality crop trees, mast hardwoods, cavity trees, safe snags, and soft-mast shrubs.</li></ul></div></div><div class="panel"><div class="panel-head"><h2>Spatial Guardrails</h2></div><div class="panel-body"><ul class="prescription-list"><li>Include field-verified wetland and stream buffers in treatment maps and contractor work orders.</li><li>Retain wooded or brushy screening cover at monitored corridors and pinch points.</li><li>Protect low-entry bedding zones during timber, fire, and access work.</li><li>Assign roads maintain, seasonal, or close-and-restore status.</li><li>Use wildlife openings as support habitat within the broader forest-management system.</li></ul></div></div></div>' +
       limitation() +
     '</div>';
   };
@@ -702,8 +673,8 @@
     return '<div class="page">' +
       heading('Costs & Assistance', 'What the owner is responsible for this year and the forecast for future years') +
       '<div class="metrics">' + metric('2026 Contracted Plan', '$59,200', 'paid and committed demonstration work') + metric('Predicted Assistance', '$20,400', 'estimated EQIP offset · not guaranteed') + metric('2026 Owner Share', '$38,800', '$31.29 per property acre') + metric('Five-Year Owner Share', '$189,100', 'current 2024–2028 projection') + '</div>' +
-      '<div class="callout"><strong>Owner reading:</strong> The 2026 program is forecast at $59,200, with $20,400 of potential cost share and $38,800 remaining for the owner. Standing timber value is shown separately in Timber & Habitat and is not used here as assumed revenue.</div>' +
-      '<div class="grid-equal"><div class="panel"><div class="panel-head"><h2>This Year</h2></div><div class="panel-body"><div class="budget-line"><span>Contracted and committed work</span><strong>$59,200</strong></div><div class="budget-line"><span>Predicted cost-share assistance</span><strong>($20,400)</strong></div><div class="budget-line"><span>Projected owner responsibility</span><strong>$38,800</strong></div><div class="budget-line"><span>Owner cost per property acre</span><strong>$31.29</strong></div></div></div><div class="panel"><div class="panel-head"><h2>Budget Guardrails</h2></div><div class="panel-body"><ul class="prescription-list"><li>Cost share is shown only as a prediction until an eligible practice is approved and certified.</li><li>Future-year scopes change after annual timber, habitat, and wildlife review.</li><li>Timber sale proceeds remain separate from management costs.</li><li>Owner approval is required for change orders or work outside the annual plan.</li></ul></div></div></div>' +
+      '<div class="callout"><strong>2026 budget position:</strong> The program is forecast at $59,200, with $20,400 of potential cost share and $38,800 remaining for the owner. Timber-sale proceeds are not assumed in this management budget.</div>' +
+      '<div class="grid-equal"><div class="panel"><div class="panel-head"><h2>This Year</h2></div><div class="panel-body"><div class="budget-line"><span>Contracted and committed work</span><strong>$59,200</strong></div><div class="budget-line"><span>Predicted cost-share assistance</span><strong>($20,400)</strong></div><div class="budget-line"><span>Projected owner responsibility</span><strong>$38,800</strong></div><div class="budget-line"><span>Owner cost per property acre</span><strong>$31.29</strong></div></div></div><div class="panel"><div class="panel-head"><h2>Budget Guardrails</h2></div><div class="panel-body"><ul class="prescription-list"><li>Cost share is shown only as a prediction until an eligible practice is approved and certified.</li><li>Future-year scopes change after annual timber, habitat, and wildlife review.</li><li>Any future timber-sale proceeds remain separate from management costs.</li><li>Owner approval is required for change orders or work outside the annual plan.</li></ul></div></div></div>' +
       '<details class="panel section-gap"><summary class="panel-head" style="cursor:pointer"><h2 style="display:inline">Show five-year budget detail</h2></summary><div class="table-wrap"><table><thead><tr><th>Year</th><th>Primary Program</th><th>Contracted Plan</th><th>Predicted EQIP Offset</th><th>Projected Owner Cost</th></tr></thead><tbody>' + rows + '<tr><td colspan="2"><strong>Five-Year Total</strong></td><td class="money"><strong>' + money(totals[0]) + '</strong></td><td class="money"><strong>(' + money(totals[1]) + ')</strong></td><td class="money"><strong>' + money(totals[2]) + '</strong></td></tr></tbody></table></div></details>' +
       limitation() +
     '</div>';
@@ -713,7 +684,7 @@
     return '<div class="page">' +
       heading('Reports & Data', 'Owner-ready reports first, with technical exports available when needed') +
       '<div class="report-grid">' +
-        '<article class="report"><span class="type">MANAGEMENT PLAN</span><h3>Current Long-Range Property Plan</h3><div class="meta">Updated July 2026 · Portal summary</div><p>The owner-level treatment schedule, outcome targets, timber decisions, and annual review points for the 1,240-acre demonstration property.</p><button class="btn" data-go="plan">Open plan</button></article>' +
+        '<article class="report"><span class="type">MANAGEMENT PLAN</span><h3>Current Long-Range Forest & Habitat Plan</h3><div class="meta">Updated July 2026 · Portal summary</div><p>The owner-level treatment schedule, outcome targets, forestry decisions, and annual review points for the 1,240-acre demonstration property.</p><button class="btn" data-go="plan">Open plan</button></article>' +
         '<article class="report"><span class="type">PROPERTY MAP</span><h3>Demo Property Management Map</h3><div class="meta">Updated July 2026 · JPEG</div><p>Sanitized composite showing how property boundaries, water, roads, openings, wetlands, treatment areas, bedding cover, and travel routes are organized.</p><a class="btn" href="' + mapPath + '" target="_blank" rel="noopener">Open map</a> <a class="btn ghost" href="' + mapPath + '" download>Download</a></article>' +
         '<article class="report"><span class="type">THERMAL DRONE SURVEY</span><h3>Winter Deer Survey Results</h3><div class="meta">2025 and 2026 · 2 survey records · CSV</div><p>Sampling coverage, unique detections, population estimates, confidence intervals, density, sex ratio, and recruitment.</p><a class="btn" href="' + thermalDataPath + '" download>Download CSV</a></article>' +
         '<article class="report"><span class="type">DEER HARVEST</span><h3>Two-Year Deer Harvest Log</h3><div class="meta">2024–25 and 2025–26 · 35 records · CSV</div><p>Harvest date, sex, age, age method, whole weight, kidney and fat weights, calculated KFI, antler points, and management unit.</p><a class="btn" href="' + deerDataPath + '" download>Download CSV</a></article>' +
