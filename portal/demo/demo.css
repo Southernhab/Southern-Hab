@@ -18,3 +18,16 @@
 .cell-note{display:block;color:var(--muted);font-size:10px;margin-top:2px;white-space:nowrap}.trend-row{padding:8px 0 13px}.trend-row>div:first-child{display:flex;justify-content:space-between;gap:12px;font-size:12px}.trend-row span{color:var(--muted)}.trend-track{height:16px;background:#ebe8df;margin-top:7px;overflow:hidden;border-radius:2px}.trend-track i{display:block;height:100%;background:linear-gradient(90deg,var(--moss),var(--forest))}.protocol-formula{padding:12px 14px;background:var(--cream);border-left:3px solid var(--gold);font:700 14px "Libre Baskerville";color:var(--forest);margin:0 0 12px}.table-tall{max-height:500px;overflow:auto}.table-tall thead{position:sticky;top:0;z-index:2}.turkey-result{display:grid;grid-template-columns:150px 180px 1fr;gap:18px;align-items:center;border-top:1px solid var(--line)}.turkey-result>div{padding-right:16px;border-right:1px solid var(--line)}.turkey-result strong,.turkey-result span{display:block}.turkey-result strong{font:700 25px "Libre Baskerville";color:var(--forest)}.turkey-result span{font-size:11px;color:var(--muted)}.turkey-result p{font-size:12px;line-height:1.55;color:var(--muted);margin:0}.report .btn{margin-right:4px}
 @media(max-width:800px){.turkey-result{grid-template-columns:1fr 1fr}.turkey-result p{grid-column:1/-1}.trend-row>div:first-child{align-items:flex-start;flex-direction:column;gap:2px}}
 .photo-art:before{content:"FIELD RECORD"}
+
+
+/* Demo inquiry call to action */
+.demo-banner{gap:24px;padding:0 16px}
+.demo-message,.demo-actions{display:flex;align-items:center;gap:16px}
+.demo-inquiry{display:inline-flex;align-items:center;min-height:26px;padding:4px 11px;background:#fff;color:var(--forest)!important;border:1px solid #fff;border-radius:3px;text-decoration:none}
+.demo-inquiry:hover{background:var(--cream);border-color:var(--cream)}
+@media(max-width:800px){
+  .demo-message span,.demo-login{display:none}
+  .demo-banner{justify-content:space-between;gap:10px;padding:0 10px}
+  .demo-message,.demo-actions{gap:8px}
+  .demo-inquiry{min-height:25px;padding:4px 8px;font-size:10px}
+}
