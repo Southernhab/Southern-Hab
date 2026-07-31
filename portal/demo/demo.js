@@ -1,6 +1,41 @@
 (function () {
   'use strict';
 
+  // Google Analytics 4 for the public, ad-facing portal demonstration only.
+  var GA_MEASUREMENT_ID = 'G-6HWVF3BKHJ';
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () {
+    window.dataLayer.push(arguments);
+  };
+  window.gtag('js', new Date());
+  window.gtag('config', GA_MEASUREMENT_ID, {
+    send_page_view: true
+  });
+
+  var analyticsScript = document.createElement('script');
+  analyticsScript.async = true;
+  analyticsScript.src = 'https://www.googletagmanager.com/gtag/js?id=' +
+    encodeURIComponent(GA_MEASUREMENT_ID);
+  analyticsScript.setAttribute('data-shc-google-analytics', 'portal-demo');
+  document.head.appendChild(analyticsScript);
+
+  function trackEvent(eventName, parameters) {
+    window.gtag('event', eventName, parameters || {});
+  }
+
+  document.addEventListener('click', function (event) {
+    var link = event.target.closest('a[href]');
+    if (!link) return;
+
+    var href = link.getAttribute('href') || '';
+    if (href === '/contact/' || href === '/contact') {
+      trackEvent('contact_cta_click', { source_location: 'portal_demo' });
+    } else if (href === '/portal/' || href === '/portal') {
+      trackEvent('portal_login_click', { source_location: 'portal_demo' });
+    }
+  });
+
   var property = {
     "name": "Pine Ridge Demonstration Tract",
     "location": "South Alabama",
@@ -765,6 +800,7 @@
     });
     window.scrollTo(0, 0);
     if (window.innerWidth < 801) document.getElementById('sidebar').classList.remove('open');
+    trackEvent('portal_demo_view', { demo_section: viewName });
   }
 
   document.querySelectorAll('#nav button').forEach(function (button) {
