@@ -1,6 +1,94 @@
 (function () {
   'use strict';
 
+  // ── Google Analytics 4 (public marketing site only) ───────────────────────
+  var GA_MEASUREMENT_ID = 'G-6HWVF3BKHJ';
+
+  function setupAnalytics() {
+    var path = window.location.pathname;
+    if (path.indexOf('/portal/') === 0 || path.indexOf('/admin/') === 0) return;
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () {
+      window.dataLayer.push(arguments);
+    };
+
+    window.gtag('js', new Date());
+    window.gtag('config', GA_MEASUREMENT_ID, {
+      send_page_view: true
+    });
+
+    if (!document.querySelector('script[data-shc-google-analytics]')) {
+      var analyticsScript = document.createElement('script');
+      analyticsScript.async = true;
+      analyticsScript.src = 'https://www.googletagmanager.com/gtag/js?id=' +
+        encodeURIComponent(GA_MEASUREMENT_ID);
+      analyticsScript.setAttribute('data-shc-google-analytics', 'true');
+      document.head.appendChild(analyticsScript);
+    }
+  }
+
+  function trackEvent(eventName, parameters) {
+    if (typeof window.gtag !== 'function') return;
+    window.gtag('event', eventName, parameters || {});
+  }
+
+  function setupAnalyticsEvents() {
+    document.addEventListener('click', function (event) {
+      var link = event.target.closest('a[href]');
+      if (!link) return;
+
+      var href = link.getAttribute('href') || '';
+      var linkText = (link.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 100);
+
+      if (href.indexOf('tel:') === 0) {
+        trackEvent('phone_click', { link_location: window.location.pathname });
+      } else if (href.indexOf('mailto:') === 0) {
+        trackEvent('email_click', { link_location: window.location.pathname });
+      } else if (href.indexOf('/portal/demo') === 0) {
+        trackEvent('portal_click', {
+          portal_destination: 'demo',
+          link_text: linkText
+        });
+      } else if (href.indexOf('/portal/') === 0) {
+        trackEvent('portal_click', {
+          portal_destination: 'client_login',
+          link_text: linkText
+        });
+      } else if (href === '/contact/' || href === '/contact') {
+        trackEvent('contact_cta_click', { link_text: linkText });
+      }
+    });
+
+    document.querySelectorAll('form[data-netlify="true"]').forEach(function (form) {
+      form.addEventListener('submit', function () {
+        var formNameInput = form.querySelector('input[name="form-name"]');
+        var formName = formNameInput ? formNameInput.value : form.getAttribute('name');
+        try {
+          window.sessionStorage.setItem('shc_pending_lead_type', formName || 'website_inquiry');
+        } catch (error) {
+          // The form still works when storage is unavailable; only attribution is skipped.
+        }
+      });
+    });
+
+    if (window.location.pathname === '/thank-you' ||
+        window.location.pathname === '/thank-you/' ||
+        window.location.pathname === '/thank-you.html') {
+      try {
+        var leadType = window.sessionStorage.getItem('shc_pending_lead_type');
+        if (leadType) {
+          trackEvent('generate_lead', { lead_type: leadType });
+          window.sessionStorage.removeItem('shc_pending_lead_type');
+        }
+      } catch (error) {
+        // Do not interrupt the confirmation page when storage is unavailable.
+      }
+    }
+  }
+
+  setupAnalytics();
+
   function makeToggleBtn(label, controlsId, className) {
     var btn = document.createElement('button');
     btn.type = 'button';
@@ -254,6 +342,7 @@
       setupAboutCollapsibles();
     }
     setupContactFormSelector();
+    setupAnalyticsEvents();
   }
 
   if (document.readyState === 'loading') {
